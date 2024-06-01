@@ -82,3 +82,11 @@
 3. 좀 더 실증적인 프로젝트를 참고해서 모듈을 추가하고 반영해본다.
 
 4. 시간이 남으면 와즘 붙여보기
+
+5. object capability model? -> 이거 설명하면 CS 자료구조 알고리즘 대강이라도 알고있다고 쳐야함
+
+The Cosmos SDK is built on the [**object-capability model (opens new window)**](https://docs.cosmos.network/v0.45/core/ocap.html). It not only favors modularity but also encapsulates code implementation. An object-capability model ensures that:
+
+https://docs.cosmos.network/v0.45/core/ocap.html
+
+6. 마지막으로는 민트스테이션 사용해보기?

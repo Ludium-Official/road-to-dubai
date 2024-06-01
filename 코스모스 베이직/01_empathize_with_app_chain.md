@@ -1,6 +1,6 @@
 # 01. Understanding Why modular blockcahins had come
 
-## Hello World !
+Hello World !
 
 이번 챕터에 있어서 가장 중요한 점은 코스모스 생태계를 이해하기 위해서는 공감해줘야 해! 내가 질문을 하나 던져볼게! **코스모스 SDK와 코스모스라는 App specific blockchain theme는 대체 왜 나왔을까?**
 
@@ -84,6 +84,20 @@
 
 그리고, App specific chain이라고 표현한 코스모스는 모듈로서 어떤 프로그램을 관리하기 때문에 하나의 시스템 위에 불필요한 반복적인 프로그램이 올라가지 않고 딱 하나만 올리고 모두가 그걸 사용하게 되어있어. 좀 더 효율적이긴 하지. 다만 새로운 프로그램을 올려야한다면 그냥 배포하면 장땡이 아니라 그 체인에 관계된 여러 이해관계자들의 합의가 필요하게 되.
 
+---
+
+앞서 얘기했던 것들은 IDA에 표현된 자료들을 바탕으로 다시 요약해서 보자!
+
+> However, Bitcoin's monolithic codebase and limited scripting language made dApp development a tedious and complex process for developers.
+
+→ Ethereum is a public blockchain with smart contract functionality that enables applications based on self-executing, self-enforcing, and self-verifying account holding objects.
+
+dapp이 제너럴 체인에 올라가는 한계점
+
+Not all dApps have the same throughput requirements, but they all have to make do with the *average* resulting throughput of the platform itself if they are implemented on a general-purpose blockchain. This impacts the **scalability** of dApps.
+
+(ida week1 인용)
+
 https://github.com/Jeongseup/jeongseupchain/blob/main/app/app.go
 
 https://ida.interchain.io/ida-course/lps/week-0/#
@@ -93,4 +107,14 @@ https://ida.interchain.io/ida-course/lps/week-0/#
 Scalability is a core challenge of blockchain technology. The interchain allows applications to scale to millions of users. This degree of scalability is possible as the interchain addresses two types of scalability:
 
 Horizontal scalability: scaling by adding similar machines to the network. When "scaling out", the netwㄴork can accept more nodes to participate in the state replication, consensus observation, and any activity that queries the state.
-Vertical scalability: scaling by improving the network's components to increase its computational power. When "scaling up", the network can accept more transactions and any activity that modifies the state.
+Vertical scalability: scaling by improving the network's components to increase its computational power. When "scaling up", the network can accept more transactions and any
+activity that modifies the state.
+
+---
+
+그리고 마지막 plus +a
+
+cosmwasm
+ethermint
+polarisEVM
+etc..
