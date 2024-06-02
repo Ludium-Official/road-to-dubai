@@ -1,16 +1,21 @@
-# 개인 / 단체 소개
-
-영상은 내가 필요하면 찍고, 적당히 하나씩 풀면 될듯?
-
-일단
-
-01
-02
-03.. 해서 계속해서 적어두고 최종적으로 1회차당 몇개의 챕터씩 할지 재정리
-
-아마도 개념은 여러개 묶어서 하고 개발엔 좀 더 시간을 주는게 좋을 듯
+# Cosmos Basic
 
 ## 1. 코스모스 오버뷰
+
+0. 블록체인 기초 & golang 기초
+
+- 블록체인 기초
+
+  - PoW & PoS
+  - How to describe BLOCKCHAIN in one line
+  - PBFT(tendermint)
+  - 비트,이더 vs 텐더민트 큰 차이점(포크 유무)
+
+- golang 기초
+  - 퍼블릭 자료로 대체?
+  - 우리가 티칭?
+
+1. 앱 체인에 대한 필요성 공감(이해) aka 코스모스 출현배경
 
 - [코스모스 출현 배경](https://ida.interchain.io/academy/1-what-is-cosmos/1-blockchain-and-cosmos.html)
   - 기존 블록체인(비트코인, 이더리움) 한계점

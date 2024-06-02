@@ -8,7 +8,7 @@ Hello World !
 
 아! 여기선 굳이 컨센서스 레벨에 대해서는 건들지는 않을 거야. (오히려 공감하고 이해하는데 방해가 된다고 생각하거든)
 
-## Review Week 0
+## Review
 
 다시 이 코스모스를 이해하려면 일단!! 큰 챕터에서 볼 때 과거의 블록체인들이 어떻게 발전해왔길래 코스모스가 출시될 수 있었을지를 보면 될거야. 왜냐? 새로운 기술은 기존의 기술의 문제점이 있다고 생각해서 아이디어를 얹혀서 개선하려고 하기 때문이지. 그렇다면, 우리가 기존 비트코인과 이더리움의 특징을 본다면 코스모스 SDK의 필요성에 공감하고 입문하는데 더 도움이 되지 않을까 싶어
 
@@ -88,19 +88,16 @@ Hello World !
 
 앞서 얘기했던 것들은 IDA에 표현된 자료들을 바탕으로 다시 요약해서 보자!
 
-> However, Bitcoin's monolithic codebase and limited scripting language made dApp development a tedious and complex process for developers.
+- From Bitcoint to Ethereum
 
-→ Ethereum is a public blockchain with smart contract functionality that enables applications based on self-executing, self-enforcing, and self-verifying account holding objects.
+> Bitcoin's monolithic codebase and limited scripting language made dApp development a tedious and complex process for developers.
+> → Ethereum is a public blockchain with smart contract functionality that enables applications based on self-executing, self-enforcing, and self-verifying account holding objects.
+
+- From Ethereum to Cosmos
 
 dapp이 제너럴 체인에 올라가는 한계점
 
-Not all dApps have the same throughput requirements, but they all have to make do with the *average* resulting throughput of the platform itself if they are implemented on a general-purpose blockchain. This impacts the **scalability** of dApps.
-
-(ida week1 인용)
-
-https://github.com/Jeongseup/jeongseupchain/blob/main/app/app.go
-
-https://ida.interchain.io/ida-course/lps/week-0/#
+> Not all dApps have the same throughput requirements, but they all have to make do with the *average* resulting throughput of the platform itself if they are implemented on a general-purpose blockchain. This impacts the **scalability** of dApps.
 
 ## How does the interchain solve the scalability issue?
 
@@ -109,6 +106,12 @@ Scalability is a core challenge of blockchain technology. The interchain allows 
 Horizontal scalability: scaling by adding similar machines to the network. When "scaling out", the netwㄴork can accept more nodes to participate in the state replication, consensus observation, and any activity that queries the state.
 Vertical scalability: scaling by improving the network's components to increase its computational power. When "scaling up", the network can accept more transactions and any
 activity that modifies the state.
+
+(ida week1 인용)
+
+https://github.com/Jeongseup/jeongseupchain/blob/main/app/app.go
+
+https://ida.interchain.io/ida-course/lps/week-0/#
 
 ---
 
