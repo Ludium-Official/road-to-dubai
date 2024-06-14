@@ -10,6 +10,7 @@
 5. Struct
 6. Method
 7. Pointer 
+8. Closure
 
 ## 0. Numerics
 integer, floating-point, complex, rune 상수를 통칭하여 numeric 상수라고 한다.
@@ -401,7 +402,6 @@ func main() {
 }
 ```
 
-
 ### Swap Example 
 다음은 x와 y의 값을 바꾸는 간단한 함수이다. 해당 예제를 통해 다음을 알아볼 수 있다. 
 - 함수는 여러 값을 반환할 수 있으므로 추가 데이터 구조나 임시 변수가 없어도 값을 쉽게 교환할 수 있다.
@@ -470,11 +470,16 @@ func main() {
 }
 ```
  
-### 객체 지향 프로그래밍의 Class와 비교
+### 객체 지향 프로그래밍의 Class와 Go의 Struct 비교
 Class는 기존 객체 지향 프로그래밍 언어에 필수적으로 들어가는 기능이다. 하지만 다이아몬드 문제와 같은 상속 문제가 골치 아프기 떄문이다. 그래서 Go는 상속의 기능을 가지지 않은 구조체를 만들었다. 클래스 비교 관점에서 바라본 구조체의 특징을 보면 다음과 같다:
 - 상속 없음: 클래스와 달리 Go의 구조체는 상속을 지원하지 않는다. 대신 Go는 컴포지션을 사용하여 코드를 재사용한다.
 - 캡슐화: Go 구조체는 캡슐화를 제공하지만 클래스에 있는 private 또는 protected와 같은 접근 지시자 같은 기능이 없다. 대신 Go는 필드 이름을 대문자로 표기하는 규칙을 사용하여 public 필드임을 나타낸다.
 - 구조체 정의 내에 메서드 없음: 메서드는 구조체 자체 내에 정의되지 않고 외부에서 구조체 타입과 연관된다.
+
+#### 상속과 컴포지션 관련 참고 글 
+- [Why is there no type inheritance?](https://go.dev/doc/faq#Is_Go_an_object-oriented_language:~:text=always%20resolved%20statically.-,Why%20is%20there%20no%20type%20inheritance%3F,-Object%2Doriented%20programming) 
+- [Why no "class" keyword in Go?](https://groups.google.com/g/golang-nuts/c/aJ6JiiIusqg/m/TJM09vOkv9YJ)
+- [Why there are no classes in the GoLang programming language?](https://www.quora.com/Why-there-are-no-classes-in-the-GoLang-programming-language)
 
 ## 6. Method
 Method(이하 메서드)는 Function과 유사하지만 특정 타입(일반적으로 구조체)과 연관되어 있다. 메서드는 타입의 동작을 정의하고 구조체의 필드에 액세스하고 동작을 정의할 수 있다. 
@@ -521,7 +526,7 @@ func main() {
 }
 ```
 
-### 객체 지향 프로그래밍의 Class와 비교
+### 객체 지향 프로그래밍의 Class와 Go의 Method 비교
 - Receiver: Go의 메서드는 클래스에서 메서드가 객체와 연관되는 방식과 유사하게 receiver argument를 사용하여 유형과 연관된다.
 - `this` 키워드 없음: Go 메서드는 많은 객체 지향 언어에서 볼 수 있는 암시적 `this` 키워드 대신 명시적으로 receiver 이름을 사용한다.
 - Pointer Receiver: Go 메서드는 클래스에서 객체의 상태를 수정하는 것과 유사하게 포인터 수신자를 사용하여 수신자의 값을 수정할 수 있다.
@@ -578,6 +583,41 @@ func main() {
 }
 ```
 
+## 8. Closure
+Closure(이하 클로저)는 프로그래밍에서 중요한 개념이다. 이는 코드의 재사용성을 높이고, 변수를 캡슐화하며, 지연 실행 패턴을 구현하는 데 유용하기 떄문이다. 가벼운 역사를 살펴보면 다음과 같다: 
+- 클로저의 개념은 함수형 프로그래밍 시초가 된 lambda calculus(이하 람다 대수)에서 기원되었다. 
+- 1950년 탄생한 LISP 언어에는 람다 대수의 아이디어를 실용적인 프로그래밍 언어로 구현한 것으로, 함수가 일급 객체로 취급되며 클로저의 개념을 포함하고 있다. 
+- 2000년대 초반 클로저의 기능을 탑재한 Javascript, Python, Ruby의 새로운 언어 부흥과 기타 이유들로 인해 클로저의 존재감 또한 올라오게 되었다. 
+- 1991년에 탄생한 Java 언어도 2014년 Java 8 버전에서 클로저 기능을 추가했다. [Like it or not, closures are coming to Java](https://www.infoworld.com/article/2078659/like-it-or-not--closures-are-coming-to-java.html)
+
+Closure(이하 클로저)는 함수 내에서 정의된 함수로, 외부 함수의 변수에 접근할 수 있는 기능을 가지고 있다. 클로저는 내부 함수가 외부 함수의 범위 내에서 변수를 "기억"하고 참조할 수 있도록 한다. Go는 초기 버전부터 클로저를 지원한다. Go의 클로저는 동시성 프로그래밍과 같은 여러 고급 기능을 구현하는 데 유용하게 다뤄지고 있다.
+
+### Closure Example
+outer 함수는 count 변수를 가지고 있으며, 내부에 정의된 익명 함수가 이 count 변수에 접근할 수 있다. increment 변수에 outer 함수를 할당하면 increment는 count 변수를 "기억"하고 호출될 때마다 증가된 값을 반환한다.
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func outer() func() int {
+    count := 0
+    return func() int {
+        count++
+        return count
+    }
+}
+
+func main() {
+    increment := outer()
+
+    fmt.Println(increment()) // 1
+    fmt.Println(increment()) // 2
+    fmt.Println(increment()) // 3
+}
+```
 
 # Links
 Go 언어에 대한 문서는 다른 언어에 비해 비교적 많은 편이다. C, C++, Java 등에 비교해보았을 때 최신 언어이기도 하고 Go의 장점을 좋아하는 사람들이 많아서 한글로 잘 작성된 문서들이 많다.
