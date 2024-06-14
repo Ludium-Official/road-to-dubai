@@ -332,4 +332,3 @@ func main() {
 
 # Resources 
 1. Go Docs, "The Go Programming Language Specification: Language version go1.22", Feb 6. 2024, https://go.dev/ref/spec
-2. Interchain Academy, https://ida.interchain.io/tutorials/
