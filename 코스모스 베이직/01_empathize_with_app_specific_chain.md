@@ -1,0 +1,169 @@
+# 01. Empathize With App specific chain
+
+Hello World!
+
+모두 안녕하세요, 코스모스 베이직 과정 첫번째 챕터에 오신 걸 환영합니다!
+
+첫번째로 우리가 다룰 주제는 **'왜 App Specific Chain이 등장했는가?'** 입니다. **(Understanding Why app specific blockcahins had come)**
+
+이번 챕터를 코스모스 베이직 과정에 있어 가장 먼저 화두에 꺼낸 이유는 코스모스 생태계를 이해하기 위해서는 먼저 **왜 앱체인이 필요한지를 공감하는 것**이기 때문입니다.
+
+이후 과정을 진행하기 앞서서 먼저 제가 질문을 하나 드리겠습니다.
+
+- Question: **Cosmos SDK와 Cosmos라는 App specific blockchain theme는 대체 왜 나오게 되었을까?**
+
+정답은 없습니다. 다만, 모두가 적어도 이 질문에 대해서 스스로 머릿속으로 **'생각'** 이라는 것을 해볼 수 있었다라는 것만으로도 이번 강의가 충분히 의미가 있어진 것 같습니다.
+
+우선 그럼 이후 글을 진행할테니 모두 위에 제시된 메인 질문은 머릿속에 품고 계속해서 설명을 들어주시면 감사하겠습니다.
+
+## History of blockchains
+
+먼저 코스모스라고 하는 블록체인에 대해 이해하고 이 app specific chain이라는 관점을 공감을 하기 위해서 앱 체인 이전에 블록체인이 어떻게 발전되어있는지를 간단하게 볼 것입니다.
+
+커다란 블록체인이라는 기술의 큰 챕터에서 볼 때, 과거의 블록체인들이 어떻게 발전해왔길래 코스모스가 출시될 수 있었을지를 보게 되는 것이죠.
+
+보통 새로운 기술은 기존의 기술의 문제점이 있다고 생각해서 아이디어를 얹혀서 개선하려고 하기 때문에
+
+앱 체인 또한 기존의 블록체인들에 어떤 문제가 있다고 생각해서 앱 체인이란 관점이 제안될 수 있었는지를 보자는 말입니다.
+
+---
+
+자, 그럼 먼저 기존 비트코인과 이더리움의 특징을 살펴보고 코스모스 SDK의 필요성에 얘기해보도록 하겠습니다.
+
+아래 그림은 'Interchain Developer Academy'에서 0주차에 나오는 도식입니다.
+
+저희는 간단히 비트코인, 이더리움, 텐더민트(현 CometBFT)&코스모스와 같은 블록체인에만 집중해서 살펴보겠습니다.
+
+- In 2008 years, Bitcoin Whitepaper was released
+
+- In 2013 years, Ethereum Whitepare was released
+
+- In 2016 years, Cosmoso Whitepaper was released
+
+이렇게 시간적 순서로 볼 때 새로운 블록체인 관점의 제안은
+비트코인 --> 이더리움 --> 코스모스로 제안되었기 때문에 그 순서대로 다시 살펴보겠습니다.
+
+[![blockchain_history](./assets/blockchain_history.png)](https://ida.interchain.io/ida-course/0-blockchain-basics/2-history.html)
+_prod : interchain developer academy 0 week course_
+
+## Purpose of App specific chain
+
+위에서 제가 주목했던 블록체인은 '비트코인, 이더리움, 코스모스'였습니다.
+
+이제 각 체인들이 어떤 목적을 가지고 기존 체인을 개선하기 위해 제안을 헀는가를 살펴볼 에정입니다.
+
+우선 블록체인이라는 굉장히 함축적인 의미를 재정립하고 이해를 돕기 위해서, 비트코인을 payment용 블록체인 시스템이라고 간주합니다
+(여기서 TPS 때문에 비트코인은 결제 시스템으로서의 실질적인 사용성이 떨어진다와 같은 얘기는 생략합니다)
+
+제가 여기서 비트코인을 **payment용 블록체인 시스템**이라고 표현한 의미는 비트코인을 결제시스템으로 보고 이를 사용한다는 의미는 2가지 측면에서의 목적성이 있기 때문입니다.
+
+1. 앨리스가 밥에게 일정량의 코인(ex: 1BTC)를 보내기 위해서
+2. 앨리스가 밥에게 보낸다는 행위(하나의 트랜잭션)를 글로벌한 장부를 통해서 증명하기 위해서
+
+지금 생각해보면 굉장히 단순히 돈을 보내고, 돈을 받고만 하는 송수신 결제 용도의 블록체인 시스템이 비트코인이라는 말입니다.
+
+단! 어떤 주고 받는 행위(트랜잭션 단위)를 보장해주고, 이를 해당 시스템을 사용하고 있는 모두가 인정할 수 있도록 합의를 해주는 시스템(컨센서스 시스템) 위에 말입니다.
+
+자 그럼 이렇게 블록체인 시스템을 용도적인 측면에서 재해석하는 과정을 비트코인, 이더리움, 코스모스에 적용해보도록 합시다.
+
+0. 비트코인 (consensus system + payment)
+
+1. 비트코인 --> 이더리움 (consensus system + computing)
+
+2. 이더리움 --> 코스모스 (horizontal consensus system + horizontal computing)
+
+이렇게 바라보면 좀 더 직관적으로 이해할 수 있습니다.
+
+#### 1. 비트코인 --> 이더리움 (consensus system + computing)
+
+0번인 비트코인에 대한 재해석은 이미 위에서 마쳤으니 (비트코인 -> 이더리움) 과정에 대해 부연 설명을 하겠습니다.
+
+여긴 제 생각이지만 목적성을 빗대어 볼 때 비슷하다고 간주하여 표현하자면
+
+**비탈릭은 이런 생각을 했을 것 입니다. 그 어떠한 글로벌한 합의 시스템이 존재한다면! 거기에 programable한 computing을 올려보는 것은 어떨까?** 라고 말입니다.
+
+그리고 이게 바로 현재의 Smart Contract(Program)가 되었고, Solidity란 언어가 등장하게 된 이유입니다.
+
+이렇게, 이더리움은 블록체인은 새로운 프레임을 제안한 것으로 볼 수 있습니다. 글로벌 컨센서스 시스템 위에 단순히 페이먼트 시스템을 올리는 것이 아닌 컴퓨터 자체를 올리는 프레임으로 말입니다. 용도의 확장이라고 볼 수도 있겠습니다.
+
+#### 2. 이더리움 --> 코스모스 (horizontal consensus system + horizontal computing)
+
+이제 저희가 배울 과정인 코스모스에 대한 내용입니다.
+
+이 파트가 바로 위에서 언급했던 질문(**Cosmos SDK와 Cosmos라는 App specific blockchain theme는 대체 왜 나오게 되었을까?**)에 대한 단서가 될 수 있는 부분이 집중과 공감을 해주시면 감사하겠습니다.
+
+앞서 이더리움은 블록체인을 페이먼트 시스템이 아닌 컴퓨팅 시스템이라는 새로운 관점을 제안했습니다.
+
+그렇지만, 이를 우리 삶에 대변해본다면 각자 노트북, 스마트폰과 같은 컴퓨터가 하나 이상씩을 가지고 있는 이 시대에 글로벌 컴퓨터를 여러명이 사용할 수 있을까?란 생각을 해볼 수 있습니다.
+
+이 생각을 확장해서, **컴퓨팅이 가능한 블록체인을 차라리 특정용도에 맞게 수평적인 확장을 하는 건 어떨까?**라고 생각해볼 수도 있습니다.
+
+이렇게 **재권은 컴퓨팅 블록체인의 수평적 확장이라는 새로운 프레임을 제안했고, 코스모스란 app specific chain을 개발하게 되었습니다.**
+(목적성에 맞게 개인적인 견해를 말씀드린 것입니다)
+
+수평적 확장이 가능한 블록체인이라는 프레임이 잘 이해가 안 가실 수도 있어서, app specific chain이 어떻게 수평적 확장을 하는 블록체인인지를 예시를 들어서 설명을 더 드리겠습니다.
+
+먼저, 이더리움은 어떠한 임의의 프로그램이든 올릴 수 있는 글로벌 컴퓨터를 하나 만들고 유저들이 그 위에 올리고 싶은 거 올리면 돼! 라고 말하는 것이라고 볼 수 있고
+
+(TODO: 그림.1 이더리움 같인 블록체인 위에 vm을 두고 여러 프로그램을 올림)
+
+코스모스는 은행용 시스템에는 은행에 필요한 송금, 대출, 적금등의 딱 필요한 프로그램만 가지고 컴퓨팅 시스템을 구축하고, 또 다른 도서관 시스템이라고 하면 도서관에 필요한 대출, 연체등의 프로그램만 올라가있는 시스템을 만들어서 여러 목적에 맞게 컴퓨팅 시스템을 분할해서 구축하고 이를 연결짓는 것이라고 볼 수 있습니다.
+
+(TODO: 그림.2 블록체인 위에 애초에 딱 그 프로그램만 올림)
+
+여기서 질문을 하나 드리겠습니다. 그렇다면 각자가 생각하기에는 어떤 프레임이 넌 더 좋다고 생각하시나요?
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+사실 정답은 없어. 음.. 내가 경험적으로 느끼기에는 EVM 같은 글로벌 컴퓨팅이 가능한 VM을 올리는 체인들은 좀 더 자유도가 높고 새로운 프로그램을 배포하는데 부담이 덜 되는 것 같아. 따로 뭐 합의가 필요하지는 않기 때문이지, 컨트랙트 자체적으로만 신경을 쓰면 되니까!
+
+하지만, 반대로 여러명이 똑같은 프로그램을 굳이 불필요하게 반복해서 올리게 될 수도 있어. 생각해보면 굳이 EVM에는 잘 짜둔 은행 프로그램 하나만 올리고 여러명이 그걸 다같이 사용하면 되는데. EVM은 퍼블릭하게 열려있어서 똑같은 프로그램을 여러명이 다 올리고 각자 자기 프로그램을 사용하게 되는 경우지.
+
+그리고, App specific chain이라고 표현한 코스모스는 모듈로서 어떤 프로그램을 관리하기 때문에 하나의 시스템 위에 불필요한 반복적인 프로그램이 올라가지 않고 딱 하나만 올리고 모두가 그걸 사용하게 되어있어. 좀 더 효율적이긴 하지. 다만 새로운 프로그램을 올려야한다면 그냥 배포하면 장땡이 아니라 그 체인에 관계된 여러 이해관계자들의 합의가 필요하게 되.
+
+---
+
+앞서 얘기했던 것들은 IDA에 표현된 자료들을 바탕으로 다시 요약해서 보자!
+
+- From Bitcoint to Ethereum
+
+> Bitcoin's monolithic codebase and limited scripting language made dApp development a tedious and complex process for developers.
+> → Ethereum is a public blockchain with smart contract functionality that enables applications based on self-executing, self-enforcing, and self-verifying account holding objects.
+
+- From Ethereum to Cosmos
+
+dapp이 제너럴 체인에 올라가는 한계점
+
+> Not all dApps have the same throughput requirements, but they all have to make do with the *average* resulting throughput of the platform itself if they are implemented on a general-purpose blockchain. This impacts the **scalability** of dApps.
+
+## How does the interchain solve the scalability issue?
+
+Scalability is a core challenge of blockchain technology. The interchain allows applications to scale to millions of users. This degree of scalability is possible as the interchain addresses two types of scalability:
+
+Horizontal scalability: scaling by adding similar machines to the network. When "scaling out", the netwㄴork can accept more nodes to participate in the state replication, consensus observation, and any activity that queries the state.
+Vertical scalability: scaling by improving the network's components to increase its computational power. When "scaling up", the network can accept more transactions and any
+activity that modifies the state.
+
+(ida week1 인용)
+
+https://github.com/Jeongseup/jeongseupchain/blob/main/app/app.go
+
+https://ida.interchain.io/ida-course/lps/week-0/#
+
+---
+
+그리고 마지막 plus +a
+
+cosmwasm
+ethermint
+polarisEVM
+etc..
