@@ -54,69 +54,71 @@ Cosmos-SDK!? 가 무엇인지 살펴보기 전에 저는 먼저 app specific cha
 
 ---
 
-<!--
-## 2. Why we need to use Cosmos SDK for building a app-chain？
+### Application-specific blockchains benefits
 
-Cosmos SDK is the most advanced framework built today by defining specific block chains of applications. The following are several reasons for considering the use of Cosmos SDK to construct a decentralized application：
+그럼 간단히 offical docs에 나와있는 앱 체인의 장점들에 대해서 알아봅시다.
 
-The default consensus engine in Cosmos SDK isTendermint Core. Tendermint is the most existing （ and the only ） mature BFT consensus engine. It is widely used in the entire industry and is considered to be the golden standard consensus engine for building a pile certification system.
-Cosmos SDK is open source, and its design purpose is to facilitate the construction of block chains from combustible modules. With the development of the open source Cosmos SDK module ecosystem, it will become easier and easier to build a complex de-centralized platform with it.
-Cosmos SDK was inspired by function-based security and was inspired by years of struggle with block chain state machines. This makes Cosmos SDK a very safe environment for building block chains.
-Most importantly, Cosmos SDK has been used to construct many application-specific block chains that have been put into production. Among them, we can quote Cosmos Hub, IRIS Hub, Binance Chain, Terra or Kava）.moreBased on Cosmos SDK construction.
+앱체인에는 크게 4가지 장점(flexibility, performance, security, sovereignty)이 존재합니다.
+
+저는 모든 장점을 자세히 다루지는 않을 것이고 간단히만 훑고 지나갈 것입니다. 당장의 교육과정과 개발과정엔 크게 중요하지 바로 와닿기도 힘들 것 같아서 입니다.
+
+다만, 추후에 좀 더 자세히 앱체인의 특장점에 대해 알고 싶으신 분들은 이 [링크](https://docs.cosmos.network/v0.50/learn/intro/why-app-specific#application-specific-blockchains-benefits)를 통해서 원문을 읽어보시길 바랍니다.
+
+##### Flexibility
+
+cosmos-sdk based가 아닌 다른 앱체인은 다를 수 있지만은! 저희가 앞으로 배울 코스모스 생태계의 앱체인들은 기본적으로 cosmos-sdk로 만들어져있습니다.
+
+아키텍쳐에 대해서는 바로 다음 섹션에서 다룰 것인데,
+
+그걸 다루기 전에 간단히 말씀드리자면 앱 체인은 크게 1. 어플리케이션 영역과 2. 컨센서스 엔진 영역으로 나뉘는데 이 두 파트는 ABCI(Application BlockChain Interface)라고 불리는 인터페이스로 연결되어있습니다.
+
+따라서, 이 인터페이스 표준만 맞춘다면 반드시 cosmos-sdk와 cometbft(전 tendermint)를 써야할 필요는 없습니다. 이를 flexibility라고 표현합니다.
+
+> Application-specific blockchains give maximum flexibility to developers: In Cosmos blockchains, the state-machine is typically connected to the underlying consensus engine via an interface called the ABCI. This interface can be wrapped in any programming language, meaning developers can build their state-machine in the programming language of their choice.
+
+이런 내용들에 대해 더 많이 궁금하시다면, 정말 유명하고 잘하는 paradigm에서 적은 [DAG based의 Narwhal&Bullshark with Cosmos-sdk 아티클](https://www.paradigm.xyz/2022/07/experiment-narwhal-bullshark-cosmos-stack)을 읽어보시는 것도 좋습니다!
+
+##### Performance
+
+퍼포먼스는 흔히들 말하는 TPS(transaction per seconds)를 뜻합니다. 얼마나 많은 트랜잭션들을 적은 시간 내에 효율적으로 처리할 수 있느냐입니다.
+
+앱 체인은 당연히 general purpose체인들인 VM based 체인들과 달리 하나의 어플리케이션을 위해서 컴퓨팅 리소스를 소모하기 때문에 상대적으로 더 퍼포먼스가 좋습니다.
+
+> In order to optimize the performance of the decentralized application, it needs to be constructed as a block chain specific to the application. An application-specific blockchain only operates a single application, so that the application does not compete with others for computation and storage.
+
+##### Security
+
+생략하겠습니다. 궁금하시면 위의 링크를 참고해주세요!
+
+##### Sovereignty
+
+대망의 Sovereignty입니다! 사실상 앱 체인의 가장 큰 장점이자 특징입니다.
+
+일반적으로 general purpose 체인들은 여러 디앱이 하나의 체인 위에 올라가기 떄문에 특정 디앱만을 위한 온체인 레벨의 수정이나 제안을 하기 어려울 수 있습니다.
+
+하지만, 앱 체인은 그 어플리케이션만을 위한 체인으로 디앱 파트인 어플리케이션의 UX를 개선하기 위해서 코어 레벨의 수정도 같이 제안하고 개선해나갈 수 있습니다!
+
+이런 특징을 자기주권성과 같이 부릅니다. 이런 점들을 잘 살린 체인이 Injective랑 Dydx등이 있는데 나중에 같이 알아보면 좋을 것 같습니다.
+
+> One of the major benefits of application-specific blockchains is sovereignty. The fundamental issue here is that the governance of the application and the governance of the network are not aligned. This issue is solved by application-specific blockchains. Because application-specific blockchains specialize to operate a single application, stakeholders of the application have full control over the entire chain. This ensures that the community will not be stuck if a bug is discovered, and that it has the freedom to choose how it is going to evolve.
+
+##### Furthermore
+
+그리고 공식문서에는 언급되지 않은 내용이지만, 간단히 Interchain Security에 대해서도 추가적으로 말씀드릴까 합니다.
+
+위의 내용으로만 본다면 앱 체인은 나름의 방향성과 목적성을 가진 꽤나 괜찮은 블록체인의 방향성일 수 있습니다. 하지만, 위와 같이 여러 주권을 가진 각각의 앱 체인들은 체인마다의 주권을 가지고 있기 때문에 그로 인해 각자의 토큰의 TVL에 따른 시큐리티를 가지게 됩니다.
+
+이로 인해 여러 앱 체인들 중 상대적으로 TVL이 낮은 체인의 경우 보안에 좀 더 취약해질 수 있습니다. PoS 특정상 체인의 시큐리티를 Cash로 지키자는 것이 기본적인 내포된 의미이기 때문이죠.
+
+그래서 Cosmos에는 현재 Interchain Security과 같은 새로운 Soveringn app chain들의 시큐리티를 cosmos 와 같은 큰 TVL의 시큐리티를 상속받아서 운영하는 방식도 논의되고 생겨나고 있습니다. (Stride & Neutron)
 
 ---
 
-## Benefits of block chains specific to applications
+### Cosmos-SDK based app chain architecture
 
-- flexibility
+저희 다룰 코스모스 앱 체인에 대한 아키텍쳐에 대해서 설명할 차례입니다.
 
-Cosmos SDK based Block chains for specific applications provide developers with maximum flexibility：
-
-In the block chain of Cosmos, the state machine is usually calledABCIThe interface is connected to the bottom consensus engine. This interface can be packed in any programming language, which means that developers can use the programming language they choose to build their status machine.
-
-ABCI also allows developers to exchange consensus engines for their specific application block chains. Today, only Tendermint can be put into production, but other consensus engines are expected to appear in the future.
-
--> ABCI 가 그래서 생각보다 재밌는 모델인데 이건 나중에 과제로 생각해보기 abci++
-
-In Cosmos SDK, logic can be automatically triggered at the beginning and end of each block. They are also free to choose the encryption library used in the application, rather than the limitation of the content provided by the bottom environment in the case of the virtual machine block chain.
-
-- performance
-
-In order to optimize the performance of the decentralized application, it needs to be constructed as a block chain specific to the application.
-
-- sovereignty
-
-One of the main benefits of a particular application block chain is sovereignty. The decentralized application is an ecosystem that designs many participants: users, developers, third-party services, etc. When developers construct on many virtual machine block chains where decentralized applications coexist, the applied community is different from the community of the bottom block chain, which replaced the former in the governance process. If there is a bug or a new function is needed, the application stakeholders have very little room to upgrade the code. If the community at the bottom block chain refuses to take action, then nothing will happen.
-
--> tvl이 작은 체인대한, ICS 생겨난 이유도 설명
-
----
-
-what is cosmos-sdk
-![alt text](image-6.png)
-
-이 그림을 반드시 이해야함. 매우 중요..
-
-아! 여기선 굳이 컨센서스 레벨에 대해서는 건들지는 않을 거야. (오히려 공감하고 이해하는데 방해가 된다고 생각하거든)
-
-![alt text](image.png)
-
-```
-                ^  +-------------------------------+  ^
-                |  |                               |  |   Built with Cosmos SDK
-                |  |  State-machine = Application  |  |
-                |  |                               |  v
-                |  +-------------------------------+
-                |  |                               |  ^
-Blockchain node |  |           Consensus           |  |
-                |  |                               |  |
-                |  +-------------------------------+  |   CometBFT
-                |  |                               |  |
-                |  |           Networking          |  |
-                |  |                               |  |
-                v  +-------------------------------+  v
-```
-
+```sh
               +---------------------+
               |                     |
               |     Application     |       -> Cosmos-SDK
@@ -132,10 +134,55 @@ Blockchain node |  |           Consensus           |  |
               |                     |
               |                     |
               +---------------------+
+```
+
+<!-- 아! 여기선 굳이 컨센서스 레벨에 대해서는 건들지는 않을 거야. (오히려 공감하고 이해하는데 방해가 된다고 생각하거든) -->
+
+```sh
+                ^  +-------------------------------+  ^
+                |  |                               |  |   Built with Cosmos SDK
+                |  |  State-machine = Application  |  |
+                |  |                               |  v
+                |  +-------------------------------+
+                |  |                               |  ^
+Blockchain node |  |           Consensus           |  |
+                |  |                               |  |
+                |  +-------------------------------+  |   CometBFT
+                |  |                               |  |
+                |  |           Networking          |  |
+                |  |                               |  |
+                v  +-------------------------------+  v
+```
+
+![02_app_chain_architecture](./assets/02_app_chain_architecture.png)
+
+<!-- ETC...
+The ABCI also allows developers to swap the consensus engine of their application-specific blockchain. Today, only CometBFT is production-ready, but in the future other consensus engines are expected to emerge.
+
+-> ABCI 가 그래서 생각보다 재밌는 모델인데 이건 나중에 과제로 생각해보기 abci++ -->
+
+<!-- ---
+
+### Why we need to use Cosmos SDK for building a app-chain？
+
+Cosmos SDK is the most advanced framework built today by defining specific block chains of applications. The following are several reasons for considering the use of Cosmos SDK to construct a decentralized application：
+
+The default consensus engine in Cosmos SDK isTendermint Core. Tendermint is the most existing （ and the only ） mature BFT consensus engine. It is widely used in the entire industry and is considered to be the golden standard consensus engine for building a pile certification system.
+Cosmos SDK is open source, and its design purpose is to facilitate the construction of block chains from combustible modules. With the development of the open source Cosmos SDK module ecosystem, it will become easier and easier to build a complex de-centralized platform with it.
+Cosmos SDK was inspired by function-based security and was inspired by years of struggle with block chain state machines. This makes Cosmos SDK a very safe environment for building block chains.
+Most importantly, Cosmos SDK has been used to construct many application-specific block chains that have been put into production. Among them, we can quote Cosmos Hub, IRIS Hub, Binance Chain, Terra or Kava）.moreBased on Cosmos SDK construction.
+
+--- -->
+
+<!--
+what is cosmos-sdk
+![alt text](image-6.png)
+
+이 그림을 반드시 이해야함. 매우 중요.. -->
 
 https://youtu.be/1_ottIKPfI4?si=XstKA2YGi2-yYKzF
 
-![alt text](image-7.png)
+<!-- ![alt text](image-7.png)
 
 transaction Lifecycel.. -> 생략하자 ㄱ
 
