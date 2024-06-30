@@ -8,7 +8,7 @@
 	1. `Any` 타입과 인터페이스 Encoding (ADR-019)
     2. Cosmos SDK `Any` Type
     3. 트랜잭션 Encoding (ADR-020)
-2. Codec(Amino, Protobuf)
+3. Codec
 
 ## 0. 정보량이란?
 [IPC](./14_rpc_basic.md#0-ipcinter-process-communication) 기법의 근간에는 섀넌의 정보이론이 있다. 기존 전문가들은 통신의 문제를 물리적으로 풀려고만 하였고 잡음 문제 극복 등 문제의 본질을 파악하지 못해 초보적인 수준에 머물러있었다. 1948년 섀넌은 [통신이란 무엇인지 정의]((https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf))하여 통신의 문제를 혁신적으로 바라보게 하였다.
@@ -140,7 +140,7 @@ func (ak AccountKeeper) SetAccount(ctx sdk.Context, acc types.AccountI) {
 ### 2-2. Cosmos SDK `Any` Type
 일반적으로 `Any` 타입을 사용하려면 `google/protobuf/any.proto`를 가져와야 하는데, [Cosmos SDK는 자체적으로 Any 타입을 구현](https://github.com/cosmos/cosmos-sdk/tree/main/codec/types)하여 사용하고 있다. 
 
-Cosmos SDK에서는 여러 곳에서 `Any` 인코딩을 사용한다:
+Cosmos SDK에서는 여러  곳에서 `Any` 인코딩을 사용한다:
 - 다양한 타입의 공개 키를 인코딩하기 위한 `cryptotypes.PubKey` 인터페이스
 - 트랜잭션에서 다양한 `Msg`를 인코딩하기 위한 `sdk.Msg` 인터페이스
 - `x/auth` 쿼리 응답에서 다양한 유형의 계정을 인코딩하기 위한 `AccountI` 인터페이스(위의 예와 유사)
@@ -198,16 +198,15 @@ type TxEncoder func(tx Tx) ([]byte, error)
 - [auth tx decoder](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/auth/tx/decoder.go)
 
 
-## 3. Codec(Amino, Protobuf)
-기존 Cosmos SDK 모든 모듈은 `Amino Codec`을 사용하여 타입과 인터페이스를 인코딩하였다. 이 `Codec`에는 일반적으로 해당 모듈의 도메인에만 등록된 타입과 인터페이스가 있다. (물론, `x/gov`와 같은 예외도 있다.) 
+## 3. Codec
+Cosmos SDK의 `codec` 패키지에 대표적으로 [`Amino Codec`](https://github.com/cosmos/cosmos-sdk/blob/main/codec/amino_codec.go)과 [`Proto Codec`](https://github.com/cosmos/cosmos-sdk/blob/main/codec/proto_codec.go)이 있다. 
 
-각 모듈은 사용자가 Codec을 제공하고 모든 타입을 등록할 수 있는 `RegisterLegacyAminoCodec` 함수를 통해 앱은 필요한 각 모듈에 대해 이 메서드를 호출한다. 위에서 언급한대로, 현재는 지속적으로 `Protobuf` 인코딩으로 전환하고 있으며 모듈에 대한 `Protobuf` 기반 타입 정의가 없는 경우, `Amino`를 통해 바이트를 구체적인 타입 또는 인터페이스로 인코딩 및 디코딩한다:
+기존 Cosmos SDK 모든 모듈은 `Amino Codec`을 사용하여 타입과 인터페이스를 인코딩하였다. 이 `Codec`에는 일반적으로 해당 모듈의 도메인에만 등록된 타입과 인터페이스가 있다. 각 모듈은 사용자가 `Codec`을 제공하고 모든 타입을 등록할 수 있는 `RegisterLegacyAminoCodec` 함수를 통해 앱은 필요한 각 모듈에 대해 이 메서드를 호출한다. 위에서 언급한대로, 현재는 지속적으로 `Protobuf` 인코딩으로 전환하고 있으며 모듈에 대한 `Protobuf` 기반 타입 정의가 없는 경우, `Amino`를 통해 바이트를 구체적인 타입 또는 인터페이스로 인코딩 및 디코딩한다:
 ```go
 bz := keeper.cdc.MustMarshal(typeOrInterface)  
 keeper.cdc.MustUnmarshal(bz, &typeOrInterface)
 ```
 
-Cosmos SDK에서는 공식 `Protobuf` 구현에 비해 속도와 DX가 개선된 동시에 `Protobuf` 스펙에 충족하는 `Gogoprto` 라이브러리를 사용하고 있다. 기존 `Amino`에서 마이그레이션하는 방법은 `상태 인코딩`과 `클라이언트 인코딩` 두 가지 접근 방식이 필요하다. 
 
 # Resources
 - https://docs.cosmos.network/v0.47/learn/advanced/encoding
