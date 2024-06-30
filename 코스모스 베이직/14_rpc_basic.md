@@ -85,7 +85,7 @@ JSON은 HTTP API와 RPC 통신 모두에 사용되는 일반적인 IDL 형식이
 ### 2-2. Protobuf(Protocol Buffer)
 2016년 구글이 만든 gRPC 프레임워크에서 사용하는 [Protobuf](https://ko.wikipedia.org/wiki/%ED%94%84%EB%A1%9C%ED%86%A0%EC%BD%9C_%EB%B2%84%ED%8D%BC)가 오픈소스로 공개되었다. 이는 데이터의 직렬화 및 역직렬화를 효율적으로 처리하여 대용량 데이터를 다루는 데에 적합하다.
 
-##### Protobuf 인코딩 및 디코딩
+#### Protobuf 인코딩 및 디코딩
 다음과 같이 JSON 형태로 표현된 데이터가 있다고 하자. 
 ```json
 { 
@@ -95,9 +95,8 @@ JSON은 HTTP API와 RPC 통신 모두에 사용되는 일반적인 IDL 형식이
 }
 ```
 
-Protobuf를 사용하려면 간단하고 사람이 읽을 수 있는 스키마 언어를 사용하여 `message`라는 데이터 구조를 정의한다. JSON의 데이터에서 key와 같은 역할을 하는 데이터 속성 값을 field_tag로 대체하여 데이터를 줄이는 게 핵심이다. 섀넌 [정보이론](https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)에 따르면 정보를 단순한게 만들어 정보량을 줄이는 것이다. 
-- 'userName', 'favouriteNumber', 'interests'와 같은 key-value 구조에서 key 역할을 하는 데이터의 속성 값과 type을 조합하여 1바이트 메타정보로 표현할 수 있다. 
-- [Protocol 인코딩 더 자세히 보기](https://medium.com/naver-cloud-platform/nbp-%EA%B8%B0%EC%88%A0-%EA%B2%BD%ED%97%98-%EC%8B%9C%EB%8C%80%EC%9D%98-%ED%9D%90%EB%A6%84-grpc-%EA%B9%8A%EA%B2%8C-%ED%8C%8C%EA%B3%A0%EB%93%A4%EA%B8%B0-2-b01d390a7190)
+Protobuf를 사용하려면 간단하고 사람이 읽을 수 있는 스키마 언어를 사용하여 `message`라는 데이터 구조를 정의한다. JSON의 데이터에서 key와 같은 역할을 하는 데이터 속성 값을 field_tag로 대체하여 데이터를 줄이는 게 핵심이다. 'userName', 'favouriteNumber', 'interests'와 같은 key-value 구조에서 key 역할을 하는 데이터의 속성 값과 type을 조합하여 1바이트 메타정보로 표현할 수 있다. 
+- [Protobuf 인코딩 더 자세히 보기](https://medium.com/naver-cloud-platform/nbp-%EA%B8%B0%EC%88%A0-%EA%B2%BD%ED%97%98-%EC%8B%9C%EB%8C%80%EC%9D%98-%ED%9D%90%EB%A6%84-grpc-%EA%B9%8A%EA%B2%8C-%ED%8C%8C%EA%B3%A0%EB%93%A4%EA%B8%B0-2-b01d390a7190)
 
 ```protobuf
 message Person { 
@@ -162,5 +161,7 @@ message HelloReply {
 
 # Resources
 - https://grpc.io/docs/what-is-grpc/introduction/
+- https://ida.interchain.io/tutorials/1-tech-terms/#protobuf
+- https://ida.interchain.io/academy/2-cosmos-concepts/6-protobuf.html
 - Silberschatz, Avraham, PETER BAER GALVIN, GREG GAGNE, Operating System Concepts 10/E, John Wiley & Sons Inc(2019), 123-155
 
