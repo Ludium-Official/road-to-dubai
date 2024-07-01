@@ -126,7 +126,7 @@ type CommitKVStore interface {
 }
 ```
 
-Commit 기능을 허용하는 `baseapp`의 기본 `-`에 [마운트된 스토어는 `CommitKVStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/rootmulti/store.go#L64)이다. `KVStore`의 키 리스트(`keys`)는 프록시로 선언되고 앱을 실행할 때 `MultiStore`에 마운트된다. 그리고 해당 키 리스트(`keys`)를 각 스토어를 관리하는 모듈 `keeper`에게도 전달한다. 
+Commit 기능을 허용하는 `baseapp`의 기본 `CommitKVStore`에 [마운트된 스토어는 `CommitKVStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/rootmulti/store.go#L64)이다. `KVStore`의 키 리스트(`keys`)는 프록시로 선언되고 앱을 실행할 때 `MultiStore`에 마운트된다. 그리고 해당 키 리스트(`keys`)를 각 스토어를 관리하는 모듈 `keeper`에게도 전달한다. 
 
 ## 2. KVStore Wrapper
 ### CacheKVStore
