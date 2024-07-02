@@ -10,9 +10,17 @@
 
 ## 0. 공개 키 암호화 
 공개 키 암호화 알고리즘은 public key와 private key를 통해 데이터를 암호화하고 복호화한다. 이는 비대칭 키 암호화라고도 알려져 있다. public key는 누구에게나 공유해도 되지만 private key는 누구에게도 알려지면 안된다. 암호 통신 방식은 다음과 같다:
-- 디지털 서명: sender는 sender의 private key로 메시지에 “서명”하고 receiver는 receiver의 public key로 수신자의 신원을 “검증” 한다. 
-- 암호/ 복호 통신: sender는 sender의 public key로 메시지를 암호화하고 receiver는 receiver의 private key로 복호화 한다.
 
+### 디지털 서명
+- 서명: Sender는 자신의 private key로 메시지에 서명한다. 이 서명은 Sender의 public key를 가진 사람 누구나 검증할 수 있다.
+- 검증: Receiver는 Sender의 public key를 사용하여 서명을 검증한다. 이를 통해 메시지가 Sender로부터 왔음을 확인할 수 있다.
+
+### 암호/ 복호 통신
+- 암호화: Sender는 Receiver의 public key로 메시지를 암호화한다. public key로 암호화된 메시지는 Receiver의 private key로만 복호화할 수 있다.
+- 복호화: Receiver는 자신의 private key로 암호화된 메시지를 복호화한다. 이를 통해 메시지를 안전하게 전달받을 수 있다.
+
+
+### 블록체인 사용 사례
 블록체인에서는 공개키 암호화가 다양한 방식으로 사용된다:
 - 트랜잭션 서명 및 검증: 자신의 private key로 트랜잭션에 디지털 서명(sign)을 하고, 네트워크 다른 노드들은 사용자의 public key를 사용하여 서명을 검증(verify)한다. 
 - address 생성: public key를 통해 파생된 address를 생성하여 공개한다. 다른 사용자는 해당 유저의 address를 참고하여 트랜잰션을 전송할 수 있다. 
