@@ -116,7 +116,9 @@ cosmos-sdk based가 아닌 다른 앱체인은 다를 수 있지만은! 저희�
 
 ### Cosmos-SDK based app chain architecture
 
-저희 다룰 코스모스 앱 체인에 대한 아키텍쳐에 대해서 설명할 차례입니다.
+저희 다룰 코스모스 앱 체인에 대한 아키텍쳐에 대해서 설명할 차례이지만 해당 내용은 다음 아티클로 미루도록 하겠습니다. 
+
+이번 시간에 배웠던 위에서 배웠던 그림과 아래그림을 어떻게 매칭해야할지 많이 고민하는 것으로 시간을 마치려고 합니다. 
 
 ```sh
               +---------------------+
@@ -136,8 +138,6 @@ cosmos-sdk based가 아닌 다른 앱체인은 다를 수 있지만은! 저희�
               +---------------------+
 ```
 
-<!-- 아! 여기선 굳이 컨센서스 레벨에 대해서는 건들지는 않을 거야. (오히려 공감하고 이해하는데 방해가 된다고 생각하거든) -->
-
 ```sh
                 ^  +-------------------------------+  ^
                 |  |                               |  |   Built with Cosmos SDK
@@ -154,136 +154,6 @@ Blockchain node |  |           Consensus           |  |
                 v  +-------------------------------+  v
 ```
 
-![02_app_chain_architecture](./assets/02_app_chain_architecture.png)
+<!-- ![02_app_chain_architecture](./assets/02_app_chain_architecture.png) -->
 
-<!-- ETC...
-The ABCI also allows developers to swap the consensus engine of their application-specific blockchain. Today, only CometBFT is production-ready, but in the future other consensus engines are expected to emerge.
-
--> ABCI 가 그래서 생각보다 재밌는 모델인데 이건 나중에 과제로 생각해보기 abci++ -->
-
-<!-- ---
-
-### Why we need to use Cosmos SDK for building a app-chain？
-
-Cosmos SDK is the most advanced framework built today by defining specific block chains of applications. The following are several reasons for considering the use of Cosmos SDK to construct a decentralized application：
-
-The default consensus engine in Cosmos SDK isTendermint Core. Tendermint is the most existing （ and the only ） mature BFT consensus engine. It is widely used in the entire industry and is considered to be the golden standard consensus engine for building a pile certification system.
-Cosmos SDK is open source, and its design purpose is to facilitate the construction of block chains from combustible modules. With the development of the open source Cosmos SDK module ecosystem, it will become easier and easier to build a complex de-centralized platform with it.
-Cosmos SDK was inspired by function-based security and was inspired by years of struggle with block chain state machines. This makes Cosmos SDK a very safe environment for building block chains.
-Most importantly, Cosmos SDK has been used to construct many application-specific block chains that have been put into production. Among them, we can quote Cosmos Hub, IRIS Hub, Binance Chain, Terra or Kava）.moreBased on Cosmos SDK construction.
-
---- -->
-
-<!--
-what is cosmos-sdk
-![alt text](image-6.png)
-
-이 그림을 반드시 이해야함. 매우 중요.. -->
-
-https://youtu.be/1_ottIKPfI4?si=XstKA2YGi2-yYKzF
-
-<!-- ![alt text](image-7.png)
-
-transaction Lifecycel.. -> 생략하자 ㄱ
-
-sdk structure
-![alt text](image-8.png)
-
-## The main components of Cosmos SDK
-
-#### 1. baseapp
-
--> simapp에서 공부
-
-#### 2. Multistore
-
--> 대강하고 넘어가고
-
-Multistore
-
-Cosmos SDK provides a multi-store for persistence. Multi-storage allows developers to declare an arbitrary number of KVStores. These KVStores only accept [] bytes as values, so any custom structure needs to be marshalled using a coder before being stored.
-
-Multi-storage abstract is used to divide the state into different blocks, each of which is managed by its own module.
-
-디비파트임.
-
-#### 3. module.. etc
-
-기본적인 모듈이 있다.. 정도하고 5번에서 대체
-module
-
-The power of Cosmos SDK lies in its modularity. The Cosmos SDK application is built by aggregating a series of interoperable modules. Each module defines a subset of the state and contains its own message/transaction processor, and Cosmos SDK is responsible for routing each message to its own module.
-
-The following is a simplified view of how each application at a complete node handles the transaction when it receives the transaction in a valid block：
-
-```
-                                      +
-                                      |
-                                      |  Transaction relayed from the full-node's
-                                      |  Tendermint engine to the node's application
-                                      |  via DeliverTx
-                                      |
-                                      |
-                +---------------------v--------------------------+
-                |                 APPLICATION                    |
-                |                                                |
-                |     Using baseapp's methods: Decode the Tx,    |
-                |     extract and route the message(s)           |
-                |                                                |
-                +---------------------+--------------------------+
-                                      |
-                                      |
-                                      |
-                                      +---------------------------+
-                                                                  |
-                                                                  |
-                                                                  |  Message routed to
-                                                                  |  the correct module
-                                                                  |  to be processed
-                                                                  |
-                                                                  |
-+----------------+  +---------------+  +----------------+  +------v----------+
-|                |  |               |  |                |  |                 |
-|  AUTH MODULE   |  |  BANK MODULE  |  | STAKING MODULE |  |   GOV MODULE    |
-|                |  |               |  |                |  |                 |
-|                |  |               |  |                |  | Handles message,|
-|                |  |               |  |                |  | Updates state   |
-|                |  |               |  |                |  |                 |
-+----------------+  +---------------+  +----------------+  +------+----------+
-                                                                  |
-                                                                  |
-                                                                  |
-                                                                  |
-                                       +--------------------------+
-                                       |
-                                       | Return result to Tendermint
-                                       | (0=Ok, 1=Err)
-                                       v
-```
-
-Each module can be regarded as a small state machine. The developer needs to define the subset of the state processed by the module, and the self-defined message type （ note to modify the state: the message is ） extracted from the transaction by baseapp. Usually, each module declares its own KVStore in multistore to maintain the state subset it defines. Most developers need to access other third-party modules when constructing their own modules. Given that Cosmos SDK is an open framework, some modules may be malicious, which means that safety principles are needed to reason the interaction between modules. These principles are based on the capabilities of the object. In practice, this means that instead of allowing each module to retain access control lists for other modules, each module achieves a special object called the holder, which can be passed on to other modules to grant a set of pre-defined capabilities.
-
-The module of Cosmos SDK is defined in the x/folder of Cosmos SDK. Some core modules include：
-
-x/auth: Used to manage accounts and signatures.
-x/bank: Used to enable tokens and tokens transfer.
-x/staking + x/slashing: used to build the Proof-Of-Stake block chain.
-In addition to the modules already in x/, anyone can use them in their applications, and Cosmos SDK also allows the establishment of its own self-defined modules.
-
----
-
-# Cosmos SDK
-
----
-
-cosmos-sdk
-
-What is Cosmos SDK？
-
-Cosmos SDKIt is an open source framework used to construct a multi-asset public interest certificate （PoS） block chain, such as Cosmos Hub, and authorization certificate （PoA） block chain. Block chains constructed using Cosmos SDK are often referred to as block chains specific to applications.
-
-The goal of Cosmos SDK is to allow developers to easily create custom block chains from scratch. These block chains can be interacted locally with other block chains. Imagine that Cosmos SDK is a framework similar to npm, which can beTendermintBuild a safe block chain application. The SDK-based block chain is constructed by combustible modules, most of which are open source and can be used by any developer. Anyone can create a module for Cosmos SDK. Integrating the modules that have been constructed is as simple as introducing them into the block chain application. More importantly, Cosmos SDK is a function-based system that allows developers to better explain the security of interaction between modules.
-
-ref: https://www.victorlamp.com/article/7387080850
-
-ref:https://docs.cosmos.network/v0.50/learn/intro/why-app-specifichttps://docs.cosmos.network/v0.50/learn/intro/why-app-specific -->
+ref; https://docs.cosmos.network/v0.50/learn/intro/why-app-specific
