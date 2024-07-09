@@ -12,7 +12,7 @@
     5. Transaction 대신 실행하기 
 
 ## 0. `authz` 모듈 
-[`authz` 모듈](https://github.com/cosmos/cosmos-sdk/tree/v0.45.4/x/authz)은 한 계정을 대신하여 다른 계정에 작업을 수행할 수 있는 권한을 부여하는 기능을 제공한다. 이 디자인은 [ADR 030](https://docs.cosmos.network/maiarchitecture/adr-030-authz-module)에 정의되어 있다. Cosmos SDK 앱 개발자는 `authz` 모듈을 구현하여 사용자에게 다른 사용자에게 특정 권한을 부여할 수 있는 기능을 제공한다. 예를 들어, 사용자가 다른 사용자가 자신을 대신하여 투표하기를 원할 수 있으므로 다른 사용자에게 자신의 계정에 대한 액세스 권한을 부여하는 대신 다른 사용자가 자신을 대신하여 MsgVote를 실행할 수 있는 권한을 부여할 수 있다. 사용 예시는 다음과 같다: 
+[`authz` 모듈](https://github.com/cosmos/cosmos-sdk/tree/v0.45.4/x/authz)은 한 계정을 대신하여 다른 계정에 작업을 수행할 수 있는 권한을 부여하는 기능을 제공한다. 이 디자인은 [ADR 030](https://docs.cosmos.network/main/build/architecture/adr-030-authz-module)에 정의되어 있다. Cosmos SDK 앱 개발자는 `authz` 모듈을 구현하여 사용자에게 다른 사용자에게 특정 권한을 부여할 수 있는 기능을 제공한다. 예를 들어, 사용자가 다른 사용자가 자신을 대신하여 투표하기를 원할 수 있으므로 다른 사용자에게 자신의 계정에 대한 액세스 권한을 부여하는 대신 다른 사용자가 자신을 대신하여 MsgVote를 실행할 수 있는 권한을 부여할 수 있다. 사용 예시는 다음과 같다: 
 - 검증자는 검증자 키를 더 안전하게 유지하기 위해 투표를 위한 별도의 계정을 만들고 싶을 수 있다. 
 - DAO에서 개별 계정에 권한을 부여하고 싶을 때 사용하여 다른 구성원의 서명 없이도 메시지를 실행할 수 있다.
 
@@ -347,6 +347,6 @@ Error: rpc error: code = NotFound desc = rpc error: code = NotFound desc = no au
 
 
 ## Resources
-- https://docs.cosmos.network/main/modules/authz
-- https://docs.cosmos.network/main/architecture/adr-030-authz-module
+- https://docs.cosmos.network/main/build/modules/authz
+- https://docs.cosmos.network/main/build/architecture/adr-030-authz-module
 - https://tutorials.cosmos.network/tutorials/8-understand-sdk-modules/1-authz.html
