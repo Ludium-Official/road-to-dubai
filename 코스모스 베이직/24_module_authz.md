@@ -347,6 +347,6 @@ Error: rpc error: code = NotFound desc = rpc error: code = NotFound desc = no au
 
 
 ## Resources
-- https://docs.cosmos.network/maimodules/authz
-- https://docs.cosmos.network/maiarchitecture/adr-030-authz-module
+- https://docs.cosmos.network/main/modules/authz
+- https://docs.cosmos.network/main/architecture/adr-030-authz-module
 - https://tutorials.cosmos.network/tutorials/8-understand-sdk-modules/1-authz.html
