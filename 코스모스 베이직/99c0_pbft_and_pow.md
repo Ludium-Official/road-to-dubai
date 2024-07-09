@@ -80,15 +80,15 @@ Safety를 확률적으로 확보하면서 51% 공격과 같은 네트워크 공�
 - Casper the Friendly Finality Gadget(Vlad)은 이 두 가지를 혼합한 하이브리드이다.
 
 Chain 기반은 비트코인의 탈중앙화 이념을 이어나간 PoS 개념으로 보면 되고, BFT 기반은 컴퓨터 과학 이론적인 토대에서 나아간 PoS 개념이라고 보면 된다. 그래서 Chain 기반은 Liveness에 더 중점을 두고 있고, BFT 기반은 Safety에 더 중점을 두고 있다. 
-- Chain 기반인 이더리움은 확률적인 Safety 문제로 체인이 포크되는 현상을 가지고 있다. 그러다보니 지분 증명에서만 발생하는 "nothing at stake"라는 문제가 발생하였는데 이를 lock과 slashing와 같은 개념을 도입하여 문제를 해결한다. 
-- BFT 기반인 텐더민트는 결정적인 Safety를 가지고 있어서 체인이 포크되는 현상은 발생하지 않는다. 그러나 이는 악의적인 행동이 발생하게 되면 Liveness에 크게 영향을 주게 된다. 그래서 마찬가지로 lock과 slashing 같은 개념을 통해 문제를 해결한다. 
+- Chain 기반인 이더리움은 확률적인 Safety 문제로 체인이 포크되는 현상을 가지고 있다. 그러다보니 지분 증명에서만 발생하는 "nothing at stake"라는 문제가 발생하였는데 이를 staking period와 slashing와 같은 개념을 도입하여 문제를 해결한다. 
+- BFT 기반인 텐더민트는 결정적인 Safety를 가지고 있어서 체인이 포크되는 현상은 발생하지 않는다. 그러나 이는 악의적인 행동이 발생하게 되면 Liveness에 크게 영향을 주게 된다. 그래서 마찬가지로 staking period와 slashing 같은 개념을 통해 문제를 해결한다. 
 
 우리가 앞으로 알아 볼 내용은 BFT 기반인 텐더민트 합의 알고리즘이다. 아티클은 대표적인 BFT 합의 알고리즘의 기본에 해당하는 PBFT와 연관지어 설명하는 아티클과 새롭게 퍼블릭 블록체인에 맞게 탄생한 PoS 합의 알고리즘에 연관지어 설명하는 아티클로 구성된다: 
 1. [tendermint_with_bft](./99c1_tendermint_with_bft.md)
 2. [tendermint_with_pos](./99c2_tendermint_with_pos.md)
 
 ## Resources
-- CASTRO, M.AND LISKOV, B. 1999b. Practical Byzantine Fault Tolerance. In Proceedings of the Third Symposium on Operating Systems Design and Implementation (OSDI), USENIX, New Orleans
+- CASTRO, M.AND LISKOV, B. Practical Byzantine Fault Tolerance. In Proceedings of the Third Symposium on Operating Systems Design and Implementation (OSDI), USENIX, New Orleans, 1999b.
 - Impossibility of Distributed Consensus with One Faulty Process, Michael J. Fischer, Nancy A. Lynch, Michael S. Paterson 
-- Satoshi Nakamoto, Oct 2008. Bitcoin: A Peer-to-Peer Electronic Cash System
+- Satoshi Nakamoto, Bitcoin: A Peer-to-Peer Electronic Cash System, Oct 2008
 - Ethan Buchman, "Tendermint: Byzantine Fault Tolerance in the Age of Blockchains", Juen. 2016, https://atrium.lib.uoguelph.ca/items/5459099e-67aa-4a23-83ae-d3471d8d8336
