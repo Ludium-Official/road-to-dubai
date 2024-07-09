@@ -12,7 +12,7 @@
     5. Transaction 대신 실행하기 
 
 ## 0. `authz` 모듈 
-[`authz` 모듈](https://github.com/cosmos/cosmos-sdk/tree/v0.45.4/x/authz)은 한 계정을 대신하여 다른 계정에 작업을 수행할 수 있는 권한을 부여하는 기능을 제공한다. 이 디자인은 [ADR 030](https://docs.cosmos.network/main/build/architecture/adr-030-authz-module)에 정의되어 있다. Cosmos SDK 앱 개발자는 `authz` 모듈을 구현하여 사용자에게 다른 사용자에게 특정 권한을 부여할 수 있는 기능을 제공한다. 예를 들어, 사용자가 다른 사용자가 자신을 대신하여 투표하기를 원할 수 있으므로 다른 사용자에게 자신의 계정에 대한 액세스 권한을 부여하는 대신 다른 사용자가 자신을 대신하여 MsgVote를 실행할 수 있는 권한을 부여할 수 있다. 사용 예시는 다음과 같다: 
+[`authz` 모듈](https://github.com/cosmos/cosmos-sdk/tree/v0.45.4/x/authz)은 한 계정을 대신하여 다른 계정에 작업을 수행할 수 있는 권한을 부여하는 기능을 제공한다. 이 디자인은 [ADR 030](https://docs.cosmos.network/maiarchitecture/adr-030-authz-module)에 정의되어 있다. Cosmos SDK 앱 개발자는 `authz` 모듈을 구현하여 사용자에게 다른 사용자에게 특정 권한을 부여할 수 있는 기능을 제공한다. 예를 들어, 사용자가 다른 사용자가 자신을 대신하여 투표하기를 원할 수 있으므로 다른 사용자에게 자신의 계정에 대한 액세스 권한을 부여하는 대신 다른 사용자가 자신을 대신하여 MsgVote를 실행할 수 있는 권한을 부여할 수 있다. 사용 예시는 다음과 같다: 
 - 검증자는 검증자 키를 더 안전하게 유지하기 위해 투표를 위한 별도의 계정을 만들고 싶을 수 있다. 
 - DAO에서 개별 계정에 권한을 부여하고 싶을 때 사용하여 다른 구성원의 서명 없이도 메시지를 실행할 수 있다.
 
@@ -63,12 +63,12 @@ $ cd cosmos-sdk && git checkout v0.45.4
 
 `simd` 바이너리를 빌드한다:
 ```sh
-$ make build
+$ make install
 ```
 
 빌드가 완료되었으면 `simd`가 제대로 동작하는 버전 체크를 통해 확인한다: 
 ```sh
-$ ./build/simd version
+$ simd version
 
 0.45.4 # good!
 ```
@@ -76,24 +76,24 @@ $ ./build/simd version
 #### Chain 설정하기
 chain ID를 설정해준다:
 ```sh
-$ ./build/simd config chain-id authz-demo 
+$ simd config chain-id authz-demo 
 ```
 
 keyring-backend 이름을 설정해준다:
 ```sh
-$ ./build/simd config keyring-backend test 
+$ simd config keyring-backend test 
 ```
 
 #### Key 설정하기 
 granter와 grantee 역할을 맡을 Alice와 Bob을 생성해준다:
 ```sh
-$ ./build/simd keys add alice 
-$ ./build/simd keys add bob 
+$ simd keys add alice 
+$ simd keys add bob 
 ```
 
 두 key가 잘 생성되었는지 확인해보자:
 ```sh
-$ ./build/simd keys list
+$ simd keys list
 ```
 
 조회 결과는 다음 샘플과 같다:
@@ -115,42 +115,42 @@ $ ./build/simd keys list
 
 chain ID를 설정해준다:
 ```sh
-$ ./build/simd config chain-id authz-demo
+$ simd config chain-id authz-demo
 ```
 
 keyring backend를 설정해준다:
 ```sh
-$ ./build/simd config keyring-backend test
+$ simd config keyring-backend test
 ```
 
 노드를 초기화한다:
 ```sh
-$ ./build/simd init test --chain-id authz-demo
+$ simd init test --chain-id authz-demo
 ```
 
 genesis 파일에 Alice와 초기 잔액을 추가한다:
 ```sh
-$ ./build/simd add-genesis-account alice 5000000000stake --keyring-backend test
+$ simd add-genesis-account alice 5000000000stake --keyring-backend test
 ```
 
 genesis 파일에 Bob과 초기 잔액을 추가한다:
 ```sh
-$ ./build/simd add-genesis-account bob 5000000000stake --keyring-backend test
+$ simd add-genesis-account bob 5000000000stake --keyring-backend test
 ```
 
 트랜잭션을 생성하여 초기 validator set에 Alice를 추가한다:
 ```sh
-$ ./build/simd gentx alice 1000000stake --chain-id authz-demo
+$ simd gentx alice 1000000stake --chain-id authz-demo
 ```
 
 validator 트랜잭션을 genesis 파일에 추가한다:
 ```sh
-$ ./build/simd collect-gentxs
+$ simd collect-gentxs
 ```
 
 이제 체인을 시작한다:
 ```sh
-$ ./build/simd start
+$ simd start
 ```
 
 쿼리나 트랜잭션 명령어를 입력할 때 사용자 주소를 복사하여 붙여넣지 않으려면 shell에 사용자 키를 액세스하여 사용할 수 있는 변수로 미리 설정하는 것이 좋다. 
@@ -161,16 +161,16 @@ $ export BOB=$(simd keys show bob --address)
 
 ### 2. Proposal 제출하기 
 거버넌스 제안에 대한 투표 권한을 증명하려면 먼저 거버넌스 제안을 만들어야 한다. 다음 명령은 거버넌스 제안서가 즉시 투표 기간에 들어갈 수 있도록 최소 예치금이 포함된 텍스트 제안서를 만든다.
- > 명령 및 플래그 옵션에 대한 자세한 내용을 보려면 `./build/simd tx gov submit-proposal --help`
+ > 명령 및 플래그 옵션에 대한 자세한 내용을 보려면 `simd tx gov submit-proposal --help`
 
 #### proposal 생성하기
 ```sh
-$ ./build/simd tx gov submit-proposal --title="Test Authorization" --description="Is Bob authorized to vote?" --type="Text" --deposit="10000000stake" --from alice
+$ simd tx gov submit-proposal --title="Test Authorization" --description="Is Bob authorized to vote?" --type="Text" --deposit="10000000stake" --from alice
 ```
 
 ####  proposal 조회하기
 ```sh
-$ ./build/simd query gov proposal 1
+$ simd query gov proposal 1
 ```
 
 조회 결과는 다음 샘플과 같다:
@@ -203,14 +203,14 @@ voting_start_time: "2024-07-02T08:19:50.144423Z"
 
 #### authorization 생성하기
 ```sh
-$ ./build/simd tx authz grant $BOB generic --msg-type /cosmos.gov.v1beta1.MsgVote --from alice
+$ simd tx authz grant $BOB generic --msg-type /cosmos.gov.v1beta1.MsgVote --from alice
 ```
 
 
 #### authorization 조회하기
 다음 쿼리를 통해 Alice가 Bob에게 준 권한 목록을 조회해본다:
 ```sh
-$ ./build/simd query authz grants $ALICE $BOB /cosmos.gov.v1beta1.MsgVote
+$ simd query authz grants $ALICE $BOB /cosmos.gov.v1beta1.MsgVote
 ```
 
 조회 결과는 다음 샘플과 같다:
@@ -231,7 +231,7 @@ Bob이 Alice 대신 메시지를 실행하려면 먼저 Alice가 서명되지 �
 #### unsigned transaction 생성하기
 Alice가 gov 제안에 동의하는 트랜잭션을 생성한다. 
 ```sh
-$ ./build/simd tx gov vote 1 yes --from $ALICE --generate-only > tx.json
+$ simd tx gov vote 1 yes --from $ALICE --generate-only > tx.json
 ```
 
 #### transaction 조회하기
@@ -275,7 +275,7 @@ Bob은 트랜잭션 `execute` 명령을 사용하여 Alice가 미리 작성해�
 
 #### Transaction 서명 및 실행하기 
 ```sh
-$ ./build/simd tx authz exec tx.json --from bob
+$ simd tx authz exec tx.json --from bob
 ```
 ```json
 {
@@ -314,7 +314,7 @@ $ ./build/simd tx authz exec tx.json --from bob
 
 #### vote 조회하기 
 ```sh
-$ ./build/simd query gov vote 1 $ALICE
+$ simd query gov vote 1 $ALICE
 ```
 
 조회 결과는 다음 샘플과 같다:
@@ -332,12 +332,12 @@ Alice(granter)는 Bob(grantee)에게 이미 부여한 권한을 취소할 수 �
 
 #### authorization 취소하기 
 ```sh
-$ ./build/simd tx authz revoke $BOB /cosmos.gov.v1beta1.MsgVote --from alice
+$ simd tx authz revoke $BOB /cosmos.gov.v1beta1.MsgVote --from alice
 ```
 
 #### authorization 조회하기
 ```sh
-$ ./build/simd query authz grants $ALICE $BOB /cosmos.gov.v1beta1.MsgVote
+$ simd query authz grants $ALICE $BOB /cosmos.gov.v1beta1.MsgVote
 ```
 
 다음과 같이 조회할 수 없는 에러가 나와야 정상적으로 authorization이 취소된 것이다:
@@ -347,6 +347,6 @@ Error: rpc error: code = NotFound desc = rpc error: code = NotFound desc = no au
 
 
 ## Resources
-- https://docs.cosmos.network/main/build/modules/authz
-- https://docs.cosmos.network/main/build/architecture/adr-030-authz-module
+- https://docs.cosmos.network/maimodules/authz
+- https://docs.cosmos.network/maiarchitecture/adr-030-authz-module
 - https://tutorials.cosmos.network/tutorials/8-understand-sdk-modules/1-authz.html
