@@ -164,7 +164,6 @@ $ simd start
 $ export ALICE=$(simd keys show alice --address) && export BOB=$(simd keys show bob --address) && export CHARLES=$(simd keys show charles --address)
 ```
 
-
 ### 2. 토큰 전송하기
 #### balance 확인하기
 토큰을 전송하기 전에 우선 각 친구들의 잔액부터 확인해보자:
