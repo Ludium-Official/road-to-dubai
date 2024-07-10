@@ -1,4 +1,4 @@
-![Rust](./image/crap.png)
+![Rust](../image/crap.png)
 
 # Rust: The Language of the Future
 
