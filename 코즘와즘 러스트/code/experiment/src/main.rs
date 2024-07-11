@@ -12,7 +12,6 @@ fn main() {
 
     let name = dict[0].name.clone();
 
-
 }
 
 struct Person{
