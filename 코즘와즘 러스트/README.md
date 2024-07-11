@@ -5,7 +5,7 @@
 ## Rust Flow
 
 0. [Overview](./article/Overview.md)
-1. [Variant and Constant](./article/Variant_and_Constant.md)
+1. [Variable and Constant](./article/Variable_and_Constant.md)
 2. [Data Type](./article/Data_Type.md)
 3. [Function](./article/Function.md)
 4. [Comment](./article/Comment.md)
