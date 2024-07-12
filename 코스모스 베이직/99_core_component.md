@@ -1,4 +1,4 @@
-# 01. Core component
+# 03. App chain core components
 
 Core Components
 Cosmos Hub
