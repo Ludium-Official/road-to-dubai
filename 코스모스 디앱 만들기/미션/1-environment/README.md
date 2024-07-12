@@ -36,6 +36,9 @@ Cosmos에는 [Cosmostation](https://chromewebstore.google.com/detail/cosmostatio
 
 미션에서는 모든 지갑을 잘 활용할 예정이지만 EVM transaction(미션#11)까지 지원하는 Cosmostation 지갑을 활용해 예제를 진행할 예정이다.
 
+지갑을 설치하고 Neutron Testnet을 추가한다.
+
+
 ## 미션을 위한 앱체인 정보
 
 - Neutron
