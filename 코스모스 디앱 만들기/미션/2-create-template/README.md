@@ -66,3 +66,7 @@ cosmos-kit 생성시 template 를 connect-multi-chain으로 설정하여 프로�
 ![m1-4](../../images/m1-2.png)
 
 여러 체인으로 계정이 변경 되는 것을 확인한다.(Cosmos 앱 체인은 체인별로 Address의 Prefix가 존재한다.)
+
+
+
+https://cosmology.zone/products/create-cosmos-app

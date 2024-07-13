@@ -122,3 +122,14 @@ import Wallet from "@/components/wallet";
 ```
 
 위 코드를 통해 지갑 연결이 정상적으로 되는지 확인한다.
+
+
+
+/// 이건 빼는 말
+
+뉴트론은 gov, staking이 없어서...
+다른체인을 지정하고 거기서 코스모스 모듈들을 마무리하고,
+cosmos testnet이 좋아보임.
+
+그리고 cosmwasmsigningclient로 뉴트론을 이용해서 와즘 관련된 내용을 하면 될듯, 번외로는 evm을 하면 좋을 듯
+
