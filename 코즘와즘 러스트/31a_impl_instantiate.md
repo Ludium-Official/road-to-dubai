@@ -10,6 +10,11 @@
    2. `Config` 쿼리 조회 비즈니스 로직 구현하기 
 6. 비즈니스 로직 테스트 
 
+## 사전 지식
+- [21_state](./21_state.md)
+- [23_message_and_event](./23_message_and_event.md)
+- [24_query](./24_query.md)
+
 ## 0. instantiate 함수
 `instantiate` 함수에서는 `config` 값을 초기한다. 여기서 초기화할 값은 `purchase_price`와 `transfer_price`이다.
 
@@ -235,8 +240,5 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 ```
 
 
-이제 instantiate 함수와 query 함수가 정상적으로 동작함을 확인할 수 있다. 다음으로는 nameservice 핵심 로직인 name을 등록하는 기능을 구현할 것이다. 
+이제 instantiate 함수와 query 함수가 정상적으로 동작함을 확인할 수 있다. 다음으로는 nameservice 핵심 로직인 name을 등록하는 기능을 구현헤보자. 
 
-
-## Resources
-- https://github.com/deus-labs/cw-contracts/tree/main/contracts/nameservice

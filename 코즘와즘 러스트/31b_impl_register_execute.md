@@ -10,6 +10,11 @@
    2. `ResolveRecord` 쿼리 조회 비즈니스 로직 구현하기 
 6. 비즈니스 로직 테스트 
 
+## 사전 지식
+- [21_state](./21_state.md)
+- [23_message_and_event](./23_message_and_event.md)
+- [24_query](./24_query.md)
+
 ## 0. register 기능 
 register 함수는 사용자가 입력한 이름을 등록하는 기능을 한다. 이름은 고유해야 하며, 중복된 이름은 등록할 수 없다.
 
@@ -290,7 +295,3 @@ fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
         assert_eq!(Some(owner.to_string()), value.address);
     }
 ```
-
-
-## Resources
-- https://github.com/deus-labs/cw-contracts/tree/main/contracts/nameservice

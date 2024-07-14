@@ -79,4 +79,4 @@ pub enum ExecuteMsg {
 }
 ```
 
-이렇게 간단하게 schema를 생성해보았다. 이는 neutron 테스트넷에 배포할 때 사용할 예정이다. 
+이렇게 간단하게 schema를 생성해보았다. 해당 스키마는 neutron 테스트넷에 배포할 때 사용된다. 

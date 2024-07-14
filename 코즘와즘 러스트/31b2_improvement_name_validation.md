@@ -160,7 +160,3 @@ test tests::test_module::register_available_name_and_query_works_with_fees ... o
 
 test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
-
-
-## Resources
-- https://github.com/deus-labs/cw-contracts/tree/main/contracts/nameservice

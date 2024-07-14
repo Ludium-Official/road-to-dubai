@@ -1,4 +1,7 @@
 # 99. Compatibility
+## Integration
+- https://docs.cosmwasm.com/docs/integration
+
 ## 1.x 버전 호환성 
 v1.0.0-beta에서 모든 향후 1.x 버전으로의 이전 버전과의 호환성과 쉬운 업그레이드 경로 제공하겠다고 함
 - https://medium.com/cosmwasm/its-showtime-3feb474fe183
