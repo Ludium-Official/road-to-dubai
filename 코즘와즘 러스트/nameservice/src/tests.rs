@@ -166,7 +166,7 @@ mod test_module {
         assert_eq!(Some(owner.to_string()), value.address);
     }
 
-    // --- register: 충분한 수수료 조회하기
+    // --- register: 수수료 검증
     #[test]
     fn fails_on_register_insufficient_fees() {
         let mut deps = mock_dependencies();
@@ -208,7 +208,7 @@ mod test_module {
     }
     // --- end
     
-    // --- register: 요청된 name 필터링하기
+    // --- register: name 입력 데이터 검증
     #[test]
     fn register_available_name_fails_with_invalid_name() {
         let mut deps = mock_dependencies();

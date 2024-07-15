@@ -2,7 +2,7 @@
 ## 목차
 0. Neutron
 1. Neutron 테스트넷 faucet 받기 
-2. namespace 컨트랙트 빌드하기
+2. nameservice 컨트랙트 빌드하기
    1. 기본으로 빌드하기
    2. wasm 사이즈 압축해서 빌드하기 
 3. celatone으로 테스트넷에 배포하기
@@ -22,7 +22,7 @@ Mintscan Explorer를 통해 메인넷과 테스트넷에 대한 블록 현황을
 /request <NEUTRON-ADDRESS>
 ```
 
-## 2. namespace 컨트랙트 빌드하기
+## 2. nameservice 컨트랙트 빌드하기
 ### 1. 기본으로 빌드하기
 ```sh
 $ cargo wasm
@@ -32,7 +32,7 @@ $ cargo wasm
 ```sh
 $ ls -lh ./target/wasm32-unknown-unknown/release/
 
-# ... 1.6M  7 12 23:53 namespace.wasm
+# ... 1.6M  7 12 23:53 nameservice.wasm
 ```
 
 ### 2. wasm 사이즈 압축해서 빌드하기 
@@ -49,7 +49,7 @@ RUSTFLAGS='-C link-args=-s' cargo wasm
 ```sh
 $ ls -lh ./target/wasm32-unknown-unknown/release/
 
-# ... 195K  7 13 00:06 namespace.wasm
+# ... 195K  7 13 00:06 nameservice.wasm
 ```
 
 그러면 용량이 195KB로 줄어서 배포 가능한 크기가 되었음을 확인할 수 있다. 이대로 배포해도 되지만 cosmwasm이 제공해주는 2번 방법을 사용해보면 크기를 더 작게 압축할 수 있다. 명령어는 다음과 같다:
@@ -65,7 +65,7 @@ docker run --rm -v "$(pwd)":/code \
 ```sh
 $ ls -lh ./artifacts
 
-# ... 165K  7 13 00:12 namespace.wasm
+# ... 165K  7 13 00:12 nameservice.wasm
 ```
 그러면 더 작은 크기인 165KB가 된 것을 확인할 수 있다. 
 

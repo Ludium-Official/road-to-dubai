@@ -22,7 +22,7 @@
 먼저, `Cargo.toml` 파일에 필요한 라이브러리를 추가한다. `cw-storage-plus`는 컨트랙트 내부 상태를 관리하는 라이브러리이고, `cosmwasm-schema`는 메세지 직렬화 기능과 함께 스키마를 생성해주는 라이브러리이다:
 ```
 [package]
-name = "namespace"
+name = "nameservice"
 version = "0.1.0"
 edition = "2021"
 
@@ -37,7 +37,7 @@ cw-storage-plus = "0.13.4"
 ```
 
 ## 2. `InstantiateMsg` 메세지 생성하기
-`msg.rs`에 `InstantiateMsg`를 생성한다: 
+`src/msg.rs`에 `InstantiateMsg`를 생성한다: 
 ```rust
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::Coin;
@@ -227,6 +227,11 @@ mod test_module {
     }
 }
 ```
+- `proper_init_no_fees`: `InstantiateMsg`에서 가격 정보가 없는 경우를 처리하는지 확인한다. 
+- `proper_init_with_fees`: `InstantiateMsg`에서 가격 정보를 포함하는 경우를 처리하는지 확인한다. 
+- `assert_config_state`: 쿼리 결과를 확인하여 상태가 예상대로 설정되었는지 확인하는 helper 함수이다. 
+- `mock_init_with_price`: `InstantiateMsg`에 가격 정보를 포함하여 instantiate 함수를 호출하는 helper 함수이다. 
+- `mock_init_no_price`: `InstantiateMsg`에 가격 정보 없이 instantiate 함수를 호출하는 helper 함수이다. 
 
 ### 2. 테스트 실행하기 
 `cargo test`로 테스트 코드를 실행해보자. 그러면 다음과 같이 정상적으로 테스트가 실행된 것을 확인할 수 있다:
