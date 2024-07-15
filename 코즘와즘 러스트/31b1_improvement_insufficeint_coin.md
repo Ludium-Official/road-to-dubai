@@ -1,4 +1,4 @@
-# 31b2. register 비즈니스 로직 개선하기: 수수료 검증
+# 31b1. register 비즈니스 로직 개선하기: 수수료 검증
 ## 목차
 0. register 비즈니스 로직 개선하기: 수수료 검증
 1. `InsufficientFundsSend` 커스텀 에러 추가하기
@@ -26,6 +26,7 @@ pub enum ContractError {
     InsufficientFundsSend {},
 }
 ```
+- `ContractError` 열거형에 `InsufficientFundsSend` 에러를 추가하여, 충분한 수수료가 지불되지 않았을 때 발생하는 에러를 정의한다.
 
 ### 2. helper 로직 작성하기 
 사용자가 제출한 코인의 양이 초기화 시 설정된 최소 양에 부합하는지 확인하는 helper 로직을 작성한다. 부합하지 않을 경우 `InsufficientFundsSend` 커스텀 에러를 반환한다:
@@ -56,6 +57,8 @@ pub fn assert_sent_sufficient_coin(
     Ok(())
 }
 ```
+- 이 함수는 사용자가 제출한 코인 목록(sent)과 필요한 최소 코인(required)을 인자로 받아, 필요한 양만큼 코인이 제출되었는지 확인한다.
+- 충분한 코인이 제출되지 않은 경우 `InsufficientFundsSend` 에러를 반환한다.
 
 ### 3. helper 로직 테스트 작성하기 
 helper 로직에 대한 테스트 코드를 `src/helpers.rs` 파일에 작성한다:
@@ -97,6 +100,8 @@ mod test {
     }
 }
 ```
+- 이 테스트들은 `assert_sent_sufficient_coin` 함수가 다양한 상황에서 올바르게 동작하는지 확인한다.
+- 테스트 케이스에는 충분한 수수료가 지불된 경우와 지불되지 않은 경우가 포함된다.
 
 테스트 실행하면 다음과 같이 정상적으로 통과하는 것을 확인할 수 있다:
 ```sh
@@ -133,10 +138,12 @@ pub fn execute_register(
 
     Ok(Response::default())
 }
-
 ```
+- `execute_register` 함수는 `register` 메시지를 처리하는 함수이다.
+- 함수가 실행될 때, `assert_sent_sufficient_coin` 함수를 호출하여 사용자가 제출한 수수료가 충분한지 확인한다. 
+- 충분한 수수료가 지불되지 않은 경우, `InsufficientFundsSend` 에러를 반환한다.
 
-## 5. 테스트 
+## 5. 비즈니스 로직 테스트 
 충분한 수수료가 지불되지 않았을 때의 테스트를 작성한다:
 ```rust
  #[test]
@@ -179,6 +186,8 @@ pub fn execute_register(
         }
     }
 ```
+- `fails_on_register_insufficient_fees`: 사용자가 충분한 수수료를 지불하지 않았을 때, register 함수가 실패하는지 확인한다.
+- `fails_on_register_wrong_fee_denom`: 사용자가 잘못된 코인 종류로 수수료를 지불했을 때, register 함수가 실패하는지 확인한다.
 
 테스트를 실행하여 모든 테스트가 정상적으로 통과하는지 확인한다:
 ```sh
@@ -190,5 +199,12 @@ test tests::test_module::fails_on_register_insufficient_fees ... ok
 
 test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
+
+
+## 마무리
+이제 register 함수의 비즈니스 로직에서 수수료 검증 기능을 성공적으로 추가하고 테스트를 통해 검증했다. 이를 통해 스마트 컨트랙트의 안정성을 높이고, 불필요한 연산을 줄일 수 있게 되었다. 다음으로는 이름 길이와 잘못된 문자열을 사전에 필터링하는 기능을 추가하여 데이터 무결성을 유지하고 시스템의 안정성과 일관성을 보장할 것이다.
+
+
+
 
 

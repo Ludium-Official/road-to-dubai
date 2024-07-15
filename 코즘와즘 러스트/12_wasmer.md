@@ -1,5 +1,5 @@
 # 12. Wasmer 
-> WebAssembly(Wasm)가 런타임 실행되는 환경에 대해 이해하기 위해 Wasm 런타임인 Wasmer에 대해서 다룬다.
+> WebAssembly(Wasm)가 런타임 실행되는 환경에 대해 이해하기 위해 Wasm 런타임 구현체 중 하나인 Wasmer에 대해서 알아보고자 한다. 
 
 ## 목차
 0. Wasm 런타임

@@ -13,7 +13,7 @@
 transfer 기능은 등록된 이름을 다른 사용자에게 전송하는 기능이다. 이 기능은 이름의 소유권을 변경하며, 소유권 이전 시 수수료를 지불해야 한다. 
 
 ## 1. `ExecuteMsg` 메세지에 `Transfer` 타입 추가하기
-msg.rs 파일에 Transfer 타입을 추가한다:
+`src/msg.rs` 파일에 Transfer 타입을 추가한다:
 ```rust
 #[cw_serde]
 pub enum ExecuteMsg {
@@ -22,9 +22,10 @@ pub enum ExecuteMsg {
     Transfer { name: String, to: String },
 }
 ```
+- `ExecuteMsg` 열거형에 `Transfer` 타입을 추가하여, 사용자가 이름을 전송할 수 있는 메시지를 정의한다.
 
 ## 2. 커스텀 에러 추가하기
-`src/error.rs` 파일에 `Unauthorized`와 `NameNotExists` 에러를 추가한다:
+`src/error.rs` 파일에 transfer 기능에 필요한 커스텀 에러를 사전 정의한다:
 ```rust
 #[derive(Error, Debug)]
 pub enum ContractError {
@@ -42,6 +43,7 @@ pub enum ContractError {
     // ------
 }
 ```
+- `ContractError` 열거형에 `Unauthorized`와 `NameNotExists` 에러를 추가하여, 전송 중 발생할 수 있는 오류를 추가해준다.
 
 ## 3. transfer 비즈니스 로직 구현하기
 `src/contract.rs` 파일에 `transfer` 기능을 추가한다:
@@ -88,6 +90,10 @@ pub fn execute_transfer(
     Ok(Response::default())
 }
 ```
+- `execute_transfer` 함수는 이름을 다른 사용자에게 전송하는 기능을 구현한다.
+- 설정된 전송 수수료를 확인하고, 충분한 수수료가 지불되지 않으면 에러를 반환한다.
+- 이름의 현재 소유자가 전송 요청을 한 사용자인지 확인하고, 그렇지 않으면 `Unauthorized` 에러를 반환한다.
+- 이름이 존재하지 않으면 `NameNotExists` 에러를 반환한다.
 
 ## 4. 비즈니스 로직 테스트 
 ### 1. 테스트 작성하기
@@ -206,6 +212,11 @@ fn fails_on_transfer_insufficient_fees() {
     assert_name_owner(deps.as_ref(), "alice", "alice_key");
 }
 ```
+- `transfer_works`: 등록된 이름을 다른 사용자에게 정상적으로 전송하는지 확인하는 테스트이다. `alice_key`가 `alice`라는 이름을 `bob_key`로 전송하고, 소유권이 제대로 변경되었는지 확인한다.
+- `transfer_works_with_fees`: 수수료가 있는 상황에서 등록된 이름을 다른 사용자에게 정상적으로 전송하는지 확인하는 테스트이다. `alice_key`가 `alice`라는 이름을 `bob_key`로 전송하고, 소유권이 제대로 변경되었는지 확인한다.
+- `fails_on_transfer_non_existent`: 등록되지 않은 이름을 전송하려고 할 때, 적절한 에러가 발생하는지 확인하는 테스트이다. `frank_key`가 존재하지 않는 `alice42`라는 이름을 `bob_key`로 전송하려고 할 때 `NameNotExists` 에러가 발생하는지 확인한다.
+- `fails_on_transfer_from_nonowner`: 소유자가 아닌 사용자가 이름을 전송하려고 할 때, 적절한 에러가 발생하는지 확인하는 테스트이다. `frank_key`가 소유하지 않은 `alice`라는 이름을 `bob_key`로 전송하려고 할 때 `Unauthorized` 에러가 발생하는지 확인한다.
+- `fails_on_transfer_insufficient_fees`: 충분한 수수료가 지불되지 않았을 때, 이름을 전송하려고 하면 적절한 에러가 발생하는지 확인하는 테스트이다. `alice_key`가 충분하지 않은 수수료와 함께 alice라는 이름을 `bob_key`로 전송하려고 할 때 `InsufficientFundsSend` 에러가 발생하는지 확인한다.
 
 ### 1. 테스트 실행하기 
 테스트를 실행하면 정상적으로 동작하는 것을 확인할 수 있다:
@@ -219,3 +230,14 @@ test tests::test_module::fails_on_transfer_from_nonowner ... ok
 test tests::test_module::transfer_works ... ok
 test tests::test_module::transfer_works_with_fees ... ok
 ```
+
+## 마무리 
+위와 같이, transfer 기능을 구현하고 테스트를 통해 검증하였다. 이를 통해 이름의 소유권을 다른 사용자에게 안전하게 전송할 수 있게 되었다. 
+
+이제 namservice의 핵심 기능들은 모두 구현하였다. 이제는 schema를 생성하고 이를 네트워크 위에 배포하는 방법에 대해서 진행해 볼 것이다. 
+
+
+
+
+
+

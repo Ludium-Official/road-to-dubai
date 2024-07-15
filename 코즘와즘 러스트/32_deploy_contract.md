@@ -59,7 +59,7 @@ docker run --rm -v "$(pwd)":/code \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
   cosmwasm/optimizer:0.16.0
 ```
-> M1?
+> 이는 사전에 docker 설치를 해야한다. 만약 docker가 설치안되어 있거나 OS 호환이 맞지 않는다면 1번 방식으로도 충분히 배포가 가능하니 이 부분은 생략해도 된다.
 
 빌드가 완료된 후 사이즈 크기를 확인해보자:
 ```sh

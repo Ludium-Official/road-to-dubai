@@ -48,7 +48,7 @@ pub struct InstantiateMsg {
     pub transfer_price: Option<Coin>,
 }
 ```
-여기서 `Coin`은 Cosmwasm의 기본 코인 타입이며, `cw_serde`는 구조체를 쉽게 인코딩 및 디코딩할 수 있도록 도와준다. 그리고 추후 사용할 schema 생성도 쉽게 할 수 있게 해준다.
+- 여기서 `Coin`은 Cosmwasm의 기본 코인 타입이며, [`cw_serde`](./23_message_and_event.md#cw_serde)는 구조체를 쉽게 인코딩 및 디코딩할 수 있도록 도와준다.
 
 
 ## 3. Config 상태 추가하기
@@ -66,7 +66,7 @@ pub struct Config {
 
 pub const CONFIG: Item<Config> = Item::new("config");
 ```
-
+- `CONFIG`는 상태는 [`Item`](./21_state.md#1-item)을 사용하여 구현하였다. 
 
 ## 4. instantiate 비즈니스 로직 구현하기
 `src/contract.rs` 파일에 `instantiate` 함수를 구현한다:
