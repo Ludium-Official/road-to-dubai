@@ -1,0 +1,381 @@
+# 17. Query
+> cosmos-sdk v0.47부터 Tendermint에서 [CometBFT로 마이그레이션](https://github.com/cosmos/cosmos-sdk/issues/14870) 했기 때문에, 아티클은 cosmos-sdk v0.47, cometbft v0.38 기반으로 작성되었다. 
+
+## 목차 
+0. Query
+1. Query Client
+2. Query Service
+3. Query 라이프사이클
+	1. Query 생성하기
+	2. Context 생성
+	3. ABCI Query 실행하기 
+	4. Application Query Handling
+	5. Response
+
+## 0. Query 
+Query는 최종 사용자가 인터페이스를 통해 풀 노드에게 정보 요청하여 통신하는 방법을 말한다. 
+1. Query는 합의 엔진을 통해 풀 노드가 수신하고 ABCI를 통해 앱으로 전달된다. 
+2. 그런 다음 `BaseApp`의 `QueryRouter`를 통해 적절한 모듈로 라우팅되어 모듈의 `QueryService`로 처리할 수 있도록 한다.
+
+### gRPC Query
+Query는 Protobuf 서비스를 사용하여 정의한다.`Query Service`는 `query.proto`에서 모듈별로 만들어야 한다. 이 서비스는 rpc로 시작하는 엔드포인트를 나열한다. 다음은 [`auth` 모듈의 `Query Service` 예시](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/proto/cosmos/auth/v1beta1/query.proto#L14-L89)이다:
+```protobuf
+service Query {
+  rpc Accounts(QueryAccountsRequest) returns (QueryAccountsResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get               = "/cosmos/auth/v1beta1/accounts";
+  }
+
+  rpc Account(QueryAccountRequest) returns (QueryAccountResponse) {
+    option (cosmos.query.v1.module_query_safe) = true;
+    option (google.api.http).get               = "/cosmos/auth/v1beta1/accounts/{address}";
+  }
+
+  // ...
+}
+```
+
+`proto.Message`로 생성된 Response 타입은 기본 `String()` 메서드로 구현되며, `RegisterQueryServer` 메서드도 생성된다. 이를 [`AppModule` 인터페이스](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/types/module/module.go#L169-L173)의 [`RegisterServices`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/types/module/module.go#L181-L185) 메서드에서 사용하여 모듈의 `QueryServer`와 `MsgServer`를 등록한다. 다음은 [`auth` 모듈 코드 예시](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/auth/module.go#L130-L153)이다: 
+```go
+func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.accountKeeper))
+	types.RegisterQueryServer(cfg.QueryServer(), am.accountKeeper)
+
+	// ...
+}
+```
+
+### Store Query
+[Store](./13_store_and_keepers.md) Query는 Store Key로 직접 쿼리한다. `clientCtx.QueryABCI(req abci.RequestQuery)`를 사용하여 머클 증명이 포함된 전체 `abci.ResponseQuery`를 반환한다. 다음은 이를 간략하게 표현한 [코드 예시](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/baseapp/abci.go#L903-L924)이다.
+```go
+func handleQueryStore(app *BaseApp, path []string, req abci.RequestQuery) abci.ResponseQuery {
+	queryable, ok := app.cms.(sdk.Queryable)
+
+	resp := queryable.Query(req)
+
+	return resp
+}
+```
+
+## 1. Query Client
+`QueryClient`는 쿼리 요청을 gRPC 서버로 전달하여 처리하고, 응답을 반환하는 역할을 한다. 각 모듈에 대한 `QueryClient`는 해당 모듈의 Protobuf 서비스 정의에서 생성되며, 이는 gRPC를 통해 쿼리를 수행하는 데 사용된다. 예를 들어, [`staking` 모듈의 `QueryClient`](https://github.com/cosmos/cosmos-sdk/blob/main/api/cosmos/staking/v1beta1/query_grpc.pb.go#L38-L95)는 다음과 같이 정의된다:
+```go
+type QueryClient interface {
+	Validators(ctx context.Context, in *QueryValidatorsRequest, opts ...grpc.CallOption) (*QueryValidatorsResponse, error)
+	
+	Validator(ctx context.Context, in *QueryValidatorRequest, opts ...grpc.CallOption) (*QueryValidatorResponse, error)
+	
+	ValidatorDelegations(ctx context.Context, in *QueryValidatorDelegationsRequest, opts ...grpc.CallOption) (*QueryValidatorDelegationsResponse, error)
+	
+	ValidatorUnbondingDelegations(ctx context.Context, in *QueryValidatorUnbondingDelegationsRequest, opts ...grpc.CallOption) (*QueryValidatorUnbondingDelegationsResponse, error)
+	
+	Delegation(ctx context.Context, in *QueryDelegationRequest, opts ...grpc.CallOption) (*QueryDelegationResponse, error)
+
+	// ...
+}
+```
+
+이 인터페이스는 [NewQueryClient 함수](https://github.com/cosmos/cosmos-sdk/blob/main/api/cosmos/staking/v1beta1/query_grpc.pb.go#L101-L103)에 의해 구현되며, 이는 `clientCtx`를 받아서 `QueryClient`를 생성한다.
+```go
+func NewQueryClient(clientCtx client.Context) QueryClient {
+    return &queryClient{cc: clientCtx.GRPCClient}
+}
+```
+
+## 2. Query Service
+Protobuf `Query` 서비스를 정의할 때, 모든 서비스 메서드가 포함된 각 모듈에 대해 `QueryServer` 인터페이스가 생성된다:
+```go
+type QueryServer interface {
+    QueryBalance(context.Context, *QueryBalanceParams) (*types.Coin, error)
+    QueryAllBalances(context.Context, *QueryAllBalancesParams) (*QueryAllBalancesResponse, error)
+}
+```
+> 이러한 사용자 정의 쿼리 메서드는 모듈의 keeper가 구현해야 하며, 일반적으로 `./keeper/grpc_query.go`에서 구현해야 한다
+
+### 상태 머신에서 Query 호출하기
+Cosmos SDK v0.47에는 상태 머신 내에서 호출해도 safe 쿼리를 명시하는 데 사용되는 새로운 `cosmos.query.v1.module_query_safe` Protobuf 어노테이션이 도입되었다:
+- keeper의 쿼리 함수는 다른 모듈의 keeper에서 호출할 수 있다.
+- [ADR-033](https://docs.cosmos.network/main/build/architecture/adr-033-protobuf-inter-module-comm) 모듈 간 쿼리를 호출한다.
+- cosmwasm 컨트랙트는 이러한 쿼리와 직접 상호작용할 수도 있다.
+
+모듈 개발자가 자신의 쿼리에 module_query_safe 어노테이션을 사용하려는 경우 쿼리가 결정론적이어야 하며 조정된 업그레이드 없이는 상태 머신을 깨지 않아야 한다. 또한, 가스를 추적하여 잠재적으로 계산량이 많은 쿼리에서 가스가 설명되지 않는 공격 벡터를 피해야 한다. 그래서 module_query_safe 어노테이션이 true로 설정되어 있으면 다음과 같다고 볼 수 있다:
+- 쿼리는 결정론적이다. 블록 높이가 주어지면 여러 번 호출해도 동일한 응답을 반환하며, SDK 패치 버전 간에 상태 머신을 깨뜨리는 변경을 일으키지 않는다.
+- 가스 소비량은 호출과 패치 버전이 달라도 항상 일정하다.
+
+
+## 3. Query 라이프사이클 
+### 3-1. Query 생성하기 
+사용자는 Query를 사용하여 풀 노드에 저장된 앱 상태 정보를 요청한다. 해당 인터페이스는 대표적으로 CLI, gRPC 및 REST를 통해 이뤄진다. 이 방법들은 이전에 [10_transaction_and_mempool의 트랜잭션 브로드캐스팅](./10_transaction_and_mempool.md#트랜잭션-브로드캐스팅하기) 파트에서 다룬 바 있다. Query는 합의가 필요한 상태 전환을 직접적으로 다루는 트랜잭션과는 달리, 풀 노드 자체에서만 처리 가능한 요청을 다룬다. 
+
+#### CLI
+Cosmos SDK의 기본 인터페이스는 CLI 인터페이스이다. 사용자는 풀 노드에 연결하여 자신의 컴퓨터에서 직접 CLI를 실행하며, CLI는 풀 노드와 직접 상호 작용한다. 터미널에서 `MyQuery`를 만들려면 사용자는 다음 명령을 입력한다:
+```shell
+simd query [moduleName] [command] <arguments> --flag <flagArg>
+```
+
+다음은 `staking` 모듈의 [`delegations 쿼리 명령`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/staking/client/cli/query.go#L298-L351)이다:
+```shell
+simd query staking delegations <delegatorAddress>
+```
+
+#### gRPC
+사용자가 쿼리를 수행할 수 있는 또 다른 인터페이스는 [gRPC 서버](./15_grpc_and_rest_and_cometbft_rpc.md#1-grpc-서버)에게 요청하는 것이다. Endpoint는 언어에 구애받지 않는 Protobuf로 작성하여 관련 도구를 통해 쉽게 gRPC 클라이언트를 빌드할 수 있다.
+```shell
+grpcurl \
+    -plaintext                                           # We want results in plain test
+    -import-path ./proto \                               # Import these .proto files
+    -proto ./proto/cosmos/staking/v1beta1/query.proto \  # Look into this .proto file for the Query protobuf service
+    -d '{"address":"$MY_DELEGATOR"}' \                   # Query arguments
+    localhost:9090 \                                     # gRPC server endpoint
+    cosmos.staking.v1beta1.Query/Delegations             # Fully-qualified service method name
+```
+
+#### REST
+사용자가 쿼리를 수행할 수 있는 또 다른 인터페이스는 grpc-Gateway로 생성된 [REST 서버](./15_grpc_and_rest_and_cometbft_rpc.md#2-rest-서버)에 대한 HTTP 요청이다. `MyQuery`에 대한 HTTP 요청의 예는 다음과 같다:
+```shell
+GET http://localhost:1317/cosmos/staking/v1beta1/delegators/{delegatorAddr}/delegations
+```
+
+
+### 3-2. Context 생성
+다음 단계는 `client.Context`를 생성하는 것이다. 이는 CLI, gRPC, 또는 REST 서버 내에서 이루어지며, [`client.Context`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/client/context.go#L24-L64)는 쿼리와 관련된 모든 데이터를 저장하고 관리하는 핵심 역할을 한다.
+```go 
+type Context struct {
+	FromAddress       sdk.AccAddress
+	Client            TendermintRPC
+	GRPCClient        *grpc.ClientConn
+	ChainID           string
+	Codec             codec.Codec
+	InterfaceRegistry codectypes.InterfaceRegistry
+	Input             io.Reader
+	Keyring           keyring.Keyring
+	KeyringOptions    []keyring.Option
+	Output            io.Writer
+	OutputFormat      string
+	Height            int64
+	HomeDir           string
+	KeyringDir        string
+	From              string
+	BroadcastMode     string
+	FromName          string
+	SignModeStr       string
+	UseLedger         bool
+	Simulate          bool
+	GenerateOnly      bool
+	Offline           bool
+	SkipConfirm       bool
+	TxConfig          TxConfig
+	AccountRetriever  AccountRetriever
+	NodeURI           string
+	FeePayer          sdk.AccAddress
+	FeeGranter        sdk.AccAddress
+	Viper             *viper.Viper
+	LedgerHasProtobuf bool
+	PreprocessTxHook  PreprocessTxFn
+
+	// IsAux is true when the signer is an auxiliary signer (e.g. the tipper).
+	IsAux bool
+
+	// TODO: Deprecated (remove).
+	LegacyAmino *codec.LegacyAmino
+}
+```
+- `Codec`: 애플리케이션에서 사용하는 인코더/디코더로, `CometBFTRPC` 요청을 하기 전에 매개변수와 쿼리를 마샬링하고 반환된 응답을 JSON 객체로 언마샬링하는 데 사용됩니다. CLI에서 사용하는 기본 코덱은 `Protobuf`이다.
+- `Account Decoder`: `auth` 모듈의 account 디코더로, `[]byte`를 account로 변환한다.
+- `RPC Client`: 요청이 릴레이되는 `CometBFTRPC` 클라이언트 또는 노드이다.
+- `Keyring`: Key Manager는 트랜잭션에 서명하고 키로 다른 작업을 처리하는 데 사용된다.
+- `Output Writer`: 응답을 출력하는 데 사용되는 `Writer`이다. 
+- `Configurations`: 이 명령에 대해 사용자가 구성한 플래그는 쿼리할 블록체인의 높이를 지정하는 `--height`와 JSON 응답에 들여쓰기를 추가하도록 지정하는 `--indent`를 포함한다. 
+
+Context는 [명령을 실행할 때 가장 먼저 생성](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/staking/client/cli/query.go#L317)되며, 요청에 필요한 모든 데이터를 관리한다:
+```go
+clientCtx, err := client.GetClientQueryContext(cmd)
+```
+
+#### Context의 역할 
+`client.Context`의 주요 역할은 최종 사용자와 상호작용하는 동안 사용되는 데이터를 저장하고 이 데이터와 상호작용하는 메서드를 제공하는 것으로, Query 라이프사이클의 시작부터 끝까지 함께한다. 
+1. 인코딩: 쿼리를 풀 노드로 전달하기 전에 쿼리를 `[]byte` 형식으로 인코딩해야 한다. 
+2. 쿼리 실행: 풀 노드 자체는 사용자 CLI가 연결된 노드를 알고 있는 `client.Context`를 사용하여 검색된다. 쿼리는 이 풀 노드로 전달되어 처리된다. 
+3. 출력 작성: 마지막으로, 응답이 반환될 때 출력을 기록하는 `Output Writer`를 `client.Context`에 작성한다. 
+
+#### Encoding
+context를 생성하고나면 명령 또는 요청을 구문 분석하고 인수를 추출한 다음 모든 것을 인코딩해준다. 합의 엔진은 `[]byte` 타입의 데이터만 취급하기 때문이다.
+
+주소의 delegation을 쿼리하는 경우, `MyQuery`에 주소 `delegatorAddress`가 유일한 인자로 포함된다. `client.Context`의 `Codec`은 합의 엔진에 전달하기 위해 [주소를 마샬링](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/staking/client/cli/query.go#L323-L325)하는 데 사용된다:
+```go
+delAddr, err := sdk.AccAddressFromBech32(args[0])
+if err != nil {
+	return err
+}
+```
+
+#### gRPC Query Client 생성 
+Cosmos SDK는 Protbuf 서비스에서 생성된 코드를 활용하여 쿼리를 생성한다. `staking` 모듈의 `MyQuery` 서비스는 CLI가 쿼리를 생성하는 데 사용하는 [Query Client를 생성](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/staking/client/cli/query.go#L321)한다:
+```go
+queryClient := types.NewQueryClient(clientCtx)
+```
+
+이를 [전체적인 코드](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/staking/client/cli/query.go#L317-L343)로 보면 다음과 같다:
+```go
+clientCtx, err := client.GetClientQueryContext(cmd)
+if err != nil {
+	return err
+}
+queryClient := types.NewQueryClient(clientCtx)
+
+delAddr, err := sdk.AccAddressFromBech32(args[0])
+if err != nil {
+	return err
+}
+
+pageReq, err := client.ReadPageRequest(cmd.Flags())
+if err != nil {
+	return err
+}
+
+params := &types.QueryDelegatorDelegationsRequest{
+	DelegatorAddr: delAddr.String(),
+	Pagination:    pageReq,
+}
+
+res, err := queryClient.DelegatorDelegations(cmd.Context(), params)
+if err != nil {
+	return err
+}
+
+return clientCtx.PrintProto(res)
+```
+
+### 3-3. ABCI Query 실행하기
+다음 단계에서 실제로 ABCI 쿼리를 실행하여 `client.Context`를 사용하여 풀 노드에 쿼리를 보내고, 그 응답을 수신한다. 인코딩된 쿼리 매개변수는 이전 단계에서 생성한 `queryClient`의  [`Invoke` 함수](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/client/grpc_query.go#L33-L124)에 전달된다. 이 함수는 서비스 메서드 이름을 경로로, 인수를 파라미터로 받는다:
+```go
+// /x/staking/client/cli/query.go
+res, err := queryClient.DelegatorDelegations(cmd.Context(), params)
+if err != nil {
+	return err
+}
+```
+```go
+// /api/cosmos/staking/v1beta1/query_grpc.pb.go
+func (c *queryClient) DelegatorDelegations(ctx context.Context, in *QueryDelegatorDelegationsRequest, opts ...grpc.CallOption) (*QueryDelegatorDelegationsResponse, error) {
+	out := new(QueryDelegatorDelegationsResponse)
+	err := c.cc.Invoke(ctx, "/cosmos.staking.v1beta1.Query/DelegatorDelegations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+```
+이는 요청을 직렬화하여 서비스 정의(query.proto)에 지정된 gRPC 서버 엔드포인트로 보낸다. 이는 데이터를 직렬화하고, `ctx.QueryABCI 함수`를 호출하여 ABCI 쿼리를 수행하고, 결과를 reply에 저장한다. 
+
+#### queryABCI 함수 
+여기서 [`QueryABCI 함수`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/client/query.go#L79-L113)는 ABCI 쿼리를 수행하여 상태를 조회하는 역할을 한다. 
+```go
+func (ctx Context) queryABCI(req abci.RequestQuery) (abci.ResponseQuery, error) {
+	node, err := ctx.GetNode()
+	if err != nil {
+		return abci.ResponseQuery{}, err
+	}
+
+	var queryHeight int64
+	if req.Height != 0 {
+		queryHeight = req.Height
+	} else {
+		// fallback on the context height
+		queryHeight = ctx.Height
+	}
+
+	opts := rpcclient.ABCIQueryOptions{
+		Height: queryHeight,
+		Prove:  req.Prove,
+	}
+
+	result, err := node.ABCIQueryWithOptions(context.Background(), req.Path, req.Data, opts)
+	if err != nil {
+		return abci.ResponseQuery{}, err
+	}
+
+	if !result.Response.IsOK() {
+		return abci.ResponseQuery{}, sdkErrorToGRPCError(result.Response)
+	}
+
+	// data from trusted node or subspace query doesn't need verification
+	if !opts.Prove || !isQueryStoreWithProof(req.Path) {
+		return result.Response, nil
+	}
+
+	return result.Response, nil
+}
+```
+1. 노드 검색: `ctx.GetNode()`를 호출하여 노드를 검색하고, 실패 시 에러를 반환한다. 
+2. 쿼리 높이 설정: `req.Height`가 설정되어 있으면 이를 사용하고, 그렇지 않으면 `ctx.Height`를 사용한다.
+3. ABCI 쿼리 옵션 생성: `ABCIQueryOptions`를 생성하고, 쿼리 높이와 증명(prove) 옵션을 설정한다. 
+4. ABCI 쿼리 수행: `node.ABCIQueryWithOptions()`를 호출하여 ABCI 쿼리를 수행한다. 
+5. 결과 검증 및 반환: 증명이 필요하지 않거나, 쿼리가 Store를 대상으로 하지 않으면 결과를 반환한다. 
+
+### 3-4. Application Query Handling
+풀 노드에서 [ABCI Query](https://docs.cosmos.network/main/learn/advanced/baseapp#query)가 실행되면 애플리케이션으로 전달된다. `baseapp`에서 [`ABCI Query()`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/baseapp/abci.go#L507-L555)함수가 실행되어 gRPC [`QueryRouter`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/baseapp/grpcrouter.go#L17-L22)를 통해 적절한 모듈로 요청을 라우팅한다. 
+```go
+// handle gRPC routes first rather than calling splitPath because '/' characters
+// are used as part of gRPC paths
+if grpcHandler := app.grpcQueryRouter.Route(req.Path); grpcHandler != nil {
+	return app.handleQueryGRPC(grpcHandler, req)
+}
+```
+
+각 모듈 내의 gRPC Handler는 이 쿼리를 인식하고 애플리케이션의 Store와 직접 상호 작용하여 관련 값을 가져온 다음 응답으로 반환한다. 이를 처리하는 함수는 각 모듈의 [쿼리 서비스](./17_query.md#1-query-service)에 대부분 구현되어 있다. `MyQuery`에는 `staking` 모듈의 [`DelegatorDelegations()`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/staking/keeper/grpc_query.go#L248-L285) 쿼리를 실행하여 적절한 값을 검색하여 응답을 반환한다. 
+```go
+func (k Querier) DelegatorDelegations(c context.Context, req *types.QueryDelegatorDelegationsRequest) (*types.QueryDelegatorDelegationsResponse, error) {
+	// ...
+	
+	store := ctx.KVStore(k.storeKey)
+	
+	// ...
+
+	return &types.QueryDelegatorDelegationsResponse{DelegationResponses: delegationResps, Pagination: pageRes}, nil
+}
+```
+
+### 3-5. Response
+`Query()`는 ABCI 함수이므로, `baseapp`은 응답을 `abci.ResponseQuery` 타입으로 반환한다. 
+
+#### Client Response
+`client.Context`는 결과를 받아서 지정된 출력 형식(JSON, YAML, 텍스트 등)에 따라 포맷팅하고, [printOutput 메서드](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/client/context.go#L330-L358)를 실행하여 출력한다.
+```go
+func (ctx Context) printOutput(out []byte) error {
+	var err error
+	if ctx.OutputFormat == "text" {
+		out, err = yaml.JSONToYAML(out)
+		if err != nil {
+			return err
+		}
+	}
+
+	writer := ctx.Output
+	if writer == nil {
+		writer = os.Stdout
+	}
+
+	_, err = writer.Write(out)
+	if err != nil {
+		return err
+	}
+
+	if ctx.OutputFormat != "text" {
+		// append new-line for formats besides YAML
+		_, err = writer.Write([]byte("\n"))
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+```
+
+# Resources
+- https://docs.cosmos.network/v0.47/learn/beginner/query-lifecycle
+- https://docs.cosmos.network/v0.47/learn/advanced/cli
+- https://docs.cosmos.network/main/build/building-modules/query-services#calling-queries-from-the-state-machine
+- https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/docs/docs/building-modules/02-messages-and-queries.md#queries
+- https://github.com/cosmos/cosmos-sdk/blob/main/docs/learn/beginner/02-query-lifecycle.md

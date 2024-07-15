@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Rust
 
 안녕하세요 Rust 과정에 오신걸 환영합니다! 이번 기회에 블록체인 기술 스택 중 가장 큰 비중을 차지하는 언어인 Rust에 대해서 자세히 알아보도록 합시다.
@@ -47,3 +48,26 @@
 | Rust의 피처를 활용한 많은 것 | 하나씩 쳐가며 Rust의 피처들을 이해해본다. |
 
 - Rust 예제 및 퀴즈
+=======
+# Rust & Cosmwasm 모듈 
+해당 모듈은 Rust와 Cosmwasm에 대해 다루는 교육 자료이다. 
+
+## 0. Rust 
+
+
+## 1. Wasm 기초 
+0. wasm 소개
+1. wasi
+2. wasmer
+
+## 2. Cosmwasm 기초 
+0. cosmwasm 소개
+1. state
+2. entry point
+3. message and event
+3. query
+
+## 3. Cosmwasm 실습 
+0. nameservice 컨트랙트 만들기 
+1. neutron 테스트넷에 배포하여 직접 tx & query 해보기
+>>>>>>> upstream/main
