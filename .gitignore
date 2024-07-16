@@ -1,3 +1,12 @@
 MEMO
 backups
 notyet
+
+# vscode
+.vscode 
+
+# rust
+**/target
+
+# MacOS
+**/.DS_Store
