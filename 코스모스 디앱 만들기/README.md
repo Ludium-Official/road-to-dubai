@@ -1,1 +1,1 @@
-# Cosmos-SDK dApp
+# Cosmos-SDK 디앱 만들기
