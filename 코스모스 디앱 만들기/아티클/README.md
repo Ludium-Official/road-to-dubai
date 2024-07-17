@@ -4,7 +4,7 @@
 
 - Cosmos-SDK는 쉽게 PoS(Proof-of-Stake) 기반의 앱체인을 제작할 수 있는 툴킷으로, Cosmos-SDK를 사용해 제작된 체인들을 앱체인이라고 주로 말한다.
 
-- Consensus 레이어는 Tendermint 또는 CombetBFT를 활용하고 개발자는 Application레이어만 신경쓰도록 설계된 SDK 이다.
+- Cosmos-SDK는 Consensus 레이어는 Tendermint 또는 CombetBFT를 활용하고 개발자는 Application레이어만 신경쓰도록 설계된 SDK 이다.
 
 ```
                 ^  +-------------------------------+  ^
