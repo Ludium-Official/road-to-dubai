@@ -10,7 +10,7 @@
 
 <!-- TODO: go mod init부터 해야하나? -->
 
-### 1. clone ludiumapp chain
+### 1. Clone ludiumapp chain
 
 먼저 제가 준비한 ludiumapp-chain repo를 클론합니다. (레포 위치는 추후 제 개인 깃허브 계정이 아닌 루디움쪽 public repo로 변경하려고 합니다) 이후에 클론을 하셨다면 간단히 바뀐 구조에 대해서만 설명하도록 하겠습니다.
 
@@ -90,7 +90,7 @@ git clone https://github.com/Jeongseup/ludiumapp-chain
 
 이 글을 다 읽으셨으면 클론 및 개인 레포를 하나 만들어서 카피코딩을 하는 것으로 마무리합니다. 참고로 이와 비슷한 형태로 simapp 구조를 정리해둔 이 [chain-minimal repository](https://github.com/cosmosregistry/chain-minimal)도 도움이 될 수 있어서 올려드립니다.
 
-### 2. start ludiumapp chain
+### 2. Start ludiumapp chain
 
 클론을 하셨고 먼저 실행을 시켜보고 싶으시다면, README를 따라서 진행하시면 됩니다.
 
@@ -109,7 +109,86 @@ make install
 
 <!-- https://github.com/cosmosregistry/chain-minimal -->
 
-<!-- TODO: ### 4. ignite cli 엿보기 -->
+### 3. Rebuild with ignite cli
+
+마지막으로 다뤄볼 내용은 ignite라는 CLI tool로 이번 시간에 만들어본 ludiumapp을 다시 한번 만들어보는 것입니다. ignite는 cosmos-sdk 앱체인 개발자들을 위해서 보일러 플레이트가 되는 부분들을 scaffolding 형식으로 만들어주는 툴입니다. ignite를 이용한다면 보다 용이하게 앱체인을 개발할 수 있습니다. 다만, 처음부터 바로 해당 툴을 이용하지 않은 이유는 한꺼번에 너무 많은 것들이 만들어지기 때문에 각각의 컴포넌트에 대한 이해가 없는 상태에서 해당 툴은 오히려 더 복잡하게만 만들 것 같아서 사용하지 않았습니다. 그렇지만, 간단히 이런 툴이 존재하고 이런 툴을 이용한다면 위에서 작업한 내용들을 어떻게 재현가능한지 정도만 다룰 예정입니다. ignite에 대한 좀 더 자세한 내용은 [official docs](https://docs.ignite.com/)를 참고하시면 좋을 것 같습니다.
+
+#### install ignite cli
+
+저희가 설치한 버젼은 v0.26.1 입니다. 해당 버젼을 사용한 이유는 그나마 cosmos-sdk 버젼이 v0.45.4와 유사한 v0.46.x를 사용하기 때문입니다.
+
+```bash
+# install ignite v0.26.1
+curl https://get.ignite.com/cli@v0.26.1\! | bash
+
+# check ignite version
+ignite version
+```
+
+#### create a new ludiumapp2 with ignite
+
+그리고 간단히 아래의 커맨드를 입력해주면 아래 사진과 같이 보일러 플레이트와 같은 기본 앱체인 구성을 제너레이팅 해줍니다. 저희는 이제 간단한 앱체인의 아키텍쳐 구성을 이해할 수 있으니 tree로 비슷한 지 체크해봅시다.
+
+```bash
+# create a new app chain
+ignite scaffold chain ludiumapp2 --no-module
+
+# >>> result
+# % cd ludiumapp2
+# % ignite chain serve
+```
+
+![07_ignite_result](./assets/07_ignite_result.png)
+
+```sh
+.
+├── app
+│   ├── app.go
+│   ├── encoding.go
+│   ├── export.go
+│   ├── genesis.go
+│   ├── params
+│   │   └── encoding.go
+│   └── simulation_test.go
+├── cmd
+│   └── ludiumapp2d
+│   ├── cmd
+│   │   ├── config.go
+│   │   ├── genaccounts.go
+│   │   └── root.go
+│   └── main.go
+├── config.yml
+├── docs
+│   ├── docs.go
+│   ├── static
+│   │   └── openapi.yml
+│   └── template
+│   └── index.tpl
+├── go.mod
+├── go.sum
+├── readme.md
+├── testutil
+│   ├── network
+│   │   └── network.go
+│   ├── nullify
+│   │   └── nullify.go
+│   └── sample
+│   └── sample.go
+└── tools
+└── tools.go
+
+```
+
+#### start ludiumapp2 chain
+
+끝으로 간단히 제너레이팅된 체인이 제대로 동작하는 체크하기 위한 테스트로 chain을 가동시켜봅니다.
+
+```bash
+# serve our chain
+ignite chain serve
+```
+
+![07_ignite_result2](./assets/07_ignite_result2.png)
 
 **과제**
 
@@ -139,3 +218,5 @@ make install
 - https://github.com/neutron-org/neutron/blob/v1.0.0/app/config.go
 
 - https://github.com/osmosis-labs/osmosis/blob/v10.2.0/app/params/config.go
+
+- https://github.com/Jeongseup/nameservice-chain/blob/main/app/app.go#L116
