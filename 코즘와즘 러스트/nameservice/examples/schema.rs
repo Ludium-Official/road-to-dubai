@@ -1,5 +1,5 @@
 use cosmwasm_schema::write_api;
-use namespace::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use nameservice::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
 fn main() {
     write_api! {

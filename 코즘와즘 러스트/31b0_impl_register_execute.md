@@ -89,7 +89,7 @@ name이 중복으로 요청되면 이에 대해 잘못된 요청임을 반환해
 우선 `thiserror` 라이브러리를 `Cargo.toml` 파일에 추가한다:
 ```
 [package]
-name = "namespace"
+name = "nameservice"
 version = "0.1.0"
 edition = "2021"
 

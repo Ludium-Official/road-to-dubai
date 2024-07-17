@@ -23,7 +23,7 @@
 #### 커스텀 Query 사용 예시 
 쿼리에 사용 가능한 메시지는 일반적으로 `msg.rs` 또는 `query.rs` 파일에 정의되어 있으며, 이는 컨트랙트 작성자가 코드를 어떻게 구조화했는지에 따라 달라진다. 쿼리는 외부 클라이언트(API나 CLI를 통해) 또는 내부 클라이언트(컨트랙트 내에서 다른 컨트랙트로)로 수행할 수 있다. 커스텀 쿼리는 [`QueryMsg`](./23_message.md#0-messages) 열거형에 항목으로 정의되고, 컨트랙트의 [query 함수](./22_entrypoint.md#0-entrypoint)에서 처리된다.
 
-[namespace 컨트랙트의 `QueryMsg`](./namespace/src/msg.rs)의 형태는 다음과 같다:
+[nameservice 컨트랙트의 `QueryMsg`](./nameservice/src/msg.rs)의 형태는 다음과 같다:
 ```rust
 #[cw_serde]
 pub enum QueryMsg {
@@ -32,7 +32,7 @@ pub enum QueryMsg {
 }
 ```
 
-컨트랙트는 이를 [query 함수](./namespace/src/contract.rs)에서 다음과 같이 처리한다:
+컨트랙트는 이를 [query 함수](./nameservice/src/contract.rs)에서 다음과 같이 처리한다:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
