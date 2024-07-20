@@ -379,7 +379,7 @@ fn main() {
 
 ## 5. VSCode에서 실습
 
-`src/main.rs` 파일에 다음 코드를 작성합니다:
+`src/main.rs` 파일에 다음 코드를 작성한다:
 
 ```rust
 #[derive(Debug)]
@@ -521,4 +521,4 @@ mod tests {
 }
 ```
 
-이 코드를 `src/main.rs` 파일에 작성한 후, 터미널에서 `cargo run`을 실행하여 프로그램을 실행하고, `cargo test`를 실행하여 테스트를 수행할 수 있습니다.
+이 코드를 `src/main.rs` 파일에 작성한 후, 터미널에서 `cargo run`을 실행하여 프로그램을 실행하고, `cargo test`를 실행하여 테스트를 수행할 수 있다.
