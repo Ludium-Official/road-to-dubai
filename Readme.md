@@ -11,7 +11,7 @@ RTD 모듈 구성은 다음과 같다
 |  | 설명 | 자료 링크 |
 | --- | --- | ----- |
 | 코스모스 베이직 | 코스모스 네트워크, SDK 활용을 통한 앱체인 구동 방식 이해를 위한 이론과 미션 | [코스모스 베이직](https://github.com/Ludium-Official/road-to-dubai/tree/main/%EC%BD%94%EC%8A%A4%EB%AA%A8%EC%8A%A4%20%EB%B2%A0%EC%9D%B4%EC%A7%81) |
-| 러스트 베이직 | 러스트 언어의 이해와 사용 방법 실습 | 러스트 베이직 |
+| 러스트 베이직 | 러스트 언어의 이해와 사용 방법 실습 | 러스트 베이직 |(./러스트 베이직)
 | 코즘와즘 베이직 | 코즘와즘을 활용을 위한 러스트 언어와 컨트랙트 작성법 이해를 위한 이론과 미션 | [코즘와즘 베이직](https://github.com/Ludium-Official/road-to-bangkok/tree/main/%EC%86%94%EB%A6%AC%EB%94%94%ED%8B%B0%20%EB%B2%A0%EC%9D%B4%EC%A7%81) |
 | 코스모스 디앱 만들기 | 코스모스 SDK, 코즘와즘을 활용한 디앱 제작 이론과 미션 | [코스모스 디앱 만들기](https://github.com/Ludium-Official/road-to-dubai/tree/main/%EC%BD%94%EC%8A%A4%EB%AA%A8%EC%8A%A4%20%EB%94%94%EC%95%B1%20%EB%A7%8C%EB%93%A4%EA%B8%B0) |
 
