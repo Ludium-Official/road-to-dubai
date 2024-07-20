@@ -134,4 +134,3 @@ where  F: FnOnce() //Fn으로 한다면 사라져가는 target을 스코프 넘�
         println!("Logging End");
     }
 }
-

@@ -1,84 +1,111 @@
-# Rust의 Ownership: 탄생 배경과 중요성
+# Ownership
 
-Rust의 가장 독특하고 중요한 특징 중 하나인 ownership 시스템에 대해 알아보자. 이 시스템이 왜 만들어졌고, 어떤 점에서 중요한지 함께 살펴볼 거야.
+## 학습 목표
+- Rust의 Ownership 시스템의 탄생 배경과 중요성을 이해한다.
+- Ownership의 규칙과 작동 방식을 숙지한다.
+- 저비용 추상화와 Ownership의 관계를 파악한다.
+- 운영체제 관점에서 Ownership의 장점을 이해한다.
+- 고급 Ownership 기법을 학습하고 활용할 수 있다.
 
-## 1. Ownership의 탄생 배경
+## Ownership의 탄생 배경
 
-Rust를 만든 사람들은 두 가지 목표를 가지고 있었어: 
-1) 메모리 안전성을 보장하는 것
-2) 동시성 프로그래밍을 쉽게 만드는 것
+Rust의 Ownership 시스템은 메모리 안전성과 동시성 프로그래밍의 용이성을 동시에 달성하기 위해 탄생했다. 기존 프로그래밍 언어들이 가비지 컬렉터(GC)를 통해 이 문제를 해결하려 했던 것과 달리, Rust는 컴파일 시점에 메모리 관리를 검사하는 새로운 접근 방식을 택했다.
 
-이 두 가지 목표를 달성하면서도 프로그램의 성능을 희생하지 않아야 했지. 기존의 프로그래밍 언어들은 이 문제를 해결하기 위해 가비지 컬렉터(GC)를 사용했어. 하지만 GC는 프로그램의 성능에 영향을 미치는 단점이 있었지.
+### 저비용 추상화
 
-Rust는 이 문제를 ownership이라는 새로운 개념으로 해결했어. Ownership 시스템은 컴파일 시점에 메모리 관리를 검사하므로, 런타임 비용이 들지 않아. 이는 Rust가 안전성과 성능을 동시에 제공할 수 있게 해주는 핵심 메커니즘이야.
+Rust의 Ownership 시스템은 "제로 비용 추상화(Zero-cost abstractions)"라는 개념을 구현한다. 이는 런타임 오버헤드 없이 고수준의 추상화를 제공한다는 의미이다. Ownership 규칙은 컴파일 시점에 적용되므로, 실행 시 추가적인 비용이 발생하지 않는다.
 
-## 2. Ownership 규칙
+```rust
+fn main() {
+    let v = vec![1, 2, 3, 4, 5];
+    
+    // 이 for 루프는 C++의 수동 반복자 사용과 동일한 성능을 보인다
+    for i in v {
+        println!("{}", i);
+    }
+}
+```
 
-Rust의 ownership 시스템은 다음과 같은 규칙을 따라:
+이 코드에서 `for` 루프는 고수준의 추상화를 제공하면서도, 수동으로 작성한 저수준 코드와 동일한 성능을 보인다.
 
-1. Rust에서 각각의 값은 해당 값의 owner라고 불리는 변수를 가져.
-2. 한 번에 하나의 owner만 존재할 수 있어.
-3. owner가 스코프 밖으로 벗어나면, 값은 삭제돼.
+## Ownership의 핵심 개념
 
-이 규칙들이 어떻게 작동하는지 예제를 통해 살펴보자:
+Rust의 Ownership 시스템은 메모리 관리를 안전하고 효율적으로 수행하기 위한 핵심 메커니즘이다. 이 시스템의 주요 개념들을 자세히 살펴보자.
+
+### 1. 스택과 힙
+
+Rust에서 메모리 관리를 이해하기 위해서는 스택(Stack)과 힙(Heap)의 차이를 아는 것이 중요하다.
+
+- **스택**: 정해진 크기의 데이터를 저장하는 빠른 메모리 영역. 함수 호출 시 지역 변수들이 여기에 저장된다.
+- **힙**: 크기가 가변적이거나 컴파일 시점에 크기를 알 수 없는 데이터를 저장하는 영역. 런타임에 메모리 할당이 이루어진다.
+
+```rust
+fn main() {
+    let x = 5; // 스택에 저장
+    let y = Box::new(10); // 힙에 저장, y는 힙의 데이터를 가리키는 포인터
+}
+```
+
+### 2. 이동 (Move)
+
+Rust에서 값을 다른 변수에 할당하면, 기본적으로 '이동'이 발생한다. 이는 힙에 할당된 데이터의 소유권이 이전되는 것을 의미한다.
 
 ```rust
 fn main() {
     let s1 = String::from("hello");
-    let s2 = s1;
+    let s2 = s1; // s1의 소유권이 s2로 이동
 
-    println!("{}, world!", s1); // 이 라인은 컴파일 에러를 발생시켜
+    // println!("{}", s1); // 컴파일 에러: s1은 이미 이동됨
+    println!("{}", s2); // 정상 작동
 }
 ```
 
-이 코드에서 `s1`의 값은 `s2`로 이동(move)되었기 때문에, `s1`은 더 이상 유효하지 않아. 이렇게 함으로써 Rust는 이중 해제 오류를 방지하고, 메모리 누수를 막을 수 있어.
+### 3. 복사 (Copy)
 
-## 3. 힙 과 스택 
-
-Rust의 ownership 시스템에 대한 설명을 하기 전에 힙 과 스택의 차이점에 대해서 알아보자  
-![image](https://github.com/user-attachments/assets/483444c4-5339-46cf-b2cf-6f2ef18f68ee)  
-메모리의 스택(stack) 영역은 함수의 호출과 관계되는 지역 변수와 매개변수가 저장되는 영역이야. 스택 영역은 함수의 호출과 함께 할당되며, 함수의 호출이 완료되면 소멸하지.  
-스택 영역의 메모리는 위에 사진에서 볼 수 있듯이, 컴파일 타임에 메모리 양이 결정이 돼. 함수의 호출이 끝난 후에, 자동으로 소멸하기 때문에, ownership이 스택 메모리에 할당되는 변수에 있어서는 적용되지 않지.  
-
-메모리의 힙(heap) 영역은 사용자가 직접 관리할 수 있는 ‘그리고 해야만 하는’ 메모리 영역이야. 컴파일 타임에 크기가 결정되어 있지 않거나 크기가 변경될 수 있는 데이터를 위해서는, 힙에 데이터를 저장할 수 있지. 힙 영역은 사용자에 의해 메모리 공간이 동적으로 할당되고 해제되는데 ownership은 여기서 나오는 오류들을 방지하고자 나온 개념이야.   
-
-힙 데이터를 관리하는 것이 곧 소유권의 존재 이유임을 알게 되는 것은 이것이 어떤 방식으로 작동하는지 설명하는데 도움을 줄 수 있어. 
+일부 타입(주로 스택에 저장되는 기본 타입들)은 `Copy` 트레이트를 구현하고 있어, 값을 복사한다.
 
 ```rust
 fn main() {
-    let s = String::from("hello");  // 힙 메모리를 사용하는 s 스코프 진입
+    let x = 5;
+    let y = x; // x의 값이 y로 복사됨
 
-    takes_ownership(s);             // s가 scope를 벗어났기 때문에 소유권이 takes_ownership 으로 이전
-
-    let x = 5;                      // 스택 메모리를 사용하는 x 스코프 진입
-
-    makes_copy(x);                  // 스택 메모리를 사용하는 x이기 때문에 copy동작. 소유권 이전되지 않음.
-
-} 
-
-fn takes_ownership(some_string: String) {
-    println!("{some_string}");
-} 
-
-fn makes_copy(some_integer: i32) { 
-    println!("{some_integer}");
+    println!("x = {}, y = {}", x, y); // 둘 다 사용 가능
 }
 ```
 
-위의 코드를 보면 s는 힙 메모리를 사용하기 때문에, ownership 이전이 발생하고 x는 스택 메모리르 사용하기 때문에 ownership이전이 발생하지 않는 것을 확인할 수 있지. 
+### 4. 소유권과 함수
 
+함수에 값을 전달할 때도 소유권 규칙이 적용된다.
 
+```rust
+fn main() {
+    let s = String::from("hello");
+    takes_ownership(s); // s의 소유권이 함수로 이동
+    // println!("{}", s); // 컴파일 에러: s는 이미 이동됨
 
-## 3. 참조와 대여
+    let x = 5;
+    makes_copy(x); // x의 값이 복사됨
+    println!("{}", x); // 여전히 사용 가능
+}
 
-값의 소유권을 이전하지 않고 값을 사용하는 방법으로 Rust는 '참조'를 제공해. 참조를 사용하면 값을 '대여(borrow)'할 수 있어.
+fn takes_ownership(some_string: String) {
+    println!("{}", some_string);
+} // some_string이 스코프를 벗어나고 drop 됨
+
+fn makes_copy(some_integer: i32) {
+    println!("{}", some_integer);
+} // some_integer가 스코프를 벗어남, 특별한 일은 없음
+```
+
+### 5. 참조와 대여 (References and Borrowing)
+
+값의 소유권을 이전하지 않고 참조를 사용하여 값을 '대여'할 수 있다.
 
 ```rust
 fn main() {
     let s1 = String::from("hello");
     let len = calculate_length(&s1);
-
-    println!("'{}의 길이는 {}입니다.", s1, len);
+    println!("The length of '{}' is {}.", s1, len);
 }
 
 fn calculate_length(s: &String) -> usize {
@@ -86,79 +113,248 @@ fn calculate_length(s: &String) -> usize {
 }
 ```
 
-여기서 `&s1`은 `s1`의 참조를 생성해. 함수는 `String`의 참조를 받아 길이를 계산하고, 소유권은 그대로 `main` 함수에 남아있어.
+### 6. 가변 참조 (Mutable References)
 
-참조는 Rust가 소유권 이전 없이 데이터를 안전하게 공유할 수 있게 해줘. 이는 특히 큰 데이터 구조를 다룰 때 성능상 이점이 있어.
+가변 참조를 사용하면 대여한 값을 수정할 수 있다. 단, 동시에 하나의 가변 참조만 허용된다.
 
 ```rust
 fn main() {
     let mut s = String::from("hello");
-
     change(&mut s);
+    println!("{}", s); // "hello, world" 출력
 }
 
-fn change(some_string: &mut String) -> {
+fn change(some_string: &mut String) {
     some_string.push_str(", world");
 }
 ```
 
-mutable 변수의 참조를 넘겨주기 위해서는 위와 이 mutable 참조를 사용해. 
+### 7. 수명 (Lifetimes)
 
-```
-let mut s = String::from("hello");
-
-let r1 = &mut s;
-let r2 = &mut s;
-
-println!("{} , {}", r1, r2);\
-```
-위의 코드는 에러가 발생하게 되는데, rust는 동일 scope안에서 mutable참조자는 하나만 만들 수 있게 하기 때문이야. 이를 통해 Data race로 버그/에러가 발생하는 것을 방지하지.
-
-## 4. Dangling References
-
-포인터를 사용하는 프로그래밍 언어에서는 댕글링 포인터(dangling pointer)를 실수로 만들기 쉬워. 댕글링 포인터란 이미 다른 누군가에게 할당되었을 수 있는 메모리 위치를 참조하는 포인터를 말하지. 
-
-반면 Rust에서는 컴파일러가 참조가 절대 댕글링 참조가 되지 않도록 보장해. 어떤 데이터에 대한 참조를 가지고 있다면, 컴파일러는 그 참조가 스코프를 벗어나기 전에 데이터가 스코프를 벗어나지 않도록 보장해.
-
-```
-fn main() {
-    let reference_to_nothing = dangle();
-}
-
-fn dangle() -> &String {
-    let s = String::from("hello");
-
-    &s
-}
-```
-rust 컴파일러는 댕글링 참조를 감지하고 컴파일 에러를 내보내서 메모리 안전성을 컴파일 시점에 보장하지. 
-
-
-## 5. Slice 타입
-
-마지막으로, Rust는 소유권을 가지지 않고 컬렉션의 일부분을 참조하는 slice라는 개념을 제공해.
+Rust의 컴파일러는 참조의 유효 범위를 추적하기 위해 수명 개념을 사용한다. 대부분의 경우 이는 암시적으로 처리되지만, 때로는 명시적으로 지정해야 한다.
 
 ```rust
-fn first_word(s: &String) -> &str {
-    let bytes = s.as_bytes();
-
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            return &s[0..i];
-        }
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
     }
-
-    &s[..]
-}
-
-fn main() {
-    let s = String::from("hello world");
-    let word = first_word(&s);
-    
-    println!("첫 번째 단어: {}", word);
 }
 ```
 
-Slice를 사용하면 컬렉션의 일부분을 안전하게 참조할 수 있어, 더욱 유연한 코드를 작성할 수 있지.
+이 함수에서 `'a`는 수명 매개변수로, 반환되는 참조가 입력 매개변수의 수명과 연관되어 있음을 나타낸다.
 
-이렇게 Rust의 ownership 시스템은 메모리 안전성을 보장하면서도 효율적인 메모리 관리를 가능하게 해. 처음에는 이해하기 어려울 수 있지만, 이 개념을 숙달하면 더 안전하고 효율적인 코드를 작성할 수 있을 거야. 다음 장에서는 Rust의 ownership에 대해 더 자세히 알아보자.
+## Ownership 두들겨보기
+
+다음 코드를 VSCode에서 두들겨보며 Ownership의 개념을 실제로 체험해보자:
+
+```rust
+fn main() {
+    // 1. 이동 (Move)
+    let s1 = String::from("hello");
+    let s2 = s1;
+    // println!("{}", s1); // 주석 해제 시 컴파일 에러
+
+    // 2. 복사 (Copy)
+    let x = 5;
+    let y = x;
+    println!("x = {}, y = {}", x, y);
+
+    // 3. 소유권과 함수
+    let s3 = String::from("world");
+    takes_ownership(s3);
+    // println!("{}", s3); // 주석 해제 시 컴파일 에러
+
+    // 4. 참조와 대여
+    let s4 = String::from("hello world");
+    let len = calculate_length(&s4);
+    println!("The length of '{}' is {}.", s4, len);
+
+    // 5. 가변 참조
+    let mut s5 = String::from("hello");
+    change(&mut s5);
+    println!("Changed string: {}", s5);
+}
+
+fn takes_ownership(some_string: String) {
+    println!("{}", some_string);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+```
+
+이 실습을 통해 Rust의 Ownership 시스템이 실제로 어떻게 작동하는지 이해할 수 있을 것이다.
+
+## Ownership 규칙
+
+Rust의 Ownership 시스템은 다음 세 가지 규칙을 따른다:
+
+1. Rust에서 각각의 값은 해당 값의 owner라고 불리는 변수를 가진다.
+2. 한 번에 하나의 owner만 존재할 수 있다.
+3. owner가 스코프 밖으로 벗어나면, 값은 삭제된다.
+
+### 예시
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+    let s2 = s1;
+
+    // println!("{}", s1); // 컴파일 에러: s1의 값이 s2로 이동됨
+    println!("{}", s2); // 정상 작동
+}
+```
+
+이 예시에서 `s1`의 값이 `s2`로 이동되어, `s1`은 더 이상 유효하지 않다. 이를 통해 Rust는 이중 해제 오류와 메모리 누수를 방지한다.
+
+## 운영체제 관점에서의 장점
+
+Rust의 Ownership 시스템은 운영체제 개발에 있어 여러 장점을 제공한다:
+
+1. **메모리 안전성**: 버퍼 오버플로우, 댕글링 포인터 등의 메모리 관련 버그를 컴파일 시점에 방지한다.
+2. **동시성 안전성**: 데이터 레이스와 같은 동시성 관련 문제를 컴파일 시점에 검출한다.
+3. **리소스 관리**: 파일 핸들, 네트워크 소켓 등의 시스템 리소스를 안전하게 관리할 수 있다.
+4. **성능**: GC 없이도 메모리 안전성을 보장하여, 예측 가능한 성능을 제공한다.
+
+```rust
+use std::fs::File;
+use std::io::Read;
+
+fn read_file(path: &str) -> Result<String, std::io::Error> {
+    let mut file = File::open(path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    Ok(contents)
+}
+
+fn main() {
+    match read_file("example.txt") {
+        Ok(contents) => println!("File contents: {}", contents),
+        Err(e) => println!("Error reading file: {}", e),
+    }
+}
+```
+
+이 예시에서 `File`은 자동으로 닫히며, 에러 처리도 명시적으로 이루어진다. 이는 운영체제 수준의 리소스 관리에 매우 유용하다.
+
+## 고급 Ownership 기법
+
+### 함수 포인터와 클로저
+
+Rust에서는 함수 포인터와 클로저를 통해 고급 Ownership 기법을 구현할 수 있다. 다음은 주어진 코드 예시이다:
+
+```rust
+fn wrap_logging<F>(target: F) -> impl Fn()
+where
+    F: Fn()
+{
+    move || {
+        println!("Logging Start");
+        target();
+        println!("Logging End");
+    }
+}
+```
+
+이 함수는 다른 함수(`target`)를 인자로 받아, 로깅 기능을 추가한 새로운 클로저를 반환한다. `FnOnce`를 사용함으로써, `target` 함수가 한 번만 호출되도록 보장한다.
+여기서 소유권 관점에서 주목할 점은 target도 변수로, 소유권에 영향을 받는다. 
+따라서, 해당 함수가 끝나는 지점에서, target 변수도 해제되는데, 이 때, `move`가 없다면.. Rust에서 캡쳐 명시자가 없다면 기본적으로 Fn(불변 참조)로 동작하는데, 이 때 wrap_logging 함수의 반환값인 Fn 클로저가 target을 여전히 참조하고 있으므로 댕글링 포인터가 발생할 수 있어 컴파일 에러가 나타난다.
+그러므로, move를 통해서 불변 참조 캡쳐가 아닌 소유권 캡쳐를 통해서 target의 소유권을 반환되는 함수 안으로 가져와야한다. 
+
+### 사용 예시
+
+```rust
+fn main() {
+    let print_hello = || println!("Hello, World!");
+    let logged_hello = wrap_logging(print_hello);
+    logged_hello();
+}
+```
+
+이 코드의 출력:
+```
+Logging Start
+Hello, World!
+Logging End
+```
+
+이 예시는 Rust의 Ownership 시스템이 어떻게 고급 프로그래밍 패턴을 안전하게 구현할 수 있게 하는지 보여준다. 이는 `함수 생성 함수` 패턴이라고 볼 수 있다. 
+
+## VSCode에서 실습
+
+1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new rust_ownership`
+2. `src/main.rs` 파일에 다음 코드를 작성한다:
+
+```rust
+fn wrap_logging<F>(target: F) -> impl FnOnce()
+where
+    F: FnOnce()
+{
+    || {
+        println!("Logging Start");
+        target();
+        println!("Logging End");
+    }
+}
+
+fn main() {
+    // 기본 Ownership 예제
+    let s1 = String::from("hello");
+    let s2 = s1;
+    // println!("{}", s1); // 컴파일 에러
+    println!("{}", s2);
+
+    // 고급 Ownership 예제
+    let print_hello = || println!("Hello, World!");
+    let logged_hello = wrap_logging(print_hello);
+    logged_hello();
+}
+```
+
+3. 터미널에서 `cargo run` 명령어를 실행하여 코드를 컴파일하고 실행한다.
+
+## 테스트 코드
+
+예제 코드가 올바르게 작동하는지 확인하기 위한 테스트 코드는 다음과 같다:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_ownership_move() {
+        let s1 = String::from("hello");
+        let s2 = s1;
+        assert_eq!(s2, "hello");
+        // s1은 이미 이동되어 사용할 수 없음
+    }
+
+    #[test]
+    fn test_wrap_logging() {
+        let mut output = Vec::new();
+        let print_to_vec = || output.push("Hello, World!");
+        let logged_print = wrap_logging(print_to_vec);
+        logged_print();
+        assert_eq!(output, vec!["Hello, World!"]);
+    }
+}
+```
+
+이 테스트 코드를 `src/main.rs` 파일의 끝에 추가하고, `cargo test` 명령어를 실행하여 테스트를 수행할 수 있다.
+
+## Reference
+
+1. Rust 공식 문서 - Ownership: [https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
+2. Rust 공식 문서 - 저비용 추상화: [https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#zero-cost-abstraction](https://rust-lang.github.io/unsafe-code-guidelines/glossary.html#zero-cost-abstraction)
+3. "Programming Rust" by Jim Blandy and Jason Orendorff, O'Reilly Media
+4. "Rust in Action" by Tim McNamara, Manning Publications
+5. Rust RFC 2094 - Non-lexical lifetimes: [https://rust-lang.github.io/rfcs/2094-nll.html](https://rust-lang.github.io/rfcs/2094-nll.html)
+6. Rust Blog - Fearless Concurrency with Rust: [https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html](https://blog.rust-lang.org/2015/04/10/Fearless-Concurrency.html)

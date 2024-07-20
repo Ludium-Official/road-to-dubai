@@ -1,82 +1,283 @@
 # Rust의 함수 (Function)
 
-Rust에서 함수는 코드를 구조화하고 재사용하는 데 아주 중요한 역할을 해. 함수를 잘 활용하면 코드를 논리적으로 나누고, 반복되는 작업을 효율적으로 처리할 수 있지.
+## 학습 목표
+- Rust 함수의 내부 동작 원리를 이해한다.
+- 함수와 소유권(Ownership) 간의 관계를 파악한다.
+- 정적 디스패치와 동적 디스패치의 차이점과 사용 사례를 학습한다.
+- 함수 포인터와 클로저의 개념과 사용법을 익힌다.
 
-## 함수 정의하기
+## 함수의 내부 동작
 
-Rust에서 함수를 만들 때는 `fn` 키워드를 사용해. 함수 이름 뒤에 괄호를 붙이고, 그 안에 매개변수를 넣어. 함수의 내용은 중괄호 `{}` 안에 적어주면 돼.
+Rust 함수는 컴파일 시점에 정적으로 디스패치되며, 이는 함수 호출의 오버헤드를 최소화한다. 함수 호출 시 다음과 같은 과정이 일어난다:
 
-```rust
-fn greet() {
-    println!("안녕하세요!");
-}
-```
+1. 스택 프레임 생성: 함수 호출 시 새로운 스택 프레임이 생성된다.
+2. 매개변수 복사: 함수 매개변수가 스택에 복사된다.
+3. 제어 흐름 이동: 프로그램 카운터가 함수의 시작 주소로 이동한다.
+4. 함수 실행: 함수 본문이 실행된다.
+5. 반환 값 처리: 반환 값이 있다면 지정된 레지스터나 스택에 저장된다.
+6. 스택 프레임 정리: 함수 종료 시 스택 프레임이 제거된다.
 
-여기서 `greet`라는 이름의 함수를 만들었어. 이 함수는 매개변수가 없고, 그냥 "안녕하세요!"라는 메시지를 출력해.
-
-## 함수 호출하기
-
-만든 함수를 사용하고 싶다면, 함수 이름 뒤에 괄호를 붙여서 호출하면 돼.
-
-```rust
-fn main() {
-    greet(); // "안녕하세요!" 출력
-}
-```
-
-## 매개변수 사용하기
-
-함수에 데이터를 전달하고 싶다면 매개변수를 사용해. 매개변수는 함수를 정의할 때 괄호 안에 적어주고, 각 매개변수의 타입도 꼭 명시해줘야 해.
-
-```rust
-fn greet_person(name: String) {
-    println!("안녕하세요, {}님!", name);
-}
-
-fn main() {
-    greet_person(String::from("홍길동")); // "안녕하세요, 홍길동님!" 출력
-}
-```
-
-## 값 반환하기
-
-함수는 작업 결과를 반환할 수 있어. 반환 타입은 함수를 선언할 때 화살표(`->`) 뒤에 적어줘. 함수 본문의 마지막 표현식이 자동으로 반환되거나, `return` 키워드를 사용해서 명시적으로 값을 반환할 수 있어.
-
+예시:
 ```rust
 fn add(a: i32, b: i32) -> i32 {
-    a + b // 마지막 표현식이 자동으로 반환돼
-}
-
-fn subtract(a: i32, b: i32) -> i32 {
-    return a - b; // 명시적으로 반환
+    a + b
 }
 
 fn main() {
-    let sum = add(5, 3);
-    println!("5 + 3 = {}", sum); // "5 + 3 = 8" 출력
-
-    let difference = subtract(10, 4);
-    println!("10 - 4 = {}", difference); // "10 - 4 = 6" 출력
+    let result = add(5, 3);
+    println!("Result: {}", result);
 }
 ```
 
-## 함수 시그니처
+이 코드의 `add` 함수 호출은 다음과 같이 처리된다:
 
-함수의 시그니처는 함수의 이름, 매개변수의 타입, 그리고 반환 타입을 포함해. 이건 함수의 인터페이스를 정의하는 중요한 부분이야.
+1. `add` 함수를 위한 새 스택 프레임 생성
+2. `a`와 `b` 매개변수 값(5와 3)을 스택에 복사
+3. `add` 함수 본문 실행
+4. 결과 값(8)을 반환 레지스터에 저장
+5. `add` 함수의 스택 프레임 제거
+6. `main` 함수에서 반환 값을 `result` 변수에 저장
+
+## 함수와 소유권
+
+Rust의 소유권 시스템은 함수 호출에도 적용된다. 함수에 값을 전달할 때 소유권이 이동하거나 대여될 수 있다.
+
+### 소유권 이동
+```rust
+fn take_ownership(s: String) {
+    println!("{}", s);
+} // 여기서 s가 드롭됨
+
+fn main() {
+    let s = String::from("hello");
+    take_ownership(s);
+    // println!("{}", s); // 컴파일 에러: s의 소유권이 이동됨
+}
+```
+
+이 예제에서 `s`의 소유권은 `take_ownership` 함수로 이동한다. 함수 호출 후에는 `main`에서 `s`를 더 이상 사용할 수 없다.
+
+### 참조 대여
+```rust
+fn borrow(s: &String) {
+    println!("{}", s);
+}
+
+fn main() {
+    let s = String::from("hello");
+    borrow(&s);
+    println!("{}", s); // 정상 작동: s는 여전히 유효함
+}
+```
+
+여기서는 `s`의 참조만 `borrow` 함수에 전달되므로, `main`에서 계속 `s`를 사용할 수 있다.
+
+## 정적 디스패치 vs 동적 디스패치
+
+Rust는 기본적으로 정적 디스패치를 사용하지만, 트레이트 객체를 통해 동적 디스패치도 지원한다.
+
+### 정적 디스패치
+컴파일 시점에 어떤 함수가 호출될지 결정된다. 이는 제로 비용 추상화의 핵심이다.
 
 ```rust
-fn calculate_area(width: f64, height: f64) -> f64 {
-    width * height
+fn static_dispatch<T: Display>(t: T) {
+    println!("{}", t);
+}
+
+fn main() {
+    static_dispatch("hello");
+    static_dispatch(5);
 }
 ```
 
-이 함수의 시그니처는 `fn calculate_area(width: f64, height: f64) -> f64`야. 이건 이 함수가 두 개의 `f64` 타입 매개변수를 받고, `f64` 타입의 값을 반환한다는 걸 나타내.
+이 코드에서 `static_dispatch` 함수는 컴파일 시점에 각 타입(`&str`과 `i32`)에 대해 특수화된다.
 
-## 주의할 점들
+### 동적 디스패치
+런타임에 어떤 메서드가 호출될지 결정된다. 이는 트레이트 객체를 통해 구현된다.
 
-1. Rust에서 함수 이름은 보통 snake_case로 쓰는 게 관례야 (예: `calculate_area`).
-2. 매개변수의 타입은 반드시 명시해줘야 해.
-3. 함수가 값을 반환한다면, 반환 타입도 꼭 명시해줘야 해.
-4. `main` 함수는 프로그램의 시작점이라 특별한 의미를 가져.
+```rust
+trait Animal {
+    fn make_sound(&self);
+}
 
-함수는 Rust 프로그래밍의 기본 재료라고 할 수 있어. 잘 설계된 함수를 사용하면 코드를 읽기 쉽게 만들고 재사용성도 높일 수 있지. 함수를 통해 복잡한 로직을 작은 단위로 나누고, 이걸 조합해서 더 큰 프로그램을 만들 수 있어.
+struct Dog;
+impl Animal for Dog {
+    fn make_sound(&self) {
+        println!("Woof!");
+    }
+}
+
+struct Cat;
+impl Animal for Cat {
+    fn make_sound(&self) {
+        println!("Meow!");
+    }
+}
+
+fn animal_sound(animal: &dyn Animal) {
+    animal.make_sound();
+}
+
+fn main() {
+    let dog = Dog;
+    let cat = Cat;
+    animal_sound(&dog);
+    animal_sound(&cat);
+}
+```
+
+여기서 `animal_sound` 함수는 런타임에 실제 객체의 `make_sound` 메서드를 호출한다.
+
+## 함수 포인터와 클로저
+
+### 함수 포인터
+함수 포인터를 사용하면 함수를 값으로 전달할 수 있다.
+
+```rust
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(f(arg))
+}
+
+fn main() {
+    let result = do_twice(add_one, 5);
+    println!("Result: {}", result); // 출력: Result: 7
+}
+```
+
+### 클로저
+클로저는 환경을 캡처할 수 있는 익명 함수다.
+
+```rust
+fn main() {
+    let x = 4;
+    let equal_to_x = |z| z == x;
+    let y = 4;
+    assert!(equal_to_x(y));
+}
+```
+
+클로저는 내부적으로 세 가지 트레이트 중 하나로 구현된다: `Fn`, `FnMut`, `FnOnce`. 컴파일러는 클로저가 환경을 어떻게 캡처하는지에 따라 적절한 트레이트를 선택한다.
+
+## VSCode에서 실습
+
+1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new rust_functions`
+2. `src/main.rs` 파일에 다음 코드를 작성한다:
+
+```rust
+fn main() {
+    // 정적 디스패치 예제
+    println!("Static dispatch:");
+    static_dispatch("hello");
+    static_dispatch(5);
+
+    // 동적 디스패치 예제
+    println!("\nDynamic dispatch:");
+    let dog = Dog;
+    let cat = Cat;
+    animal_sound(&dog);
+    animal_sound(&cat);
+
+    // 함수 포인터 예제
+    println!("\nFunction pointer:");
+    let result = do_twice(add_one, 5);
+    println!("Result: {}", result);
+
+    // 클로저 예제
+    println!("\nClosure:");
+    let x = 4;
+    let equal_to_x = |z| z == x;
+    let y = 4;
+    println!("Is y equal to x? {}", equal_to_x(y));
+}
+
+fn static_dispatch<T: std::fmt::Display>(t: T) {
+    println!("{}", t);
+}
+
+trait Animal {
+    fn make_sound(&self);
+}
+
+struct Dog;
+impl Animal for Dog {
+    fn make_sound(&self) {
+        println!("Woof!");
+    }
+}
+
+struct Cat;
+impl Animal for Cat {
+    fn make_sound(&self) {
+        println!("Meow!");
+    }
+}
+
+fn animal_sound(animal: &dyn Animal) {
+    animal.make_sound();
+}
+
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(f(arg))
+}
+```
+
+3. 터미널에서 `cargo run` 명령어를 실행하여 코드를 컴파일하고 실행한다.
+
+## 테스트 코드
+
+예제 코드가 올바르게 작동하는지 확인하기 위한 테스트 코드는 다음과 같다:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_static_dispatch() {
+        static_dispatch("test");
+        static_dispatch(10);
+        // 컴파일되면 성공
+    }
+
+    #[test]
+    fn test_dynamic_dispatch() {
+        let dog = Dog;
+        let cat = Cat;
+        animal_sound(&dog);
+        animal_sound(&cat);
+        // 컴파일되면 성공
+    }
+
+    #[test]
+    fn test_function_pointer() {
+        assert_eq!(do_twice(add_one, 5), 7);
+    }
+
+    #[test]
+    fn test_closure() {
+        let x = 4;
+        let equal_to_x = |z| z == x;
+        assert!(equal_to_x(4));
+        assert!(!equal_to_x(5));
+    }
+}
+```
+
+이 테스트 코드를 `src/main.rs` 파일의 끝에 추가하고, `cargo test` 명령어를 실행하여 테스트를 수행할 수 있다.
+
+## 참고 자료
+
+1. Rust 공식 문서 - 함수: https://doc.rust-lang.org/book/ch03-03-how-functions-work.html
+2. Rust 공식 문서 - 클로저: https://doc.rust-lang.org/book/ch13-01-closures.html
+3. Rust 공식 문서 - 트레이트 객체: https://doc.rust-lang.org/book/ch17-02-trait-objects.html
+4. "Programming Rust" by Jim Blandy and Jason Orendorff, O'Reilly Media
+5. "The Rust Programming Language" by Steve Klabnik and Carol Nichols: https://doc.rust-lang.org/book/
+6. Rust RFC 0255 - Object Safety: https://github.com/rust-lang/rfcs/blob/master/text/0255-object-safety.md
