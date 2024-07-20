@@ -1,113 +1,162 @@
 # 컬렉션
 
 ## 학습 목표
-- Rust의 주요 컬렉션 타입들을 이해한다.
-- 벡터, 스트링, 해시맵의 사용법을 익힌다.
-- 각 컬렉션 타입의 특징과 적절한 사용 상황을 파악한다.
-- 컬렉션들의 내부 구현과 시간 복잡도를 이해한다.
+- Rust의 주요 컬렉션 타입(Vec, String, HashMap)의 내부 구조를 이해한다.
+- 각 컬렉션 타입의 메모리 레이아웃과 성능 특성을 파악한다.
+- 컬렉션 타입들의 주요 메서드와 사용 패턴을 학습한다.
+- 각 컬렉션 타입의 최적화 기법을 이해한다.
 
-## Rust의 컬렉션
+## Vec<T>
 
-Rust의 표준 라이브러리에는 컬렉션이라고 불리는 매우 유용한 데이터 구조들이 여러 개 포함되어 있다. 대부분의 다른 데이터 타입들은 하나의 특정한 값을 표현하지만, 컬렉션은 여러 개의 값들을 담을 수 있다. 튜플이나 배열과는 다르게, 이 컬렉션들이 가리키는 데이터는 힙에 저장되기 때문에 컴파일 타임에 크기를 알 필요가 없다. 즉 컬렉션은 프로그램 실행 중에 그 크기가 커지거나 작아질 수 있다는 뜻이다.
-
-이 장에서는 Rust 프로그램에서 매우 자주 사용되는 세 가지 컬렉션에 대해 배워볼 것이다:
-
-- 벡터(Vector): 가변 개수의 값들을 저장할 수 있도록 해준다.
-- 스트링(String): 문자들의 모음이다.
-- 해시맵(Hash Map): 특정 키와 값을 연관시켜 저장할 수 있도록 해주는 좀 더 일반적인 구현체의 컬렉션이다.
-
-## 벡터
-
-벡터(`Vec<T>`)는 같은 타입의 값을 메모리상에 이웃하도록 배치하여 저장한다. 
-
-### 내부 구현
-벡터는 내부적으로 동적 배열로 구현되어 있다. 이는 연속된 메모리 공간에 요소들을 저장하며, 필요에 따라 크기를 조절한다. 벡터는 세 가지 필드를 가지고 있다:
-1. 데이터에 대한 포인터
-2. 길이 (현재 사용 중인 요소의 수)
-3. 용량 (할당된 총 공간)
-
-### 시간 복잡도
-- 끝에 요소 추가/제거 (push/pop): O(1) 평균
-- 임의의 위치에 요소 삽입/제거: O(n)
-- 인덱스로 접근: O(1)
-- 순회: O(n)
+Vec<T>는 Rust의 동적 배열 구현체이다. 내부 구조는 다음과 같다:
 
 ```rust
-let mut v = Vec::new();
-v.push(5);
-v.push(6);
-v.push(7);
-v.push(8);
+pub struct Vec<T> {
+    ptr: *mut T,
+    len: usize,
+    cap: usize,
+}
 ```
 
-## 스트링
+- `ptr`: T 타입 요소들의 연속된 메모리 블록을 가리키는 포인터
+- `len`: 현재 벡터에 저장된 요소의 수
+- `cap`: 할당된 메모리의 총 용량 (요소 개수 단위)
 
-Rust의 `String` 타입은 UTF-8로 인코딩된 가변 길이 문자열이다.
+Vec<T>의 메모리 레이아웃:
 
-### 내부 구현
-`String`은 내부적으로 `Vec<u8>`을 래핑한 구조체다. 이는 바이트의 벡터를 사용하여 UTF-8 인코딩된 텍스트를 저장한다.
+```
+Stack:
++--------+--------+--------+
+|  ptr   |  len   |  cap   |
++--------+--------+--------+
+    |
+    v
+Heap:
++------+------+------+------+------+------+
+|  T1  |  T2  |  T3  |  T4  |  ... |  Tn  |
++------+------+------+------+------+------+
+```
 
-### 시간 복잡도
-- 끝에 추가: O(1) 평균
-- 문자열 연결: O(n), 여기서 n은 두 번째 문자열의 길이
-- 길이 확인: O(1)
-- 인덱스로 접근: O(n), UTF-8 인코딩 때문
+Vec<T>는 용량이 가득 차면 새로운 메모리를 할당하고 요소를 복사한다. 성장 전략은 다음과 같다:
+
+1. 현재 용량이 0이면, 4 또는 `T`의 크기에 따라 적절한 초기 용량으로 설정
+2. 그 외의 경우, 현재 용량의 2배로 증가
+
+주요 메서드:
+- `push(value)`: 벡터 끝에 요소 추가
+- `pop()`: 벡터 끝의 요소 제거 및 반환
+- `insert(index, value)`: 지정된 인덱스에 요소 삽입
+- `remove(index)`: 지정된 인덱스의 요소 제거 및 반환
+
+## String
+
+String은 UTF-8 인코딩된 가변 길이 문자열이다. 내부적으로 Vec<u8>을 래핑한 구조체이다:
 
 ```rust
-let mut s = String::new();
-s.push_str("Hello");
-s.push(',');
-s += " world!";
+pub struct String {
+    vec: Vec<u8>,
+}
 ```
 
-## 해시맵
+String의 메모리 레이아웃은 Vec<u8>과 동일하다:
 
-`HashMap<K, V>`는 키-값 쌍을 저장하는 데 사용된다.
+```
+Stack:
++--------+--------+--------+
+|  ptr   |  len   |  cap   |
++--------+--------+--------+
+    |
+    v
+Heap:
++------+------+------+------+------+------+
+| byte | byte | byte | byte |  ... | byte |
++------+------+------+------+------+------+
+```
 
-### 내부 구현
-해시맵은 내부적으로 해시 테이블을 사용한다. 키는 해시 함수를 통해 해시값으로 변환되고, 이 해시값은 값을 저장할 "버킷"을 결정한다. Rust의 해시맵은 충돌 해결을 위해 선형 탐사(linear probing)를 사용한다.
+String은 항상 유효한 UTF-8 시퀀스를 보장한다. 이는 다음과 같은 특성을 가진다:
 
-### 시간 복잡도
-- 삽입/검색/삭제: O(1) 평균, 최악의 경우 O(n)
-- 순회: O(n)
+- 1~4바이트로 문자를 표현
+- ASCII 문자는 1바이트로 표현되어 효율적
+- 문자 단위 인덱싱이 O(n) 시간 복잡도를 가짐
+
+주요 메서드:
+- `push_str(&str)`: 문자열 끝에 str 추가
+- `push(char)`: 문자열 끝에 문자 추가
+- `insert_str(index, &str)`: 지정된 바이트 인덱스에 str 삽입
+- `remove(index)`: 지정된 바이트 인덱스의 문자 제거 및 반환
+
+## HashMap<K, V>
+
+HashMap<K, V>는 키-값 쌍을 저장하는 해시 테이블 구현체이다. 내부 구조는 다음과 같다:
 
 ```rust
-use std::collections::HashMap;
+pub struct HashMap<K, V, S = RandomState> {
+    base: base::HashMap<K, V, S>,
+}
 
-let mut scores = HashMap::new();
-scores.insert(String::from("Blue"), 10);
-scores.insert(String::from("Yellow"), 50);
+struct HashMap<K, V, S> {
+    hash_builder: S,
+    table: RawTable<(K, V)>,
+}
 ```
+
+- `hash_builder`: 키를 해시값으로 변환하는 해시 함수
+- `table`: 실제 키-값 쌍을 저장하는 테이블
+
+HashMap의 메모리 레이아웃:
+
+```
+Stack:
++----------------+----------------+
+|  hash_builder  |     table      |
++----------------+----------------+
+                       |
+                       v
+Heap:
++------+------+------+------+------+------+
+| Slot | Slot | Slot | Slot |  ... | Slot |
++------+------+------+------+------+------+
+```
+
+각 Slot은 다음 중 하나이다:
+- 비어있음
+- 삭제됨
+- (해시, 키, 값) 튜플
+
+HashMap은 기본적으로 SipHash-1-3 알고리즘을 사용하며, Robin Hood 해싱 기법으로 충돌을 해결한다.
+
+주요 메서드:
+- `insert(key, value)`: 키-값 쌍 삽입
+- `get(&key)`: 키에 해당하는 값 참조 반환
+- `remove(&key)`: 키-값 쌍 제거 및 값 반환
+- `contains_key(&key)`: 키 존재 여부 확인
 
 ## VSCode에서 실습
 
-1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new collections`
+1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new collections_example`
 2. `src/main.rs` 파일에 다음 코드를 작성한다:
 
 ```rust
 use std::collections::HashMap;
 
 fn main() {
-    // 벡터
-    let mut v = Vec::new();
-    v.push(5);
-    v.push(6);
-    v.push(7);
-    v.push(8);
-    println!("Vector: {:?}", v);
+    // Vec 예제
+    let mut vec = Vec::new();
+    vec.push(1);
+    vec.push(2);
+    vec.push(3);
+    println!("Vec: {:?}", vec);
 
-    // 스트링
-    let mut s = String::new();
-    s.push_str("Hello");
-    s.push(',');
-    s += " world!";
+    // String 예제
+    let mut s = String::from("Hello");
+    s.push_str(", world!");
     println!("String: {}", s);
 
-    // 해시맵
-    let mut scores = HashMap::new();
-    scores.insert(String::from("Blue"), 10);
-    scores.insert(String::from("Yellow"), 50);
-    println!("HashMap: {:?}", scores);
+    // HashMap 예제
+    let mut map = HashMap::new();
+    map.insert(String::from("Blue"), 10);
+    map.insert(String::from("Yellow"), 50);
+    println!("HashMap: {:?}", map);
 }
 ```
 
@@ -123,35 +172,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_vector() {
-        let mut v = Vec::new();
-        v.push(5);
-        v.push(6);
-        v.push(7);
-        v.push(8);
-        assert_eq!(v, vec![5, 6, 7, 8]);
+    fn test_vec() {
+        let mut vec = Vec::new();
+        vec.push(1);
+        vec.push(2);
+        vec.push(3);
+        assert_eq!(vec, vec![1, 2, 3]);
     }
 
     #[test]
     fn test_string() {
-        let mut s = String::new();
-        s.push_str("Hello");
-        s.push(',');
-        s += " world!";
+        let mut s = String::from("Hello");
+        s.push_str(", world!");
         assert_eq!(s, "Hello, world!");
     }
 
     #[test]
     fn test_hashmap() {
-        let mut scores = HashMap::new();
-        scores.insert(String::from("Blue"), 10);
-        scores.insert(String::from("Yellow"), 50);
-        assert_eq!(scores.get("Blue"), Some(&10));
-        assert_eq!(scores.get("Yellow"), Some(&50));
+        let mut map = HashMap::new();
+        map.insert(String::from("Blue"), 10);
+        map.insert(String::from("Yellow"), 50);
+        assert_eq!(map.get("Blue"), Some(&10));
+        assert_eq!(map.get("Yellow"), Some(&50));
     }
 }
 ```
 
 이 테스트 코드를 `src/main.rs` 파일의 끝에 추가하고, `cargo test` 명령어를 실행하여 테스트를 수행할 수 있다. 모든 테스트가 통과하면 예제 코드가 올바르게 작성되었음을 확인할 수 있다.
-
-이렇게 Rust의 주요 컬렉션 타입들에 대해 알아보았다. 각 컬렉션의 내부 구현과 시간 복잡도를 이해하는 것은 효율적인 프로그램을 작성하는 데 매우 중요하다. 상황에 따라 적절한 컬렉션을 선택하고 사용하는 것이 Rust 프로그래밍의 핵심이 된다.
