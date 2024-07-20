@@ -225,21 +225,6 @@ fn main() {
 
 이 코드는 컴파일 시간에 `Point` struct의 크기를 결정하고, 런타임에 추가 비용 없이 이 정보를 사용한다.
 
-### 3.3 제로 비용 추상화
-
-Rust의 struct는 제로 비용 추상화의 좋은 예이다. 컴파일 시간에 모든 레이아웃이 결정되므로, 런타임 오버헤드가 없다.
-
-```rust
-struct Wrapper(Vec<String>);
-
-impl Wrapper {
-    fn push(&mut self, s: String) {
-        self.0.push(s);
-    }
-}
-```
-
-이 `Wrapper` struct는 `Vec<String>`을 감싸고 있지만, 런타임 성능 저하 없이 추가적인 안전성을 제공한다. 컴파일러는 `Wrapper`의 `push` 메서드 호출을 내부 `Vec<String>`의 `push` 메서드 호출로 최적화할 수 있다.
 
 ## 4. 고급 Struct 패턴
 
@@ -391,7 +376,6 @@ fn main() {
 
 이 패턴을 사용하면 단위 변환 오류를 방지하고 코드의 의도를 명확히 할 수 있다.
 
-네, 이해했습니다. 실습 코드와 테스트 코드만 제공하겠습니다.
 
 ## 5. VSCode에서 실습
 
