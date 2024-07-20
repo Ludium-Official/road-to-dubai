@@ -60,7 +60,53 @@ let user2 = User {
 };
 ```
 
-`..user1`은 명시되지 않은 나머지 필드들을 `user1`에서 가져온다. 이는 얕은 복사(shallow copy)를 수행하며, 소유권 이전이 발생할 수 있음에 주의해야 한다.
+`..user1`은 명시되지 않은 나머지 필드들을 `user1`에서 가져온다. 이는 소유권 이전이 발생할 수 있음에 주의해야 한다.
+자세하게 들여다보자면, Copy trait가 구현된 타입은 얕은 복사를 수행하며(바이트 단위 복사), 그렇지 않은 타입은 move 연산을 수행한다  
+
+```rust
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: u32,
+    address: String,
+}
+
+fn main() {
+    let person1 = Person {
+        name: String::from("Alice"),
+        age: 30,
+        address: String::from("123 Main St"),
+    };
+
+    // person1의 일부 필드를 사용하여 person2를 생성
+    let person2 = Person {
+        age: 31,
+        ..person1
+    };
+
+    // 여기서 소유권 문제가 발생합니다
+    println!("person1: {:?}", person1);
+    println!("person2: {:?}", person2);
+}
+```
+이 코드를 실행하면 컴파일 에러가 발생합니다. 그 이유를 살펴보겠다:
+
+String 타입의 소유권 이전:
+
+person1의 name과 address 필드는 String 타입이다.
+String은 Copy 트레이트를 구현하지 않았으므로, 값을 복사하는 대신 소유권이 이전된다.
+..person1 문법을 사용하면 person1의 name과 address 필드의 소유권이 person2로 이전된다.
+
+부분적 소유권 이전:
+
+age 필드는 u32 타입으로, Copy 트레이트를 구현했기 때문에 복사된다.
+따라서 person1.age는 여전히 사용 가능하다.
+
+컴파일 에러:
+
+println!("person1: {:?}", person1); 라인에서 에러가 발생한다.
+person1의 name과 address 필드의 소유권이 이미 person2로 이전되었기 때문이다.
+
 
 ## 2. Struct의 고급 기능
 
