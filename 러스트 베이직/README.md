@@ -1,8 +1,9 @@
-  # Rust
+  # 러스트 베이직 모듈 구성
+  
+* 러스트 베이직 모듈은 블록체인 코어 및 스마트 컨트랙트 작성을 위한 언어 이해 및 문법 실습 자료를 제공한다.
+* 모듈은 아티클과 미션으로 구성된다. 아티클이란 특정 개념 혹은 현상을 설명하는 자료이다. 아티클은 기술 및 배경의 정의와 출현 배경, 구성 요소, 구동 원리, 특장점, 활용 방안을 포함한다. 반면 미션은 실습을 통해 기술 및 개념 체득을 유도하는 자료이다. 미션은 결과물 설명을 포함하는 목적 및 배경, 사전 설치, 코드와 설명을 포함한 수행 방법, 제출 내용을 포함한다.
 
-  안녕하세요 Rust 과정에 오신걸 환영합니다! 이번 기회에 블록체인 기술 스택 중 가장 큰 비중을 차지하는 언어인 Rust에 대해서 자세히 알아보도록 합시다.
-
-  # Module Structure
+  # 모듈 구성
 
   | # | Topic | Type | Description | Link |
   |---|-------|------|-------------|------|
@@ -38,14 +39,7 @@
   | 30 | Asynchronous Programming(2) | Mission | Advanced asynchronous programming | [Asynchronous Programming(2)](./article/Asynchronous_Programming_2.md) |
   | 31 | Smartcontract in Rust | Project | Writing smart contracts in Rust | [Smartcontract in Rust](./article/Smartcontract_in_Rust.md) |
 
-  # 미션 작성 방향
-
-  - Rust 실습
-  - Rust 문법에 대한 이해
-  - Rust Smart Contract 실습
-
-  | 미션                        | 설명                                    |
-  | -------------------------- | --------------------------------------- |
-  | Rust의 피처를 활용한 많은 것 | 하나씩 쳐가며 Rust의 피처들을 이해해본다. |
-
-  - Rust 예제 및 퀴즈
+  # 제안 및 추가 
+솔리디티 베이직 교육 모듈은 오픈 소스 컨트리뷰션을 통해 지속적으로 자료를 보완, 발전시킨다
+현존하는 모듈에 제안을 원하는 빌더는 Issue를 통해 제안 내용을 작성하거나 리포를 포킹해서 개선된 내용을 Pull Request로 바로 요청할 수도 있다
+제안, 요청된 내용은 루디움에서 검토 이후 적절성을 판단하여 자료를 업데이트 한다
