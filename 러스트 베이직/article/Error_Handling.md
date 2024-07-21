@@ -1,10 +1,33 @@
-# 에러 핸들링
+# 에러 처리
 
-Rust는 에러 핸들링에 있어서 매우 강력한 기능을 제공해. 다른 언어들과는 달리, Rust는 예외를 사용하지 않아. 대신에 에러 처리를 위한 두 가지 주요 카테고리를 가지고 있지: 복구 가능한 에러와 복구 불가능한 에러야.
+## 학습 목표
+- Rust의 에러 처리 철학과 방식을 이해한다.
+- 복구 불가능한 에러와 `panic!` 매크로의 사용법을 익힌다.
+- `Result<T, E>` 타입을 이용한 복구 가능한 에러 처리 방법을 학습한다.
+- 에러 전파 기법과 `?` 연산자의 활용법을 파악한다.
+- 언제 `panic!`을 사용하고 언제 `Result`를 반환할지 결정하는 기준을 이해한다.
+- 사용자 정의 에러 타입 생성 방법을 습득한다.
+
+## Rust의 에러 처리 철학
+
+Rust는 안전성과 신뢰성을 중요시하는 언어로, 에러 처리에 있어서도 명확하고 체계적인 접근 방식을 취한다. Rust의 에러 처리 시스템은 크게 두 가지 카테고리로 나뉜다:
+
+1. 복구 불가능한 에러 (Unrecoverable Errors)
+2. 복구 가능한 에러 (Recoverable Errors)
+
+이러한 구분은 프로그래머로 하여금 에러의 성격을 명확히 인지하고, 적절한 처리 방법을 선택할 수 있게 한다.
 
 ## 복구 불가능한 에러와 `panic!`
 
-때때로, 코드에서 나쁜 일이 발생하고 그것에 대해 우리가 할 수 있는 게 없을 때가 있어. 이런 경우에 Rust는 `panic!` 매크로를 가지고 있어. 이 매크로가 실행되면, 프로그램은 실패 메시지를 출력하고, 스택을 되감고 정리한 다음, 종료돼. 이건 주로 버그를 발견했고 프로그래머가 이 에러를 어떻게 처리할지 명확하지 않을 때 사용해.
+복구 불가능한 에러는 프로그램이 더 이상 정상적으로 실행될 수 없는 심각한 상황을 의미한다. Rust에서는 이러한 상황을 `panic!` 매크로를 통해 처리한다.
+
+### `panic!` 매크로의 동작
+
+`panic!`이 발생하면 다음과 같은 과정이 진행된다:
+
+1. 에러 메시지 출력
+2. 스택 되감기(unwinding) 또는 즉시 중단(abort)
+3. 프로그램 종료
 
 ```rust
 fn main() {
@@ -12,17 +35,45 @@ fn main() {
 }
 ```
 
-이 코드를 실행하면, 다음과 같은 출력을 볼 수 있어:
+이 코드를 실행하면 다음과 같은 출력을 볼 수 있다:
 
 ```
 thread 'main' panicked at 'crash and burn', src/main.rs:2:5
+note: Run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
 ```
 
-## Result와 함께하는 복구 가능한 에러
+### 백트레이스 사용하기
 
-대부분의 에러들은 완전히 프로그램을 중단시킬 정도로 심각하지 않아. 가끔, 함수가 실패하면, 그건 쉽게 해석하고 대응할 수 있는 이유인 경우가 많지. 예를 들어, 파일을 열려고 했는데 그 파일이 존재하지 않아서 실패한 경우, 프로그램을 종료하는 대신 파일을 새로 만들고 싶을 수 있어.
+`RUST_BACKTRACE` 환경 변수를 설정하면 `panic!` 발생 시 더 자세한 정보를 얻을 수 있다:
 
-이런 상황을 위해 Rust는 `Result` 열거형을 가지고 있어:
+```bash
+$ RUST_BACKTRACE=1 cargo run
+```
+
+이는 디버깅 과정에서 매우 유용하다.
+
+### `panic!`의 사용 시기
+
+`panic!`은 다음과 같은 상황에서 주로 사용된다:
+
+1. 절대 발생해서는 안 되는 상황에서의 에러
+2. 외부 코드의 예기치 못한 동작
+3. 더 이상의 에러 처리가 불가능한 상황
+
+```rust
+fn main() {
+    let v = vec![1, 2, 3];
+    v[99]; // 이 라인은 panic!을 발생시킨다
+}
+```
+
+## 복구 가능한 에러와 `Result<T, E>`
+
+복구 가능한 에러는 프로그램의 정상적인 실행을 방해하지 않으면서 처리할 수 있는 에러를 의미한다. Rust에서는 이를 `Result<T, E>` 열거형을 통해 처리한다.
+
+### `Result<T, E>` 타입
+
+`Result<T, E>`는 다음과 같이 정의된다:
 
 ```rust
 enum Result<T, E> {
@@ -31,72 +82,365 @@ enum Result<T, E> {
 }
 ```
 
-T와 E는 제네릭 타입 파라미터야. T는 성공한 경우 Ok 변형 안에 반환될 값의 타입을 나타내고, E는 실패한 경우 Err 변형 안에 반환될 에러의 타입을 나타내.
+여기서 `T`는 성공 시 반환될 값의 타입이고, `E`는 에러 시 반환될 에러의 타입이다.
 
-여기 `Result`를 사용하는 예제가 있어:
+### `Result` 사용 예제
+
+파일을 열어 내용을 읽는 간단한 예제를 통해 `Result`의 사용법을 알아보자:
 
 ```rust
 use std::fs::File;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, std::io::Error> {
+    let mut username = String::new();
+    File::open("hello.txt")?.read_to_string(&mut username)?;
+    Ok(username)
+}
 
 fn main() {
-    let f = File::open("hello.txt");
-
-    let f = match f {
-        Ok(file) => file,
-        Err(error) => panic!("Problem opening the file: {:?}", error),
-    };
-}
-```
-
-이 코드는 파일을 열려고 시도하고, 결과를 `match` 표현식으로 처리해. 만약 `File::open`이 성공하면, 파일 핸들이 `f`의 값이 돼. 실패하면, `panic!` 매크로를 호출해.
-
-## 에러 전파하기
-
-때로는 에러를 직접 처리하는 대신, 함수를 호출한 코드에게 에러를 반환하고 싶을 수 있어. 이걸 "에러 전파"라고 불러. 여기 예제가 있어:
-
-```rust
-use std::io;
-use std::io::Read;
-use std::fs::File;
-
-fn read_username_from_file() -> Result<String, io::Error> {
-    let f = File::open("hello.txt");
-
-    let mut f = match f {
-        Ok(file) => file,
-        Err(e) => return Err(e),
-    };
-
-    let mut s = String::new();
-
-    match f.read_to_string(&mut s) {
-        Ok(_) => Ok(s),
-        Err(e) => Err(e),
+    match read_username_from_file() {
+        Ok(username) => println!("Username: {}", username),
+        Err(e) => println!("Error: {}", e),
     }
 }
 ```
 
-이 함수는 파일에서 사용자 이름을 읽으려고 해. 만약 파일을 열 수 없거나 내용을 읽을 수 없다면, 이 함수는 그 에러를 호출자에게 반환해.
+이 예제에서 `?` 연산자는 `Result`를 반환하는 함수에서 에러를 쉽게 전파할 수 있게 해준다.
 
-## `?` 연산자
+### `unwrap`과 `expect`
 
-Rust는 에러 전파를 더 쉽게 만들기 위해 `?` 연산자를 제공해. `?`를 `Result`를 반환하는 표현식 뒤에 놓으면, 그건 거의 위의 `match` 표현식과 같은 방식으로 작동해.
-
-여기 `?` 연산자를 사용해 다시 작성한 이전 예제가 있어:
+`Result`의 `unwrap`과 `expect` 메소드는 `Ok` 값을 반환하거나 `panic!`을 발생시킨다:
 
 ```rust
-use std::io;
-use std::io::Read;
-use std::fs::File;
+let f = File::open("hello.txt").unwrap();
+let f = File::open("hello.txt").expect("Failed to open hello.txt");
+```
 
-fn read_username_from_file() -> Result<String, io::Error> {
-    let mut f = File::open("hello.txt")?;
-    let mut s = String::new();
-    f.read_to_string(&mut s)?;
-    Ok(s)
+이 메소드들은 주로 프로토타이핑이나 테스트에서 사용되며, 실제 프로덕션 코드에서는 더 세밀한 에러 처리가 권장된다.
+
+## 에러 전파하기
+
+함수에서 발생한 에러를 호출자에게 전달하는 것을 에러 전파라고 한다. Rust에서는 `?` 연산자를 통해 이를 간편하게 수행할 수 있다.
+
+### `?` 연산자
+
+`?` 연산자는 `Result`를 반환하는 표현식 뒤에 사용되며, 다음과 같이 동작한다:
+
+1. 결과가 `Ok`이면 `Ok` 내부의 값을 추출한다.
+2. 결과가 `Err`이면 해당 `Err`을 즉시 반환한다.
+
+```rust
+fn read_username_from_file() -> Result<String, std::io::Error> {
+    let mut file = File::open("hello.txt")?;
+    let mut username = String::new();
+    file.read_to_string(&mut username)?;
+    Ok(username)
 }
 ```
 
-`?` 연산자를 사용하면 코드가 훨씬 간결해지고 읽기 쉬워져.
+이 코드는 이전 예제와 동일한 기능을 하지만, `?` 연산자를 사용하여 더 간결해졌다.
 
-이렇게 Rust의 에러 핸들링에 대해 알아봤어. Rust의 에러 처리 방식은 안전하고 명시적이며, 프로그래머가 모든 가능한 실패 케이스를 고려하도록 강제해. 이는 더 견고하고 신뢰할 수 있는 프로그램을 만드는 데 도움을 줘!
+### 연쇄적인 메소드 호출
+
+`?` 연산자를 사용하면 여러 연산을 연쇄적으로 수행할 수 있다:
+
+```rust
+fn read_username_from_file() -> Result<String, std::io::Error> {
+    let mut username = String::new();
+    File::open("hello.txt")?.read_to_string(&mut username)?;
+    Ok(username)
+}
+```
+
+이 방식은 코드를 더욱 간결하고 읽기 쉽게 만든다.
+
+## `panic!`이냐 `Result`냐
+
+에러 상황에서 `panic!`을 사용할지 `Result`를 반환할지 결정하는 것은 중요한 설계 결정이다. 다음은 이에 대한 가이드라인이다:
+
+### `panic!`을 사용해야 할 때
+
+1. 예제, 프로토타입, 테스트에서
+2. 복구가 불가능한 상황에서
+3. 잘못된 값으로 인해 계속 실행하면 보안 문제가 발생할 수 있는 경우
+
+### `Result`를 사용해야 할 때
+
+1. 예상 가능한 에러 상황에서
+2. 호출자가 에러를 복구하거나 처리할 수 있는 경우
+3. 라이브러리 API를 설계할 때
+
+```rust
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Result<Guess, String> {
+        if value < 1 || value > 100 {
+            Err(String::from("Guess value must be between 1 and 100"))
+        } else {
+            Ok(Guess { value })
+        }
+    }
+
+    pub fn value(&self) -> i32 {
+        self.value
+    }
+}
+```
+
+이 예제에서는 `Result`를 사용하여 잘못된 입력을 처리하고 있다. 이는 호출자에게 에러 처리의 유연성을 제공한다.
+
+## 사용자 정의 에러 타입
+
+복잡한 애플리케이션에서는 사용자 정의 에러 타입을 만드는 것이 유용할 수 있다. 이를 통해 더 구체적이고 의미 있는 에러 처리가 가능해진다.
+
+```rust
+use std::fmt;
+use std::error::Error;
+
+#[derive(Debug)]
+pub enum AppError {
+    IoError(std::io::Error),
+    ParseError(std::num::ParseIntError),
+    CustomError(String),
+}
+
+impl fmt::Display for AppError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            AppError::IoError(e) => write!(f, "IO error: {}", e),
+            AppError::ParseError(e) => write!(f, "Parse error: {}", e),
+            AppError::CustomError(s) => write!(f, "Custom error: {}", s),
+        }
+    }
+}
+
+impl Error for AppError {}
+
+impl From<std::io::Error> for AppError {
+    fn from(error: std::io::Error) -> Self {
+        AppError::IoError(error)
+    }
+}
+
+impl From<std::num::ParseIntError> for AppError {
+    fn from(error: std::num::ParseIntError) -> Self {
+        AppError::ParseError(error)
+    }
+}
+```
+
+이 예제에서는 `AppError`라는 사용자 정의 에러 타입을 만들고, 여러 종류의 에러를 하나의 타입으로 통합하고 있다.
+
+## 고급 에러 처리 기법
+
+Rust의 에러 처리 시스템은 기본적인 사용법 외에도 다양한 고급 기법을 제공한다. 이를 통해 더 복잡한 상황에서도 효과적인 에러 처리가 가능하다.
+
+### 1. 다중 에러 타입 처리
+
+여러 종류의 에러를 처리해야 하는 경우, `Box<dyn Error>`를 사용하여 다양한 에러 타입을 하나의 타입으로 통합할 수 있다.
+
+```rust
+use std::error::Error;
+use std::fs::File;
+use std::io::Read;
+
+fn read_and_parse() -> Result<i32, Box<dyn Error>> {
+    let mut file = File::open("number.txt")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let number: i32 = contents.trim().parse()?;
+    Ok(number)
+}
+```
+
+이 예제에서는 파일 I/O 에러와 파싱 에러, 두 가지 다른 종류의 에러를 `Box<dyn Error>`로 처리하고 있다. 사실은 밑에서 서술하는 `anyhow`와 같은 역할을 한다. 
+
+### 2. `thiserror` 크레이트 사용
+
+`thiserror` 크레이트를 사용하면 사용자 정의 에러 타입을 더 쉽게 만들 수 있다.
+
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum DataStoreError {
+    #[error("data not found")]
+    NotFound(String),
+    #[error("invalid data: {0}")]
+    InvalidData(String),
+    #[error("I/O error")]
+    Io(#[from] std::io::Error),
+}
+```
+
+이 예제에서는 `#[derive(Error)]`를 사용하여 자동으로 `Error` 트레이트를 구현하고, `#[error]` 속성으로 에러 메시지를 지정하고 있다.
+
+### 3. `anyhow` 크레이트를 이용한 에러 처리 간소화
+
+`anyhow` 크레이트는 에러 처리를 더욱 간단하게 만들어준다. 특히 애플리케이션 코드에서 유용하다.
+
+```rust
+use anyhow::{Context, Result};
+use std::fs::File;
+use std::io::Read;
+
+fn read_config() -> Result<String> {
+    let mut file = File::open("config.txt")
+        .with_context(|| "Failed to open config file")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)
+        .with_context(|| "Failed to read config file")?;
+    Ok(contents)
+}
+```
+
+`anyhow::Result`는 어떤 에러 타입이든 처리할 수 있으며, `with_context` 메소드를 통해 추가적인 컨텍스트 정보를 제공할 수 있다.
+조금 다른 점은 anyhow에서 제네릭 트레이트인 Context를 구현하고 있다는 것.  with_context를 구현하고 있다는 건데, 이는 추가로 컨텍스트 로그를 남길 수 있게 해준다. 이외에도 다른 점이 있지만, 알아서 찾아보도록 한다.
+
+Context 트레이트:
+```rust
+pub trait Context<T, E>: Sized {
+    fn with_context<C, F>(self, f: F) -> Result<T, Error>
+    where
+        C: Display + Send + Sync + 'static,
+        F: FnOnce() -> C;
+}
+```
+
+Context 트레이트의 구현:
+Generic한 Result 타입에 대해서 작동하는 메서드를 구현하여 일반적으로 쓸 수 있게 해준다.  
+```rust
+impl<T, E> Context<T, E> for Result<T, E>
+where
+    E: std::error::Error + Send + Sync + 'static,
+{
+    fn with_context<C, F>(self, f: F) -> Result<T, Error>
+    where
+        C: Display + Send + Sync + 'static,
+        F: FnOnce() -> C,
+    {
+        self.map_err(|error| {
+            let context = f();
+            anyhow::Error::new(error).context(context)
+        })
+    }
+}
+```
+
+
+### 4. 에러 변환 (Error Conversion)
+
+때로는 한 타입의 에러를 다른 타입으로 변환해야 할 필요가 있다. Rust에서는 `From` 트레이트를 구현하여 이를 수행할 수 있다.
+
+```rust
+#[derive(Debug)]
+pub enum AppError {
+    IoError(std::io::Error),
+    ParseError(std::num::ParseIntError),
+}
+
+impl From<std::io::Error> for AppError {
+    fn from(error: std::io::Error) -> Self {
+        AppError::IoError(error)
+    }
+}
+
+impl From<std::num::ParseIntError> for AppError {
+    fn from(error: std::num::ParseIntError) -> Self {
+        AppError::ParseError(error)
+    }
+}
+
+fn read_and_parse() -> Result<i32, AppError> {
+    let mut file = File::open("number.txt")?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let number: i32 = contents.trim().parse()?;
+    Ok(number)
+}
+```
+
+이 예제에서는 `From` 트레이트를 구현하여 `std::io::Error`와 `std::num::ParseIntError`를 `AppError`로 자동 변환하고 있다.
+
+
+
+## VSCode에서 실습
+
+1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new rust_error_handling`
+2. `src/main.rs` 파일에 다음 코드를 작성한다:
+
+```rust
+use std::fs::File;
+use std::io::Read;
+
+fn read_username_from_file() -> Result<String, std::io::Error> {
+    let mut username = String::new();
+    File::open("hello.txt")?.read_to_string(&mut username)?;
+    Ok(username)
+}
+
+fn main() {
+    match read_username_from_file() {
+        Ok(username) => println!("Username: {}", username),
+        Err(e) => println!("Error: {}", e),
+    }
+
+    // panic! 예제
+    // let v = vec![1, 2, 3];
+    // v[99];
+}
+```
+
+3. 터미널에서 `cargo run` 명령어를 실행하여 코드를 컴파일하고 실행한다.
+
+## 테스트 코드
+
+예제 코드가 올바르게 작동하는지 확인하기 위한 테스트 코드는 다음과 같다:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+
+    #[test]
+    fn test_read_username_from_file() {
+        // 테스트용 파일 생성
+        let mut file = File::create("test_hello.txt").unwrap();
+        file.write_all(b"test_username").unwrap();
+
+        // 함수 테스트
+        let result = read_username_from_file();
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), "test_username");
+
+        // 테스트 파일 삭제
+        std::fs::remove_file("test_hello.txt").unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected = "index out of bounds")]
+    fn test_panic() {
+        let v = vec![1, 2, 3];
+        let _ = v[99];
+    }
+}
+```
+
+이 테스트 코드를 `src/main.rs` 파일의 끝에 추가하고, `cargo test` 명령어를 실행하여 테스트를 수행할 수 있다.
+
+## Reference
+
+1. Rust 공식 문서 - 에러 처리: https://doc.rust-lang.org/book/ch09-00-error-handling.html
+2. Rust by Example - 에러 처리: https://doc.rust-lang.org/rust-by-example/error.html
+3. The Rust Programming Language (2nd Edition) by Steve Klabnik and Carol Nichols
+4. Programming Rust (2nd Edition) by Jim Blandy, Jason Orendorff, and Leonora F. S. Tindall
+5. Rust 공식 문서 - std::error 모듈: https://doc.rust-lang.org/std/error/index.html
+6. `thiserror` 크레이트 문서: [https://docs.rs/thiserror](https://docs.rs/thiserror)
+7. `anyhow` 크레이트 문서: [https://docs.rs/anyhow](https://docs.rs/anyhow)
+8. Rust 에러 처리 모범 사례 블로그 포스트: [https://nick.groenen.me/posts/rust-error-handling/](https://nick.groenen.me/posts/rust-error-handling/)
+
