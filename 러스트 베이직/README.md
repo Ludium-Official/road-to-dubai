@@ -25,7 +25,7 @@
   | 15 | Generic | Mission | Working with generics | [Generic](./article/Generic.md) |
   | 16 | Lifetime | Mission | Understanding lifetimes in Rust | [Lifetime](./article/Lifetime.md) |
   | 17 | Simple Test | Mission | Writing and running tests | [Simple Test](./article/Simple_Test.md) |
-  | 18 | Toy Project | Project | Building a small Rust project | [Toy Project](./article/Toy_Project.md) |
+  | 18 | Trait | Project | Understanding Trait | [Trait](./article/Trait.md) |
   | 19 | What is Functional Programming? | Article | Introduction to functional programming | [What is Functional Programming?](./article/What_is_Functional_Programming.md) |
   | 20 | Functional Programming Paradigm | Article | Understanding functional programming paradigms | [Functional Programming Paradigm](./article/Functional_Programming_Paradigm.md) |
   | 21 | Functional Programmatic Syntax | Mission | Practicing functional programming syntax | [Functional Programmatic Syntax](./article/Functional_Programmatic_Syntax.md) |
