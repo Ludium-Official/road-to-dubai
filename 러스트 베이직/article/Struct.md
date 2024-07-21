@@ -170,7 +170,7 @@ struct Point {
 이 코드는 `Point` struct에 `Debug`, `Clone`, `PartialEq` 트레이트를 자동으로 구현한다. 이는 보일러플레이트 코드를 줄이고 생산성을 높인다.
 
 - `Debug`: `println!("{:?}", point);`와 같이 디버그 출력을 가능하게 한다.
-- `Clone`: `point.clone()`으로 깊은 복사를 가능하게 한다.
+- `Clone`: `point.clone()`으로 명시적으로 깊은 복사 메커니즘과 유사하게 동일한 객체 생성을 가능하게 한다.
 - `PartialEq`: `==` 연산자로 두 `Point` 인스턴스를 비교할 수 있게 한다.
 
 ## 3. Struct와 메모리
@@ -226,7 +226,7 @@ fn main() {
 이 코드는 컴파일 시간에 `Point` struct의 크기를 결정하고, 런타임에 추가 비용 없이 이 정보를 사용한다.
 
 
-## 4. 고급 Struct 패턴
+## 4. 유용한 Struct 패턴들
 
 ### 4.1 타입 상태 패턴
 
@@ -267,6 +267,7 @@ fn main() {
 ```
 
 이 패턴을 사용하면 열린 문을 열거나 닫힌 문을 닫는 등의 잘못된 동작을 컴파일 시간에 방지할 수 있다. `PhantomData`는 컴파일러에게 `State` 타입 매개변수가 사용되고 있음을 알려주는 역할을 한다.
+문법 설명을 하자면, `Door<State>` 는 제네릭을 사용하는 것이고, `impl Door<Closed>` 및 `impl Door<Open>`은 특정 타입에 대해서 메서드를 구현하는 것이다. 
 
 ### 4.2 빌더 패턴
 
@@ -322,6 +323,8 @@ impl UserBuilder {
         let username = self.username.ok_or("Username is required")?;
         let email = self.email.ok_or("Email is required")?;
 
+        // 필드가 누락될 시 런타임에 오류를 잡는 패턴
+
         Ok(User {
             username,
             email,
@@ -337,6 +340,8 @@ fn main() {
         .email("john@example.com".to_string())
         .active(true)
         .build();
+        // 복잡한 객체를 핸들링하는데 도움이 된다.
+        
 
     match user {
         Ok(u) => println!("User created: {:?}", u),
@@ -379,7 +384,8 @@ fn main() {
 
 ## 5. VSCode에서 실습
 
-`src/main.rs` 파일에 다음 코드를 작성한다:
+1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new rust_struct`
+2. `src/main.rs` 파일에 다음 코드를 작성한다:
 
 ```rust
 #[derive(Debug)]
@@ -467,7 +473,11 @@ fn main() {
         Err(e) => println!("Error building rectangle: {}", e),
     }
 }
+```
+3. 터미널에서 `cargo run` 명령어를 실행하여 코드를 컴파일하고 실행한다.
 
+
+```rust
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -521,4 +531,4 @@ mod tests {
 }
 ```
 
-이 코드를 `src/main.rs` 파일에 작성한 후, 터미널에서 `cargo run`을 실행하여 프로그램을 실행하고, `cargo test`를 실행하여 테스트를 수행할 수 있다.
+이 테스트 코드를 `src/main.rs` 파일의 끝에 추가하고, `cargo test` 명령어를 실행하여 테스트를 수행할 수 있다.
