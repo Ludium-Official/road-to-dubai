@@ -19,7 +19,7 @@
   | 9 | Struct | Mission | Working with structs | [Struct](./article/Struct.md) |
   | 10 | Enum | Mission | Using enums in Rust | [Enum](./article/Enum.md) |
   | 11 | Pattern Matching | Mission | Pattern mathcing in Rust | [Pattern Matching](./article/PatternMatching.md) |
-  | 12 | Copy and Clone | Article | Understanding Rust's Copy| [Crate and Module](./article/Copy_and_clone.md) |
+  | 12 | Copy and Clone | Article | Understanding Rust's Copy| [Copy and Clone](./article/Copy_and_clone.md) |
   | 13 | Crate and Module | Article | Understanding Rust's module system | [Crate and Module](./article/Crate_and_Module.md) |
   | 14 | Error Handling | Mission | Handling errors in Rust | [Error Handling](./article/Error_Handling.md) |
   | 15 | Generic | Mission | Working with generics | [Generic](./article/Generic.md) |
