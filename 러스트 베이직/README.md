@@ -18,7 +18,8 @@
   | 8 | Ownership(1) | Mission | Understanding Rust's ownership model | [Ownership(1)](./article/Ownership_1.md) |
   | 9 | Struct | Mission | Working with structs | [Struct](./article/Struct.md) |
   | 10 | Enum | Mission | Using enums in Rust | [Enum](./article/Enum.md) |
-  | 11 | Crate and Module | Article | Understanding Rust's module system | [Crate and Module](./article/Crate_and_Module.md) |
+  | 11 | Pattern Matching | Mission | Pattern mathcing in Rust | [Enum](./article/PatternMatching.md) |
+  | 12 | Crate and Module | Article | Understanding Rust's module system | [Crate and Module](./article/Crate_and_Module.md) |
   | 13 | Error Handling | Mission | Handling errors in Rust | [Error Handling](./article/Error_Handling.md) |
   | 14 | Generic | Mission | Working with generics | [Generic](./article/Generic.md) |
   | 15 | Lifetime | Mission | Understanding lifetimes in Rust | [Lifetime](./article/Lifetime.md) |
