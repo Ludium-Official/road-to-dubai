@@ -19,7 +19,7 @@ schema = "run --example schema" // 추가!
 이전에 msg를 구현할 때 `cosmwasm_schema` 라이브러리를 추가했었다. 이는 인코딩 및 디코딩을 도와줄뿐더러 이름 그대로 스키마 생성도 쉽게 할 수 있도록 지원해주고 있다. `examples/schema.rs`에 다음과 같은 코드를 추가해보자:
 ```rust
 use cosmwasm_schema::write_api;
-use namespace::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use nameservice::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
 fn main() {
     write_api! {
@@ -34,15 +34,15 @@ fn main() {
 ```sh
 $ cargo schema
 
-Exported the full API as /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/namespace/schema/namespace.json
-Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/namespace/schema/raw/instantiate.json
-Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/namespace/schema/raw/execute.json
-Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/namespace/schema/raw/query.json
-Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/namespace/schema/raw/response_to_config.json
-Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/namespace/schema/raw/response_to_resolve_record.json
+Exported the full API as /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/nameservice/schema/nameservice.json
+Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/nameservice/schema/raw/instantiate.json
+Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/nameservice/schema/raw/execute.json
+Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/nameservice/schema/raw/query.json
+Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/nameservice/schema/raw/response_to_config.json
+Exported /Users/ijong-won/Desktop/ludium/road-to-dubai/코즘와즘 러스트/nameservice/schema/raw/response_to_resolve_record.json
 ```
 
-이 중에서 `namespace.json`은 모든 정보를 포함하고 있는 schema이다. 예시로 `execute`에 대한 명세서 일부를 가져와보면 다음과 같다: 
+이 중에서 `nameservice.json`은 모든 정보를 포함하고 있는 schema이다. 예시로 `execute`에 대한 명세서 일부를 가져와보면 다음과 같다: 
 ```json
 "execute": {
     "$schema": "http://json-schema.org/draft-07/schema#",

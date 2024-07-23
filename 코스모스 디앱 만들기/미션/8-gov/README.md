@@ -1,12 +1,14 @@
-# gov
+# Governance
 
-- 거버넌스 내용을 확인한다.
-- 투표한다.
-- 바꾼다.
-- 투표 종류를 확인한다.
-- 거버넌스 결과가 반영되는 걸 확인한다.
+거버넌스는 현재 진행중인 현재 진행중인 Proposal 목록, 그리고 투표하는 Msg를 생성 및 전송하는 것을 구현한다.
 
-```
+현재는 cosmoshub testnet에 진행중인 proposal이 없어서 예제 코드를 통해서만 알아본다.
+
+## 예제
+
+#### **`components/gov.tsx`**
+
+```ts
 "use client";
 
 import { useChain } from "@cosmos-kit/react";
@@ -44,7 +46,7 @@ export default function Gov() {
     }
     const fetchProposals = async () => {
       const res = await fetch(
-        `${await getRestEndpoint()}/cosmos/gov/v1beta1/proposals`
+        `${await getRestEndpoint()}/cosmos/gov/v1beta1/proposals?proposal_status=PROPOSAL_STATUS_VOTING_PERIOD`
       );
       const result = await res.json();
       setProposals(result);
@@ -60,5 +62,4 @@ export default function Gov() {
     </>
   );
 }
-
 ```

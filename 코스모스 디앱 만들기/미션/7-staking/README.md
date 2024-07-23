@@ -1,22 +1,96 @@
-# staking
+# Staking
 
-staking 모듈을 테스트한다.
-staking 기능에는 reward 조회
-delegate, undelegate 등 기능이 있다.
+Cosmos-SDK에 핵심 기능인 staking 관련 기능에 대해 알아본다.
 
-- 있는 돈을 스테이킹 한다.
-- 쌓이는 리워드를 확인하고 claim 한다.
-- 언스테이킹 한다.
-- 화면에 리워드 쌓인 내용을 보여준다.
+## 설명
 
+Cosmos-SDK는 dPoS로 체인마다 Validator가 있고 Validator에 위임을 하고 리워드를 받는다. 자세한 내용은 Cosmos Basic에서 확인한다.
 
-https://swagger.kava.io/
+Validator에 User가 위임하는 걸 Delegate, 위임 철회하는 걸 Undelegate, 위임한 보상을 Reward라고 한다.
 
-스웨거 . 더좋은거 찾을 때 까지 참고
+아래 미션을 통해 위임/리워드 확인과, 위임/철회/클레임 등 기본 스테이킹 기능을 테스트 해본다.
 
+참고 - Swagger의 distribution, staking 관련 method 확인
+https://cosmos-rest.publicnode.com/swagger/
 
+## 구현
 
+### Delegation정보 확인
+
+```ts
+const balances = await fetch(
+  `${await getRestEndpoint()}/cosmos/staking/v1beta1/delegations/${address}`
+);
+const result = await balances.json();
+console.log(result);
 ```
+
+### Reward정보 확인
+
+```ts
+const reward = await fetch(
+  `${await getRestEndpoint()}/cosmos/distribution/v1beta1/delegators/${address}/rewards`
+);
+const result = await reward.json();
+console.log(result);
+```
+
+### Delegate
+
+Validator 정보는 Explorer에서 조회 가능하다.
+https://www.mintscan.io/cosmoshub-testnet/validators/cosmosvaloper1mngvkkhm6g7nqxh4hcv8hjxvgax4m8xujzt964
+
+```ts
+const validator = "cosmosvaloper1mngvkkhm6g7nqxh4hcv8hjxvgax4m8xujzt964";
+const msg: MsgDelegateEncodeObject = {
+  typeUrl: "/cosmos.staking.v1beta1.MsgDelegate",
+  value: {
+    delegatorAddress: address,
+    validatorAddress: validator,
+    amount: { amount: amount, denom: "uatom" },
+  },
+};
+const client = await getSigningStargateClient();
+const res = await client.signAndBroadcast(address, [msg], "auto");
+console.log(res);
+```
+
+### Undelegate
+
+```ts
+const msg: MsgUndelegateEncodeObject = {
+  typeUrl: "/cosmos.staking.v1beta1.MsgUndelegate",
+  value: {
+    delegatorAddress: address,
+    validatorAddress: "cosmosvaloper1mngvkkhm6g7nqxh4hcv8hjxvgax4m8xujzt964",
+    amount: { amount: amount, denom: "uatom" },
+  },
+};
+const client = await getSigningStargateClient();
+const res = await client.signAndBroadcast(address, [msg], "auto");
+console.log(res);
+```
+
+### Withdraw Reward
+
+```ts
+const msg: MsgWithdrawDelegatorRewardEncodeObject = {
+  typeUrl: "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward",
+  value: {
+    delegatorAddress: address,
+    validatorAddress: "cosmosvaloper1mngvkkhm6g7nqxh4hcv8hjxvgax4m8xujzt964",
+  },
+};
+const client = await getSigningStargateClient();
+const res = await client.signAndBroadcast(address, [msg], "auto");
+console.log(res);
+```
+
+## 예제
+
+#### **`components/staking.tsx`**
+
+```ts
 "use client";
 
 import { useChain } from "@cosmos-kit/react";
@@ -27,6 +101,8 @@ import {
   MsgUndelegateEncodeObject,
   MsgWithdrawDelegatorRewardEncodeObject,
 } from "@cosmjs/stargate";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function Staking() {
   const { address, getRestEndpoint, getSigningStargateClient } =
@@ -98,14 +174,6 @@ export default function Staking() {
       return;
     }
 
-    const fetchBalance = async () => {
-      const client = await getSigningStargateClient();
-      const balances1 = await client.getBalanceStaked(address);
-      setBalances(balances1);
-    };
-
-    fetchBalance();
-
     const fetchDelegations = async () => {
       const balances = await fetch(
         `${await getRestEndpoint()}/cosmos/staking/v1beta1/delegations/${address}`
@@ -128,21 +196,37 @@ export default function Staking() {
   return (
     <>
       <h3>Staking</h3>
-      {address}
-      {balances?.amount} {balances?.denom}
-      {JSON.stringify(delegations)}
-      {JSON.stringify(rewards)}
-      <input
+      <h4>Delegation</h4>
+      {delegations &&
+        delegations.delegation_responses &&
+        delegations.delegation_responses.map((delegation: any) => (
+          <div key={delegation.delegation.validator_address}>
+            {delegation.delegation.validator_address} :
+            {delegation.balance.amount}
+            {delegation.balance.denom}
+          </div>
+        ))}
+      <h4>Reward</h4>
+      {rewards &&
+        rewards.total &&
+        rewards.total.map((reward: any) => (
+          <div key={reward.denom}>
+            {reward.amount}
+            {reward.denom}
+          </div>
+        ))}
+      <Input
         type="text"
         value={amount}
         placeholder="Amount"
         onChange={(e) => setAmount(e.target.value)}
       />
-      <button onClick={delegate}>Delegate</button>
-      <button onClick={undelegate}>Undelegate</button>
-      <button onClick={claim}>Claim</button>
+      <Button onClick={delegate}>Delegate</Button>
+      <Button onClick={undelegate}>Undelegate</Button>
+      <Button onClick={claim}>Claim</Button>
     </>
   );
 }
-
 ```
+
+위 예제로 Delegate, Undelegate, Claim을 하며 Mintscan에서 값의 변화를 확인해본다.

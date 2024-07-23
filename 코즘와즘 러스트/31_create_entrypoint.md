@@ -67,10 +67,10 @@ pub fn query(
 이제 프로젝트를 빌드하고 `cosmwasm-check`를 통해 컨트랙트 검증에 통과했는지 확인해 보자:
 ```sh
 $ cargo wasm
-$ cosmwasm-check ./target/wasm32-unknown-unknown/release/namespace.wasm
+$ cosmwasm-check ./target/wasm32-unknown-unknown/release/nameservice.wasm
 Available capabilities: {"cosmwasm_1_4", "staking", "stargate", "cosmwasm_1_2", "cosmwasm_1_3", "cosmwasm_2_0", "iterator", "cosmwasm_1_1"}
 
-./target/wasm32-unknown-unknown/release/namespace.wasm: pass
+./target/wasm32-unknown-unknown/release/nameservice.wasm: pass
 
 All contracts (1) passed checks!
 ```

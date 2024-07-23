@@ -42,8 +42,8 @@ $ cargo install cosmwasm-check
 
 ## 2. 프로젝트 생성
 ```sh
-$ cargo new  --lib ./namespace
-$ cd namespace
+$ cargo new  --lib ./nameservice
+$ cd nameservice
 ```
 
 프로젝트를 빌드하기 전에, 우선 폴더 구조는 다음과 같아야 한다:
@@ -94,8 +94,8 @@ crate-type = ["cdylib", "rlib"]
 ```sh
 $ cargo build --target wasm32-unknown-unknown
 
-# /target/wasm32-unknown-unknown/debug/namespace.wasm
-# /target/wasm32-unknown-unknown/debug/deps/namespace.wasm
+# /target/wasm32-unknown-unknown/debug/nameservice.wasm
+# /target/wasm32-unknown-unknown/debug/deps/nameservice.wasm
 ```
 
 ### alias 설정하기 
@@ -110,19 +110,19 @@ wasm = "build --release --target wasm32-unknown-unknown"
 ```sh
 $ cargo wasm
 
-# /target/wasm32-unknown-unknown/release/namespace.wasm
-# /target/wasm32-unknown-unknown/release/deps/namespace.wasm
-# /target/wasm32-unknown-unknown/debug/namespace.wasm
-# /target/wasm32-unknown-unknown/debug/deps/namespace.wasm
+# /target/wasm32-unknown-unknown/release/nameservice.wasm
+# /target/wasm32-unknown-unknown/release/deps/nameservice.wasm
+# /target/wasm32-unknown-unknown/debug/nameservice.wasm
+# /target/wasm32-unknown-unknown/debug/deps/nameservice.wasm
 ```
 
 이전에 설치한 `cosmwasm-check` 명령어를 통해서 빌드된 wasm 바이너리 파일을 체크해보자: 
 ```sh
-$ cosmwasm-check ./target/wasm32-unknown-unknown/release/namespace.wasm
+$ cosmwasm-check ./target/wasm32-unknown-unknown/release/nameservice.wasm
 
 Available capabilities: {"cosmwasm_1_1", "iterator", "cosmwasm_1_4", "cosmwasm_2_0", "staking", "stargate", "cosmwasm_1_3", "cosmwasm_1_2"}
 
-./target/wasm32-unknown-unknown/release/namespace.wasm: failure
+./target/wasm32-unknown-unknown/release/nameservice.wasm: failure
 Error during static Wasm validation: Wasm contract missing a required marker export: interface_version_*
 
 Passes: 0, failures: 1
@@ -139,7 +139,7 @@ $ cargo add cosmwasm-std@1.5.4
 그러면 다음과 같이 dependecies 항목에 라이브러리가 추가된 것을 확인할 수 있다:
 ```toml
 [package]
-name = "namespace"
+name = "nameservice"
 version = "0.1.0"
 edition = "2021"
 

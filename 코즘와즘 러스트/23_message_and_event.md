@@ -6,12 +6,12 @@
 3. Event
 
 ## 0. Messages
-메시지는 CosmWasm 스마트 컨트랙트와 상호작용하는 방법이다. 대부분의 컨트랙트에는 메시지를 정의하는 [`msg.rs`](./namespace/src/msg.rs) 파일이 있다. 세 가지 주요 메시지 유형이 있다:
+메시지는 CosmWasm 스마트 컨트랙트와 상호작용하는 방법이다. 대부분의 컨트랙트에는 메시지를 정의하는 [`msg.rs`](./nameservice/src/msg.rs) 파일이 있다. 세 가지 주요 메시지 유형이 있다:
 - 인스턴스화 메시지 (`InstantiateMsg`): 이는 컨트랙트를 초기화할 때 전송된다. 일반적으로 컨트랙트를 올바르게 초기화하는 데 필요한 데이터를 포함하고 있습니다. 이는 대부분의 경우 단순한 구조로 이루어져 있다.
 - 실행 메시지 (`ExecuteMsg`) 및 쿼리 메시지 (`QueryMsg`): 둘 다 열거형(enum) 메시지이다. 이들은 각각 실행 및 쿼리에 사용되는 메시지 유형을 나타낸다. 
 
 ### 메시지 정의 예시
-다음은 nameservice 컨트랙의 간단한 [`execute` 메시지 정의 예시](./namespace/src/msg.rs)이다:
+다음은 nameservice 컨트랙의 간단한 [`execute` 메시지 정의 예시](./nameservice/src/msg.rs)이다:
 ```rust
 #[cw_serde]
 pub enum ExecuteMsg {
@@ -27,10 +27,10 @@ pub enum ExecuteMsg {
 - 자동 직렬화 및 역직렬화: `cw_serde` 매크로는 `serde` 라이브러리의 `Serialize` 및 `Deserialize` 트레잇을 자동으로 구현한다. 이를 통해 데이터를 JSON 형식으로 손쉽게 변환할 수 있다.
 - 스키마 생성: `schemars` 라이브러리를 사용하여 JSON 스키마를 자동으로 생성한다. 이는 메시지와 데이터 구조의 예상 형식과 타입을 정의하는 데 유용하다.
 
-[namespace 컨트랙트의 스키마 폴더](./namespace/schema/)를 보면, `cw_serde`로 생성한 스키마 파일을 볼 수 있다.
+[nameservice 컨트랙트의 스키마 폴더](./nameservice/schema/)를 보면, `cw_serde`로 생성한 스키마 파일을 볼 수 있다.
 
 ### 메시지 핸들링
-이 메시지들은 [contract.rs 파일의 execute 함수](./namespace/src/contract.rs)에서 다음과 같이 처리된다:
+이 메시지들은 [contract.rs 파일의 execute 함수](./nameservice/src/contract.rs)에서 다음과 같이 처리된다:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
