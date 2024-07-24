@@ -137,8 +137,6 @@ mod tests {
 }
 ```
 
-이 테스트 코드는 노드 생성, 자식 노드 추가, 그리고 다중 소유권을 검증한다.
-
 ## Reference
 
 1. Rust 공식 문서 - 스마트 포인터: https://doc.rust-lang.org/book/ch15-00-smart-pointers.html
