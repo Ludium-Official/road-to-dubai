@@ -1,182 +1,152 @@
-# Rust의 스마트 포인터 (Smart Pointers)
+# 스마트 포인터 (Smart Pointers)
 
-스마트 포인터는 Rust의 핵심 기능 중 하나야. 단순한 포인터보다 더 많은 기능을 제공하면서 메모리를 안전하고 효율적으로 관리할 수 있게 해줘. 여기서는 Rust의 주요 스마트 포인터들과 그 사용법, 그리고 내부 동작 원리에 대해 자세히 알아볼 거야.
+## 학습 목표
+- 스마트 포인터의 개념과 필요성을 이해한다.
+- Rust에서 제공하는 주요 스마트 포인터 타입들을 학습한다.
+- 각 스마트 포인터의 특징, 사용 사례, 내부 동작 원리를 파악한다.
+- 스마트 포인터와 소유권, 수명 관리의 관계를 이해한다.
+- 사용자 정의 스마트 포인터를 구현하는 방법을 익힌다.
+- 스마트 포인터의 성능 특성과 최적화 기법을 학습한다.
+- 실제 코드에서 스마트 포인터를 효과적으로 활용하는 방법을 습득한다.
 
-## 1. 스마트 포인터란?
+## 스마트 포인터의 개념
 
-스마트 포인터는 포인터처럼 동작하지만 추가적인 기능과 메타데이터를 가진 데이터 구조야. Rust에서 스마트 포인터는 보통 구조체로 구현되며, `Deref`와 `Drop` 트레이트를 구현해.
+스마트 포인터는 포인터처럼 동작하면서 추가적인 메타데이터와 기능을 제공하는 데이터 구조다. 일반 참조자와 달리, 스마트 포인터는 대부분 데이터를 소유한다. Rust에서 스마트 포인터는 주로 `Deref`와 `Drop` 트레이트를 구현하여 만들어진다.
 
-- `Deref` 트레이트: 스마트 포인터가 참조하는 값에 접근할 수 있게 해줘.
-- `Drop` 트레이트: 스마트 포인터가 스코프를 벗어날 때 실행될 코드를 정의해.
+### 스마트 포인터의 필요성
 
-## 2. Box<T>
+1. 메모리 관리 자동화: 자원의 수명을 자동으로 관리한다.
+2. 다중 소유권: 데이터를 여러 소유자가 공유할 수 있게 한다.
+3. 내부 가변성: 불변 참조를 통해 가변 데이터에 접근할 수 있게 한다.
+4. 런타임 다형성: 트레이트 객체를 통해 동적 디스패치를 가능하게 한다.
+5. 지연 초기화: 필요한 시점에 데이터를 초기화할 수 있다.
 
-`Box<T>`는 가장 간단한 스마트 포인터야. 힙에 데이터를 할당하고, 그 데이터에 대한 포인터를 스택에 저장해.
+## Rust의 주요 스마트 포인터
 
-### 사용 예시:
-```rust
-let b = Box::new(5);
-println!("b = {}", b);
-```
+### 1. Box<T>
 
-### 언제 사용할까?
-1. 컴파일 타임에 크기를 알 수 없는 타입을 사용할 때
-2. 큰 데이터를 복사하지 않고 소유권을 전달하고 싶을 때
-3. 특정 타입을 구현하는 값을 소유하고 싶을 때, 정확한 타입은 신경 쓰지 않을 때
+`Box<T>`는 가장 단순한 형태의 스마트 포인터다. 힙에 데이터를 할당하고, 스택에는 그 힙 데이터를 가리키는 포인터를 저장한다.
+참고로, 커링에서 impl Fn을 중첩할 수 없어서 `impl Fn(String) -> Box<dyn Fn(F) -> () >` 이런 식으로 한 바 있다.
+모든 타입에 대해 자유롭다.
 
-### 내부 동작:
-`Box<T>`는 내부적으로 단순한 포인터야. `Deref` 트레이트를 구현해서 `*` 연산자로 내부 값에 접근할 수 있게 해주고, `Drop` 트레이트로 메모리를 해제해.
+특징:
+- 컴파일 시점에 크기를 알 수 없는 타입을 다룰 때 유용하다.
+- 큰 데이터를 복사하지 않고 소유권을 이전할 때 사용한다.
+- 트레이트 객체를 만들 때도 사용된다. `Box<dyn Trait>`
 
-## 3. Rc<T>
+### 2. Rc<T>
 
-`Rc<T>`는 "Reference Counting"의 약자로, 여러 소유자를 가질 수 있는 타입이야.
+`Rc<T>`는 Reference Counting의 약자로, 다중 소유권을 제공한다. 동일한 데이터에 대해 여러 개의 불변 참조를 가능하게 한다.
 
-### 사용 예시:
+특징:
+- 데이터를 여러 부분에서 공유해야 할 때 사용한다.
+- 참조 카운트를 통해 마지막 소유자가 드롭될 때 메모리를 해제한다.
+- 순환 참조를 만들 수 있어 메모리 누수의 가능성이 있다.
+
+### 3. RefCell<T>
+
+`RefCell<T>`는 내부 가변성을 제공하는 스마트 포인터다. 불변 참조를 통해 가변 데이터에 접근할 수 있게 해준다.
+
+특징:
+- 컴파일 시간이 아닌 런타임에 차용 규칙을 검사한다.
+- 단일 스레드 환경에서만 안전하다.
+- `borrow()`와 `borrow_mut()` 메서드를 통해 내부 값에 접근한다.
+
+## VSCode에서 실습
+
+1. VSCode를 열고 새 Rust 프로젝트를 생성한다: `cargo new smart_pointers`
+2. `src/main.rs` 파일에 다음 코드를 작성한다:
+
 ```rust
 use std::rc::Rc;
-
-let a = Rc::new(5);
-let b = Rc::clone(&a);
-let c = Rc::clone(&a);
-
-println!("count after creating c = {}", Rc::strong_count(&a));
-```
-
-### 언제 사용할까?
-1. 데이터를 여러 부분에서 읽기 전용으로 공유해야 할 때
-2. 컴파일 타임에 어느 부분이 마지막으로 데이터를 사용할지 알 수 없을 때
-
-### 내부 동작:
-`Rc<T>`는 내부적으로 참조 카운트를 관리해. `clone`을 호출할 때마다 카운트가 증가하고, `Rc`가 스코프를 벗어날 때마다 감소해. 카운트가 0이 되면 데이터가 해제돼.
-
-## 4. RefCell<T>
-
-`RefCell<T>`는 실행 시간에 빌림 규칙을 확인하는 타입이야. 내부 가변성을 제공해.
-
-### 사용 예시:
-```rust
 use std::cell::RefCell;
 
-let data = RefCell::new(5);
-
-{
-    let mut m = data.borrow_mut();
-    *m += 1;
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    children: RefCell<Vec<Rc<Node>>>,
 }
 
-println!("data: {:?}", data.borrow());
-```
-
-### 언제 사용할까?
-1. 컴파일 타임에는 불변이지만 내부 값을 변경해야 할 때
-2. 런타임에 빌림 규칙을 확인하고 싶을 때
-
-### 내부 동작:
-`RefCell<T>`는 내부적으로 빌림 상태를 추적해. `borrow`와 `borrow_mut` 메서드로 내부 값에 접근할 수 있고, 이 때 런타임 검사가 수행돼. 규칙을 위반하면 패닉이 발생해.
-
-## 5. Arc<T>
-
-`Arc<T>`는 "Atomically Reference Counted"의 약자로, 스레드 간에 안전하게 공유할 수 있는 타입이야.
-
-### 사용 예시:
-```rust
-use std::sync::Arc;
-use std::thread;
-
-let data = Arc::new(vec![1, 2, 3]);
-
-for _ in 0..3 {
-    let data = Arc::clone(&data);
-    thread::spawn(move || {
-        println!("{:?}", *data);
-    });
-}
-```
-
-### 언제 사용할까?
-1. 여러 스레드 간에 데이터를 공유해야 할 때
-2. 스레드 안전성이 필요한 상황에서 `Rc<T>` 대신 사용
-
-### 내부 동작:
-`Arc<T>`는 `Rc<T>`와 비슷하지만, 원자적 연산을 사용해 참조 카운트를 관리해. 이로 인해 스레드 간 데이터 레이스를 방지할 수 있어.
-
-## 6. Mutex<T>와 RwLock<T>
-
-이 두 타입은 동시성 상황에서 데이터에 대한 접근을 동기화하는 데 사용돼.
-
-### Mutex<T> 사용 예시:
-```rust
-use std::sync::{Arc, Mutex};
-use std::thread;
-
-let counter = Arc::new(Mutex::new(0));
-let mut handles = vec![];
-
-for _ in 0..10 {
-    let counter = Arc::clone(&counter);
-    let handle = thread::spawn(move || {
-        let mut num = counter.lock().unwrap();
-        *num += 1;
-    });
-    handles.push(handle);
-}
-
-for handle in handles {
-    handle.join().unwrap();
-}
-
-println!("Result: {}", *counter.lock().unwrap());
-```
-
-### 언제 사용할까?
-1. 여러 스레드에서 데이터를 읽고 쓰는 상황을 동기화해야 할 때
-2. 상호 배제(mutual exclusion)가 필요할 때
-
-### 내부 동작:
-`Mutex<T>`는 내부적으로 락(lock)을 관리해. `lock` 메서드를 호출하면 락을 획득하고 내부 데이터에 접근할 수 있는 가드를 반환해. 가드가 스코프를 벗어나면 자동으로 락이 해제돼.
-
-## 7. 커스텀 스마트 포인터 만들기
-
-필요에 따라 자신만의 스마트 포인터를 만들 수도 있어. 주로 `Deref`와 `Drop` 트레이트를 구현하게 돼.
-
-```rust
-use std::ops::Deref;
-
-struct MyBox<T>(T);
-
-impl<T> MyBox<T> {
-    fn new(x: T) -> MyBox<T> {
-        MyBox(x)
+impl Node {
+    fn new(value: i32) -> Rc<Node> {
+        Rc::new(Node {
+            value,
+            children: RefCell::new(vec![]),
+        })
     }
-}
 
-impl<T> Deref for MyBox<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl<T> Drop for MyBox<T> {
-    fn drop(&mut self) {
-        println!("Dropping MyBox!");
+    fn add_child(&self, child: Rc<Node>) {
+        self.children.borrow_mut().push(child);
     }
 }
 
 fn main() {
-    let x = 5;
-    let y = MyBox::new(x);
+    let root = Node::new(1);
+    let child1 = Node::new(2);
+    let child2 = Node::new(3);
 
-    assert_eq!(5, x);
-    assert_eq!(5, *y);
+    root.add_child(Rc::clone(&child1));
+    root.add_child(Rc::clone(&child2));
+
+    child1.add_child(Rc::clone(&child2));
+
+    println!("Root: {:?}", root);
 }
 ```
 
-이 예제에서 `MyBox`는 `Deref`와 `Drop` 트레이트를 구현해서 스마트 포인터처럼 동작해.
+3. 터미널에서 `cargo run` 명령어를 실행하여 코드를 컴파일하고 실행한다.
 
-## 결론
 
-스마트 포인터는 Rust의 강력한 기능 중 하나야. 메모리 관리를 안전하고 효율적으로 할 수 있게 해주면서, 다양한 상황에 맞는 유연한 해결책을 제공해. 
-`Box<T>`, `Rc<T>`, `RefCell<T>`, `Arc<T>`, `Mutex<T>` 등 각각의 스마트 포인터는 특정 상황에 맞게 설계됐어. 
-이들을 적절히 사용하면 안전하고 효율적인 Rust 프로그램을 작성할 수 있어. 
+## 테스트 코드
+
+`src/main.rs` 파일의 끝에 다음 테스트 코드를 추가한다:
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_node_creation() {
+        let node = Node::new(5);
+        assert_eq!(node.value, 5);
+        assert!(node.children.borrow().is_empty());
+    }
+
+    #[test]
+    fn test_add_child() {
+        let parent = Node::new(1);
+        let child = Node::new(2);
+        parent.add_child(Rc::clone(&child));
+        assert_eq!(parent.children.borrow().len(), 1);
+        assert_eq!(parent.children.borrow()[0].value, 2);
+    }
+
+    #[test]
+    fn test_multiple_ownership() {
+        let node1 = Node::new(1);
+        let node2 = Node::new(2);
+        let node3 = Node::new(3);
+
+        node1.add_child(Rc::clone(&node2));
+        node1.add_child(Rc::clone(&node3));
+        node2.add_child(Rc::clone(&node3));
+
+        assert_eq!(Rc::strong_count(&node3), 3);
+    }
+}
+```
+
+이 테스트 코드는 노드 생성, 자식 노드 추가, 그리고 다중 소유권을 검증한다.
+
+## Reference
+
+1. Rust 공식 문서 - 스마트 포인터: https://doc.rust-lang.org/book/ch15-00-smart-pointers.html
+2. Rust 표준 라이브러리 문서: https://doc.rust-lang.org/std/
+3. "Programming Rust, 2nd Edition" by Jim Blandy, Jason Orendorff, and Leonora F.S. Tindall (2021)
+4. "Rust in Action" by Tim McNamara (2021)
+5. Rust RFC - Stabilize Weak::new(): https://github.com/rust-lang/rfcs/blob/master/text/3110-weak-new.md
+6. Rust 블로그 - Rust 2021 Edition: https://blog.rust-lang.org/2021/05/11/edition-2021.html
+7. "The Rustonomicon" - Rust의 unsafe 프로그래밍 가이드: https://doc.rust-lang.org/nomicon/
+8. Rust 성능 북: https://nnethercote.github.io/perf-book/
+9. Rust 디자인 패턴: https://rust-unofficial.github.io/patterns/
