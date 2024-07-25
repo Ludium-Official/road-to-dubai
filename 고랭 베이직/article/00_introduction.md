@@ -1,5 +1,6 @@
 # 000. Go Introduction
-> golang baisc 모듈은 Go로 작성되어있는 Cosmos-SDK를 이해하고 직접 커스텀할 수 있게하기 위한 목적으로 작성되었다. 
+> golang baisc 모듈은 Go로 작성되어있는 Cosmos-SDK를 이해하고 직접 커스텀할 수 있게하기 위한 목적으로 작성되었다. 더 나아가 CometBFT 합의 엔진과 인터체인의 핵심인 IBC에 대한 기술 이해도 목표로 한다.
+
 ## 목차
 0. Go 언어 탄생 배경
    1. Go 언어의 발전 
