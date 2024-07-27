@@ -4,7 +4,7 @@
    1. `instantiate` EntryPoint
    2. `execute` EntryPoint
    3. `query` EntryPoint
-## 1. 컨트랙트 빌드 후 검증하기
+1. 컨트랙트 빌드 후 검증하기
 
 ## 사전 지식
 - [22_entrypoint](./22_entrypoint.md)
