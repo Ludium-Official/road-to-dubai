@@ -203,4 +203,9 @@ OS가 관리하는 Threads
 
 ![image](https://github.com/user-attachments/assets/5b0336f2-5182-4a4e-95af-04039ae022ee)
 
-적절히 섞어쓴게 M:N 모델인데, 
+적절히 섞어쓴게 M:N Thread 모델인데, 대표적으로는 Go언어의 고루틴이 있다.
+https://medium.com/@rezauditore/introducing-m-n-hybrid-threading-in-go-unveiling-the-power-of-goroutines-8f2bd31abc84
+
+하지만, Rust는 Ownership system을 바탕으로 인한 편리한 동시성 문제 해결로 인해 고성능 병렬성을 쉽게 구현할 수 있다. 따라서 1:1 Thread 모델을 채택한다. 
+https://doc.rust-kr.org/ch16-01-threads.html
+
