@@ -120,4 +120,55 @@ PCB말고도 Kernel이 운용하는 자료구조는 다음과 같이 더 있다.
 - 멀티 프로그래밍 Degree
 - CPU 할당
 - swap Out/in
-등에 대한 스케줄링을 실행한다. 
+등에 대한 스케줄링을 실행한다.
+
+### Process switching vs Mode switching
+process swithcing은 mode switching에 비해 현저히 적게 일어나지만, process switching은 process context를 저장/불러오기 하는 등의 오버헤드가 발생한다. 
+<img width="421" alt="image" src="https://github.com/user-attachments/assets/b8ce8d77-be06-4ffd-a4df-dd6dc6ed472d">
+
+
+### Process Managing
+Process는 creation, exit, 자원 공유 등의 여러가지 생로병사를 가지고 있다.
+내 개인적인 생각으로는, 관리(뭐든!)를 하기 위한 가장 좋은 자료구조는 tree 구조라고 생각한다. 왜냐하면, 의존 관계가 명확하고, 
+그로 인한 각각 인스턴스의 관할 하의 전체적이면서도 세부적인 관리가 가능하기 때문이다. 그래서 역사책에 중앙집권 체제의 그래프를 보면 보통 트리 구조이다.(ㅋㅋ)
+![image](https://github.com/user-attachments/assets/64b2cdfc-ed58-4dc3-8f2d-6a1b4f0854ff)
+
+잡소리 그만 하고, 프로세스는 다음과 같은 형태로 생성되고 관리된다. 즉, 부모 프로세스 및 자식 프로세스의 관계가 존재한다. 
+![image](https://github.com/user-attachments/assets/320bf2e9-7e72-4de5-8f33-bf3c5a87c72b)
+
+
+
+## Excution of OS
+
+아까도 말했듯이, Stored Program Concept에 의하면 OS도 프로그램 중 하나이며, OS도 프로세스로 올라갈 것이다. 즉, `OS is just subject for Scheduling`.
+
+그렇다면, OS는 누가 controll하는가?
+-> OS 디자인에 따라 다르다. 
+
+Non-Process Kernel의 경우 process로서 실행되지 않는다. 
+<img width="533" alt="image" src="https://github.com/user-attachments/assets/48381f9d-1a8a-44f6-b2b4-c17a108ff615">
+
+
+User Process안에 Kernel이 들어있는 경우, Switching을 Process 밖에 있는 PSF에게 스위칭을 위임한다.
+<img width="550" alt="image" src="https://github.com/user-attachments/assets/43c3e9e7-fdff-4d2d-8e3e-d4b8746005bb">
+
+이는 완전 독립된 OS Process를 가정한다. 이 경우, 또한 Process 밖에 있는 PSF에게 위임한다. 이 모델은 멀티 프로세서 환경에 적합하다고 할 수 있다. 
+<img width="587" alt="image" src="https://github.com/user-attachments/assets/ca31dca8-0a28-4bb1-9def-97b0c884c1d8">
+
+## Multithreading
+- process model의 트리 위계 구조를 통해 Web server의 여러 클라이언트의 요청을 동시에 처리하기엔 부하가 너무 크다.
+- Traditional process는 cpu를 동시에 하나밖에 쓸 수 없어서 멀티 프로세서 아키텍처의 장점을 충분히 활용할 수가 없었다. 물론 멀티 프로세싱을 할 수는 있었지만, single process에 multiple processor을 할당할 수가 없었다는 소리. 
+
+따라서 Multiple Threads Model이 제기되었다.
+- Thread는 image와 context를 다 가지고 있는 Process와 달리, sp, pc와 local variable, return register을 트래킹 하기 위한 Stack 정도로만 구성되어있다. 간단히 말하면 Thread = Stack + Thread Context
+- Thread들끼리는 코드와 대부분의 data를 공유한다. Context도 공유한다.
+
+Modern Process 모델은 다음과 같이 구성되어있다.
+<img width="802" alt="image" src="https://github.com/user-attachments/assets/d863aef8-1efb-4259-9cc0-1c8a59b641bd">
+
+논리적 구조로 보면, Process는 트리 형태, Thread는 병렬 관계로 관리한다. 
+
+<img width="661" alt="image" src="https://github.com/user-attachments/assets/dd7123d3-e9f3-4de4-93a7-3919edb63bed">
+
+
+
