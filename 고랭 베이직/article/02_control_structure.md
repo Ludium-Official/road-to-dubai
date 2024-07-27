@@ -8,20 +8,17 @@
    2. if-else 문
    3. if-else if-else 문
    4. 조건문 내 변수 선언
-   5. (실습) 조건문을 통해 숫자 판별 프로그램 구현하기 
 2. 반복문: for, break, continue
    1. 기본 for 문
    2. 조건식만 있는 for 문
    3. 무한 루프: 정지 판별 문제
    4. range를 사용한 for 문
    5. break와 continue
-   6. (실습) 반복문, 조건문을 활용한 입출력 핸들러 프로그램 구현하기
 3. switch 문
    1. 기본 switch 문
    2. 여러 값을 검사하는 switch 문
    3. 조건식을 사용하는 switch 문
    4. fallthrough
-   5. (실습) switch문을 활용하여 입출력 핸들러 프로그램 구현하기
 
 ## 1. 조건문: if, else if, else
 Go에서 조건문은 if, else if, else 키워드를 사용하여 정의한다. 조건문은 특정 조건에 따라 코드 블록을 실행하거나 건너뛸 수 있게 한다.
@@ -100,37 +97,6 @@ func main() {
     // x 존재하지 않음
 }
 ```
-
-### 5. (실습) 조건문을 통해 숫자 판별 프로그램 구현하기 
-조건문을 사용하여 숫자를 판별하는 프로그램을 구현해보도록 하자.
-
-#### 1. 기본 설정하기
-기본 설정은 다음과 같다:
-```sh
-# if_condition 디렉토리 생성
-$ mkdir if_condition && cd if_condition
-
-# if_condition go module 생성 
-$ go mod init if_condition
-```
-
-#### 2. 코드 작성하기
-조건문을 사용하여 사용자가 입력한 숫자를 기준으로 해당 숫자의 범위를 판별하는 프로그램 코드를 작성해야 한다. 
-
-프로그램 구현 요구 사항은 다음과 같다: 
-1. 입력한 숫자가 음수이면 "The number is negative"를 출력한다. 
-2. 입력한 숫자가 0이면 "The number is zero"를 출력한다.
-3. 입력한 숫자가 0보다 크고 10 이하이면 "The number is between 1 and 10"를 출력한다.
-4. 입력한 숫자가 10보다 크면 "The number is greater than 10"를 출력한다.
-> 구현된 실습 코드 확인하기: [02_if_condition](../code/02_if_condition/)
-
-
-#### 3. 조건문을 통해 숫자 판별 프로그램 실행화면 제출하기
-프로그램을 실행하여 출력된 결과는 다음과 같다:
-<div style="text-align: center;">
-   <img src="../assets/02_control_structure_if_condition_result_example.png" alt="02_control_structure_if_condition_result_example" width="600"/>
-</div>
-
 
 ## 2. 반복문: for, break, continue
 Go에서는 유일한 반복문으로 for 문을 사용한다. 다양한 방식으로 반복문을 사용할 수 있다.
@@ -245,39 +211,6 @@ func main() {
 	}
 }
 ```
-
-### 6. (실습) 반복문, 조건문을 활용한 입출력 핸들러 프로그램 구현하기
-조건문과 반복문을 모두 활용하여 간단한 입출력 핸들러 프로그램을 실습해보도록 하자. 이전 조건문 실습은 반복문이 없어서 다른 입력 값을 입력하기 위해서 계속해서 프로그램을 다시 실행해야 하는 번거로움이 있었다. 이제 반복문을 사용하면 그러한 불편함을 해소할 수 있다. 
-
-#### 1. 기본 설정하기
-기본 설정은 다음과 같다:
-```sh
-# io_handler 디렉토리 생성
-$ mkdir io_handler && cd io_handler
-
-# io_handler go module 생성 
-$ go mod init io_handler
-```
-
-#### 2. 코드 작성하기
-이 프로그램은 사용자로부터 입력을 받아 그 입력에 따라 다른 동작을 수행한다. 이는 사용자가 "exit"를 입력할 때까지 무한 루프로 계속 실행된다. 
-
-프로그램 구현 요구 사항은 다음과 같다:
-1. 사용자가 입력한 명령어에 따라 다양한 동작을 수행한다.
-2. 명령어는 다음과 같다:
-   1. "exit": 프로그램을 종료한다.
-   2. "hello": "Hello, world!"를 출력한다.
-   3. "even": 0부터 10까지의 짝수를 출력한다.
-   4. "odd": 1부터 10까지의 홀수를 출력한다.
-   6. 그 외의 입력에 대해서는 "Unknown command"를 출력한다.
-> 구현된 실습 코드 확인하기: [02_io_handler](../code/02_io_handler/)
-
-
-#### 3. 반복문, 조건문을 활용한 입출력 핸들러 프로그램 실행화면 제출하기
-프로그램을 실행하여 출력된 결과는 다음과 같다:
-<div style="text-align: center;">
-   <img src="../assets/02_control_structure_io_handler_result_example.png" alt="02_control_structure_io_handler_result_example" width="600"/>
-</div>
 
 
 ## 3. switch 문
@@ -395,38 +328,6 @@ func main() {
 - `default`: fallthrough에 의해 다음 case 절이 없을 때 실행된다. 위 코드에서는 실행되지 않는다.
 
 fallthrough는 오직 다음 case 절로만 실행을 강제로 넘길 수 있다. 즉, 현재 case 절의 끝에만 사용될 수 있으며, 다중 fallthrough는 허용되지 않는다. 이를 사용할 경우, 다음 case 절의 조건은 검사되지 않으므로 논리적 오류를 방지하기 위해 신중하게 사용해야 한다.
-
-### 5. (실습) switch문을 활용하여 입출력 핸들러 프로그램 구현하기
-이번 실습에서는 switch문을 활용하여 반복문 실습에서 작성한 입출력 핸들러와 비슷한 프로그램을 작성해보도록 하자. switch 문을 사용하면 더 가독성있는 코드를 작성할 수 있다. 
-
-#### 1. 기본 설정하기
-기본 설정은 다음과 같다:
-```sh
-# switch_io_handler 디렉토리 생성
-$ mkdir switch_io_handler && cd switch_io_handler
-
-# switch_io_handler go module 생성 
-$ go mod init switch_io_handler
-```
-
-#### 2. 코드 작성하기
-프로그램 요구 사항은 다음과 같다:
-1. 사용자가 입력한 명령어에 따라 다양한 동작을 수행한다.
-2. 명령어는 다음과 같다:
-   1. "exit": 프로그램을 종료한다.
-   2. "hello": "Hello, world!"를 출력한다.
-   3. "even": 0부터 10까지의 짝수를 출력한다.
-   4. "odd": 1부터 10까지의 홀수를 출력한다.
-   5. "help": 사용 가능한 명령어 목록을 출력한다.
-   6. 그 외의 입력에 대해서는 "Unknown command"를 출력한다.
-> 구현된 실습 코드 확인하기: [02_switch_io_handler](../code/02_switch_io_handler/)
-
-#### 3. switch문을 활용하여 입출력 핸들러 프로그램 실행화면 제출하기
-프로그램을 실행하여 출력된 결과는 다음과 같다:
-<div style="text-align: center;">
-   <img src="../assets/02_control_structure_switch_io_handler_result_example.png" alt="02_control_structure_switch_io_handler_result_example" width="600"/>
-</div>
-
 
 
 ## Resources 
