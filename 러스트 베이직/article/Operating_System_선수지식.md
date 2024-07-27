@@ -193,6 +193,14 @@ Thread 관리가 user-level threads library로 이루어진다. 그리고 kernel
   멀티 프로세서의 이점을 얻을 수 없음 
 ![image](https://github.com/user-attachments/assets/a3c7c0c3-111e-47dc-8c69-2f2188eca39b)
 
-![image](https://github.com/user-attachments/assets/1317d155-a03a-4668-9163-93ccf7c3297e)
+#### Kernel-Level Thread
+OS가 관리하는 Threads
+- 장점
+  kernel이 인지하므로, 멀티 프로세서의 이점을 가질 수 있다.
+  하나가 I/O한다고 해서 모두 블로킹 되지 않는다.
+- 단점
+  라이브러리의 Thread 생성이 Kernel Thread 생성을 야기한다. 
 
+![image](https://github.com/user-attachments/assets/5b0336f2-5182-4a4e-95af-04039ae022ee)
 
+적절히 섞어쓴게 M:N 모델인데, 
