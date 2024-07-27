@@ -305,3 +305,20 @@ Linux에서는 다음과 같은 멀티프로세서 스케줄러들이 사용된�
    - 확장성은 떨어지지만 반응성이 좋고 구현이 간단하다.
 
 
+## Synchronization
+Multithreading, CPU scheduling을 잘 이해했다. 근데 Thread들 사이에 데이터 공유를 저런 식으로 하면 뭔가 문제가 있지 않을까? 
+
+<img width="697" alt="image" src="https://github.com/user-attachments/assets/67add7ec-dd1c-479d-99b8-07abe0fb2e62">
+
+이는 동시성 문제라고 한다. 즉,2개 이상의 Thread들이 아무런 동기화 없이 리소스를 공유하는 것이 문제이다. 
+따라서, 동기화 메커니즘이 필요하다. 
+
+어떤 자원을 공유할까? 
+- Between processes
+  Shard memory objects, files . .. 
+- Between threads
+  Global variables on static data segment
+  dynamic objects on heap
+
+
+
