@@ -41,7 +41,7 @@ IBC의 작동 방식을 이해하려면 다음 두 가지 계층을 구분하는
    <img src="./assets/99i_ibc_overview_2d.png" alt="99i_ibc_overview_2d" width="650"/>
 </div>
 
-이에 대한 ibc에서 제공하는 이미지는 다음과 같다:
+ibc에서 제공하는 이미지는 이를 더 입체적으로 표현하고 있다:
 <div style="text-align: center;">
    <img src="./assets/99i_ibc_overview_3d.png" alt="99i_ibc_overview_2d" width="650"/>
 </div>
