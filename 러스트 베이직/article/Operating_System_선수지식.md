@@ -170,5 +170,20 @@ Modern Process 모델은 다음과 같이 구성되어있다.
 
 <img width="661" alt="image" src="https://github.com/user-attachments/assets/dd7123d3-e9f3-4de4-93a7-3919edb63bed">
 
+Threads와 Processes의 공통점:
+- 고유의 logical flow가 있다.
+- 각각 다 스케줄링 된다.
+
+차이점:
+- Thread들 끼리는 코드와 데이터를 공유한다.
+- Thread들은 트리 위계 구조가 없고, 경량화 되어있으므로 process보다 쉽게 생성된다.
+- IPC와 다르게, Thread들 끼리는 주소 공간과 메모리를 공유하므로, kernel 개입 없이 커뮤니케이션이 가능하다.
+
+이를 통해, 단일 프로세스를 구성하는 Thread들에 CPU가 하나씩 할당되어 단일 프로세스에 대한 병렬 처리가 가능해졌다. 
+
+### User-Level Thread vs Kernel-Level Thread
+
+#### User-Level Thread
+
 
 
