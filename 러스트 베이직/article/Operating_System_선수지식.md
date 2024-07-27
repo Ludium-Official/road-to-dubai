@@ -99,9 +99,25 @@ Running Program(User Program)과 OS는 syscall 인터페이스를 통해 상호�
    -Kernel Context: pid, gid, open files, paging tables ... 
 
 그래서 이런 정보들 다 모아가지고, essential kernel data structure인 PCB를 설계한다. 
-PCB의 element는 앞서 말한 Images, Process Context를 이용해서 설계한다. 즉, 프로세스를 관리하기 위한 추상 데이터 구조를 설계한 것이다.
+PCB의 element는 앞서 말한 Images, Process Context를 이용해서 설계한다. 즉, 프로세스를 관리하기 위한 추상 데이터 구조를 설계한 것이다. 다음은 실제 리눅스 커널에서 쓰이는 PCB이다. 
 
-![image](https://github.com/user-attachments/assets/469ab826-b067-4eee-a072-fb60ae1c957f)
+![image](https://github.com/user-attachments/assets/30cde532-ec60-4fdb-a69a-40f92a1ffc77)
 
-어렵게 생각할 필요 없고, 모든 소프트웨어는 데이터 구조를 설계하고 그 데이터 구조를 잘 바꾸는 일 밖에 할 것이 없다. 운영체제도 똑같은 소프트웨어이므로, PCB라는 데이터 구조를 설계한 뒤, 그것을 통해 추상화된 프로세스들을 관리한다. 
+어렵게 생각할 필요 없고, 모든 소프트웨어는 데이터 구조를 설계하고 그 데이터 구조를 잘 바꾸는 일 밖에 할 것이 없다. 운영체제도 똑같은 소프트웨어이므로, PCB라는 데이터 구조를 설계한 뒤, 그것을 통해 추상화된 프로세스들을 관리한다. 결국 Stored Program Concept에 의헤 Kernel도 Main memory에 적재되어 똑같이 움직인다. 
 
+PCB말고도 Kernel이 운용하는 자료구조는 다음과 같이 더 있다.
+- Memory data structures
+  프로세스에 대한 메모리 할당, 프로세스에 대한 디스크의 할당, 가상 메모리에 대한 info .. 
+- I/O data structures
+  I/O device의 가능성, I/O operation의 상태, I/O transfer에 대한 source 혹은 destination이 되는 main memory address
+- File data structures
+  Current states of file, 파일의 디스크 상 주소 
+
+프로세스의 생명주기 관리는 다음과 같은 다이어그램 처럼 이루어진다.
+![image](https://github.com/user-attachments/assets/a88308df-af19-4b10-9221-dbe936b1c383)
+
+이 외에도 OS는 프로세스에 대해서
+- 멀티 프로그래밍 Degree
+- CPU 할당
+- swap Out/in
+등에 대한 스케줄링을 실행한다. 
