@@ -8,7 +8,7 @@
    2. Float & Complex 
 1. String
 2. String Formatting 
-3. Booleans
+3. Boolean
 4. 변수 선언 및 초기화하기  
    1. 초기화 없이 여러 변수 선언하기
    2. 상수(Constant) 정의하기
@@ -99,7 +99,7 @@ fmt 패키지는 다양한 방식으로 문자열의 포맷을 지정할 수 있
 | %c    | Unicode 코드 포인트로 표시되는 문자   |
 
 
-## 3. Booleans
+## 3. Boolean
 Go에서 `bool` 타입은 말 그대로 boolean 값을 나타낸다. 이는 `true` 혹은 `false`로 표현이 가능하다. 
 
 Go에서 bool 타입의 주요 특성은 다음과 같다:
