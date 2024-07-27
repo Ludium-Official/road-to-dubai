@@ -2,6 +2,7 @@
 ## 목차
 0. 컨트랙트 Instantiate 하기 
 1. config 쿼리하기 
+2. 컨트랙트 Instantiate 트랜잭션 제출하기 
 
 ## 0. 컨트랙트 Instantiate 하기 
 cosmwasm 컨트랙트는 evm 컨트랙트와는 다르게 업로드와 인스턴스화(또는 초기화) 부분이 분리되어 있다. 그래서 한 번 업로드하면 배포할 때의 설정에 따라 권한이 있는 사람들은 초기화를 할 수 있어서 코드 재사용성이 좋다. 
@@ -16,7 +17,7 @@ cosmwasm 컨트랙트는 evm 컨트랙트와는 다르게 업로드와 인스턴
 3. Transaction Fee가 계산되어 나오면 실행이 완료되었다는 뜻이다. 따라서 `Instantiate` 버튼을 눌러 컨트랙트 초기화를 위한 트랜잭션을 전송한다. 
 ![](./assets/33_contract_initiate.png)
 
-### 2. Initate 완료 
+### 2. 컨트랙트 초기화 완료 
 트랜잭션이 성공적으로 실행되었을 경우 다음과 같다:
 ![](./assets/33_contract_initiate_complete.png)
 
@@ -47,3 +48,7 @@ cosmwasm 컨트랙트는 evm 컨트랙트와는 다르게 업로드와 인스턴
 우리가 초기화할 때 보낸 메세지의 정보가 컨트랙트 내부 상태에 잘 보관되어 있는 것을 확인할 수 있다. 
 
 ![](./assets/33_contract_config_query.png)
+
+## 2. 컨트랙트 Instantiate 트랜잭션 제출하기 
+다음과 같이 nameservice 컨트랙트를 초기화한 결과를 제출해야 한다:
+- transcation hash: [E282A572BAC5274CE075FAE13E4316DC73C63FDDD68BC3E8D480B066A8CFA39C](https://neutron.celat.one/pion-1/txs/E282A572BAC5274CE075FAE13E4316DC73C63FDDD68BC3E8D480B066A8CFA39C)

@@ -2,6 +2,7 @@
 ## 목차
 0. register 트랜잭션 실행하기 
 1. `ResolveRecord` 쿼리 조회하기 
+2. register 트랜잭션 실행 결과 제출하기
 
 ## 0. register 트랜잭션 실행하기
 이제 nameservice를 제대로 사용해 볼 차례이다. `Execute`탭을 선택하여 `register`를 선택한 다음 name을 입력하여 메세지를 작성해보자:
@@ -48,3 +49,7 @@
   }
 }
 ```
+
+## 2. register 트랜잭션 실행 결과 제출하기
+다음과 같이 register 트랜잭션을 직접 실행한 결과를 제출해야 한다:
+- transaction hash: [C1AED2C9966260AF037342D9321711BBDC302A154C41AECB7A14B14C032E4CA6](https://neutron.celat.one/pion-1/txs/C1AED2C9966260AF037342D9321711BBDC302A154C41AECB7A14B14C032E4CA6)
