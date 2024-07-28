@@ -28,13 +28,12 @@
   | 19 | Simple Test | Mission | Writing and running tests | [Simple Test](./article/Simple_Test.md) |
   | 20 | Trait | Project | Understanding Trait | [Trait](./article/Trait.md) |
   | 21 | What is Functional Programming? | Article | Introduction to functional programming | [What is Functional Programming?](./article/What_is_Functional_Programming.md) |
-  | 22 | Functional Programming Paradigm | Article | Understanding functional programming paradigms | [Functional Programming Paradigm](./article/Functional_Programming_Paradigm.md) |
-  | 23 | Functional Programmatic Syntax | Mission | Practicing functional programming syntax | [Functional Programmatic Syntax](./article/Functional_Programmatic_Syntax.md) |
-  | 24 | Currying | Mission | Understanding and using currying | [Currying](./article/Currying.md) |
-  | 25 | Map, Filter, Fold | Mission | Working with higher-order functions | [Map, Filter, Fold](./article/map_filter_fold.md) |
-  | 26 | Lazy Evaluation in iterator | Article | Understanding lazy evaluation | [Lazy Evaluation in iterator](./article/Lazy_evaluation.md) |
-  | 27 | Monad | Article | Introduction to monads | [Monad](./article/Monad.md) |
-  | 28 | Smart Pointer | Mission | Working with smart pointers | [Smart Pointer](./article/Smart_Pointer.md) |
+  | 22 | Functional Programmatic Syntax | Mission | Practicing functional programming syntax | [Functional Programmatic Syntax](./article/Functional_Programmatic_Syntax.md) |
+  | 23 | Currying | Mission | Understanding and using currying | [Currying](./article/Currying.md) |
+  | 24 | Map, Filter, Fold | Mission | Working with higher-order functions | [Map, Filter, Fold](./article/map_filter_fold.md) |
+  | 25 | Lazy Evaluation in iterator | Article | Understanding lazy evaluation | [Lazy Evaluation in iterator](./article/Lazy_evaluation.md) |
+  | 26 | Monad | Article | Introduction to monads | [Monad](./article/Monad.md) |
+  | 27 | Smart Pointer | Mission | Working with smart pointers | [Smart Pointer](./article/Smart_Pointer.md) |
 
   
 
