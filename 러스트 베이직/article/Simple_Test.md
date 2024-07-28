@@ -116,7 +116,7 @@ Rust는 어트리뷰트를 통해 쉬운 테스트를 작성하기 용이해서,
 4. **문서화**: 함수형 코드는 자체로 명확해서 테스트가 좋은 문서 역할을 한다.
 5. **버그 감소**: 불변성과 순수 함수로 인해 상태 관련 버그가 줄어든다.
 
-
+## Reference
 1. "Test-Driven Development: By Example" by Kent Beck
 2. "Functional Programming in Scala" by Paul Chiusano and Rúnar Bjarnason
 3. "Rust 공식 문서": https://doc.rust-lang.org/book/ch11-00-testing.html
