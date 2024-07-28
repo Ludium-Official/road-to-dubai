@@ -16,7 +16,7 @@
   | 7 | Comment | Article | Best practices for commenting | [Comment](./article/Comment.md) |
   | 8 | Flow | Mission | Control flow in Rust | [Flow](./article/Flow.md) |
   | 9 | Operating System 선수지식 | Article | Prerequisites for OS programming | [Operating System 선수지식](./article/Operating_System_선수지식.md) |
-  | 10 | Ownership | Mission | Understanding Rust's ownership model | [Ownership(1)](./article/Ownership_1.md) |
+  | 10 | Ownership | Mission | Understanding Rust's ownership model | [Ownership](./article/Ownership_1.md) |
   | 11 | Struct | Mission | Working with structs | [Struct](./article/Struct.md) |
   | 12 | Enum | Mission | Using enums in Rust | [Enum](./article/Enum.md) |
   | 13 | Pattern Matching | Mission | Pattern mathcing in Rust | [Pattern Matching](./article/PatternMatching.md) |
