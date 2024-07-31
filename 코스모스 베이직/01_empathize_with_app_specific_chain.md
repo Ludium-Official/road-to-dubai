@@ -2,7 +2,7 @@
 
 ### Preview
 
-**Hello Eearth!, Welcome to Cosmos** ,안녕하세요! 코스모스 베이직 과정 첫번째 챕터에 온걸 환영합니다.
+**Hello Eearth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 첫번째 챕터에 온걸 환영한다.
 
 첫번째로 우리가 다룰 주제는 ‘왜 App Specific Chain(이하 app chain)이 등장했는가?**(Understanding Why App-Specific blockcahins Emerged)**’ 이다.
 
@@ -176,7 +176,7 @@ _prod : interchain developer academy 0 week course_
 
 여기서 우리가 알 수 있는 점은 반드시 기술의 발전이 모든 자원을 효율적으로 운용하는 형태보다는 그 자원을 가지고 유틸리티를 만드는 개발자(UX or DX)의 사용경험들도 매우 중요한 기술발전의 요소인 것을 알 수 있다.
 
-#### References
+### References
 
 https://ida.interchain.io/ida-course/lps/week-0
 https://ida.interchain.io/ida-course/lps/week-1
