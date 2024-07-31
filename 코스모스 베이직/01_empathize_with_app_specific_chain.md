@@ -1,10 +1,10 @@
-# 01. Empathize with app specific chain
+# 01. Empathize with App-Specific Chain
 
 ### Preview
 
-**Hello World!** ,안녕하세요! 코스모스 베이직 과정 첫번째 챕터에 환영한다.
+**Hello Eearth!, Welcome to Cosmos** ,안녕하세요! 코스모스 베이직 과정 첫번째 챕터에 온걸 환영합니다.
 
-첫번째로 우리가 다룰 주제는 ‘왜 App Specific Chain(이하 app chain)이 등장했는가?**(Understanding Why app specific blockcahins had come)**’ 이다.
+첫번째로 우리가 다룰 주제는 ‘왜 App Specific Chain(이하 app chain)이 등장했는가?**(Understanding Why App-Specific blockcahins Emerged)**’ 이다.
 
 이번 챕터를 코스모스 베이직 과정에 있어 가장 먼저 화두에 꺼낸 이유는 코스모스 생태계를 공부하고 이해하고 나아가 이 생태계에서 무언가를 개발하기 위해 먼저 왜 앱체인이 필요한지를 공감하는 것이 매우 중요하다고 생각했기 때문이다.
 
@@ -16,19 +16,19 @@
 
 아마, 이 글을 통해서 충분히 이 생태계의 방향성과 추구하고자 하는 목적을 깨닫고 공감한다면, 앞으로의 긴 로드 투 두바이 교육여정에 있어서의 좋은 모티베이션이 될 것 같다.
 
-### Why we need app specific chain?
+### Why Do We Need an App-Specific Chain?
 
 자! 먼저 이번 챕터를 공부하기 앞서 질문을 하나 하겠다.
 
-- **Question: Cosmos SDK와 Cosmos라는 App specific blockchain theme는 대체 왜 나오게 되었을까?**
+- **Question: Cosmos SDK와 Cosmos라는 App specific blockchain 테마는 왜 나오게 되었을까?**
 
 정답은 없다. 다만, 모두가 적어도 이 질문에 대해 각자 스스로 머릿속으로 **'생각'** 이라는 것을 해볼 수 있었다라는 것만으로도 이번 강의가 충분히 의미가 있어진 것이다.
 
 우선! 이후 글을 진행할테니 모두 위에 제시된 메인 질문은 머릿속에 품고 계속해서 설명을 들으면 된다.
 
-### Review of blockchain's history
+### Review of Blockchain History
 
-먼저! 우리가 **app specific chain**이라는 관점을 공감을 하기 위해서 앱 체인 이전에 블록체인이 어떻게 발전되어있는지를 간단하게 볼 것이다.
+먼저! 우리가 **app-specific chain**이라는 관점을 공감을 하기 위해서 앱 체인 이전에 블록체인이 어떻게 발전되어있는지를 간단하게 볼 것이다.
 
 커다란 블록체인이라는 기술의 큰 챕터에서 볼 때, 과거의 블록체인들이 어떻게 발전해왔길래 코스모스가 출시될 수 있었을지를 맥락적으로 이해하자는 말이다.
 
@@ -49,7 +49,7 @@
 [![blockchain_history](./assets/01_blockchain_history.png)](https://ida.interchain.io/ida-course/0-blockchain-basics/2-history.html)
 _prod : interchain developer academy 0 week course_
 
-### Purpose of app specific chain1
+### Purpose of App-Specific Chains 1
 
 위에서 우리가 주목했던 블록체인들은 '비트코인, 이더리움, 코스모스'였다. 이제 각 체인들이 어떤 목적을 가지고 기존 체인을 개선하기 위해 제안을 헀는가를 살펴볼 차례이다.
 
@@ -75,7 +75,7 @@ _prod : interchain developer academy 0 week course_
 
 이렇게 바라보면 좀 더 직관적으로 이해할 수 있을 것이다.
 
-### Purpose of app specific chain2
+### Purpose of App-Specific Chains 2
 
 #### 1. 비트코인 → 이더리움 (consensus system + computing)
 
@@ -93,7 +93,7 @@ _prod : interchain developer academy 0 week course_
 
 이제 우리가 배울 코스모스에 대해서도 생각해보자.
 
-이 파트가 바로 위에서 언급했던 질문(**Cosmos SDK와 Cosmos라는 App specific blockchain theme는 대체 왜 나오게 되었을까?**)에 대한 단서가 될 수 있는 부분이니 집중과 공감을 반드시 해보길 바란다.
+이 파트가 바로 위에서 언급했던 질문(**Cosmos SDK와 Cosmos라는 App-Specific Blockchain 테마는 대체 왜 나오게 되었을까?**)에 대한 단서가 될 수 있는 부분이니 집중과 공감을 반드시 해보길 바란다.
 
 앞서 언급한 이더리움은 블록체인을 페이먼트 시스템이 아닌 컴퓨팅 시스템이라는 새로운 관점을 제안했다고 하였다. 그렇지만, 이를 우리 삶에 대변해본다면 **각자 노트북, 스마트폰과 같은 컴퓨터가 하나 이상씩을 가지고 있는 이 시대에 글로벌 컴퓨터를 여러명이 사용할 수 있을까?**란 생각을 하게 될 것이다.
 
@@ -122,7 +122,7 @@ _prod : interchain developer academy 0 week course_
 
 ![01_app_based_blockchains](./assets/01_app_based_blockchains.png)
 
-### Consider about the first question again
+### Consider the First Question Again
 
 여기서 질문을 다시 하도록 하겠다. 여기까지의 설명을 듣고, 각자가 생각하기에는 어떤 프레임 혹은 생태계가 더 좋거나 혹은 여러 개발자들이 온보딩하기 좋은 생태계일까? 각자 대답하는 것을 이번 시간의 [과제](./homework/01.md)로 하겠다.
 
@@ -164,7 +164,7 @@ _prod : interchain developer academy 0 week course_
 
 > Vertical scalability: scaling by improving the network's components to increase its computational power. When "scaling up", the network can accept more transactions and any activity that modifies the state.
 
-### Somethign special on Cosmos-Ecosystem?
+### Somethings Special About the Cosmos Ecosystem?
 
 여기는 plus +a이다. 내가 현직 코스모스 생태계에서 종사하면서 느낀 코스모스란 에코시스템의 현재를 표현해보았다. 참고로 [이 글](./99_$ATOM과%20인터체인%20보안.md)에서 아곤이 추가적으로 좋은 글을 써두었으니 여기 섹션과 저 글을 이어서보면 매우 좋을 것이다.
 
