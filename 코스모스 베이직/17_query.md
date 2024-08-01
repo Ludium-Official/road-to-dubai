@@ -3,6 +3,8 @@
 
 ## 목차 
 0. Query
+   1. gRPC Query
+   2. Store Query
 1. Query Client
 2. Query Service
 3. Query 라이프사이클
@@ -17,7 +19,7 @@ Query는 최종 사용자가 인터페이스를 통해 풀 노드에게 정보 �
 1. Query는 합의 엔진을 통해 풀 노드가 수신하고 ABCI를 통해 앱으로 전달된다. 
 2. 그런 다음 `BaseApp`의 `QueryRouter`를 통해 적절한 모듈로 라우팅되어 모듈의 `QueryService`로 처리할 수 있도록 한다.
 
-### gRPC Query
+### 1. gRPC Query
 Query는 Protobuf 서비스를 사용하여 정의한다.`Query Service`는 `query.proto`에서 모듈별로 만들어야 한다. 이 서비스는 rpc로 시작하는 엔드포인트를 나열한다. 다음은 [`auth` 모듈의 `Query Service` 예시](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/proto/cosmos/auth/v1beta1/query.proto#L14-L89)이다:
 ```protobuf
 service Query {
@@ -45,7 +47,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 }
 ```
 
-### Store Query
+### 2. Store Query
 [Store](./13_store_and_keepers.md) Query는 Store Key로 직접 쿼리한다. `clientCtx.QueryABCI(req abci.RequestQuery)`를 사용하여 머클 증명이 포함된 전체 `abci.ResponseQuery`를 반환한다. 다음은 이를 간략하게 표현한 [코드 예시](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/baseapp/abci.go#L903-L924)이다.
 ```go
 func handleQueryStore(app *BaseApp, path []string, req abci.RequestQuery) abci.ResponseQuery {

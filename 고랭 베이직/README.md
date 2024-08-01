@@ -20,7 +20,7 @@
 | 2 | 제어 구조(조건문, 반복문, switch문) | Article | 고 언어의 조건문(if, else), 반복문(for), 그리고 switch문과 같은 제어 구조를 통해 프로그램의 흐름을 제어하는 방법을 설명한다 | [Control Structure](./article/02_control_structure.md) |
 | 2-mission-0 | 숫자 판별 프로그램 구현하기 | Mission | 조건문을 사용하여 숫자를 판별하는 프로그램을 직접 구현해본다 | [Number Decision Program](./article/02m00_condition_number_decision.md) |
 | 2-mission-1 | Simpe CLI(Command Line Interface) 프로그램1 | Mission | 조건문과 반복문을 모두 활용하여 간단한 CLI 프로그램을 직접 구현해본다 | [Simple CLI1](./article/02m01_iteration_simple_cli.md) |
-| 2-mission-2 | switch문을 활용하여 CLI(Command Line Interface) 프로그램을 직접 구현해본다 | Mission | switch문을 활용하여 간단한 CLI 프로그램 구현하기 | [Simple CLI2](./article/02m02_switch_simple_cli.md) |
+| 2-mission-2 | switch문을 활용하여 간단한 CLI 프로그램 구현하기 | Mission | switch문을 활용하여 CLI(Command Line Interface) 프로그램을 직접 구현해본다 | [Simple CLI2](./article/02m02_switch_simple_cli.md) |
 | 3 | 인티페이스와 다형성 | Article  | 인터페이스의 개념과 이를 통한 다형성 개념에 대해서 알아본다  | [Interface](./article/03_interface.md)
 | 3-mission-0 | Interface를 통해 다형성 구현하기 | 인터페이스를 활용하여 다양한 타입의 객체가 동일한 메서드를 구현해보며 다형성을 이해해본다 | Numerics | [Array](./article/03m00_interface_and_polymorphism.md) |
 | 4 | Data Structure | Article & Mission | Go 언어의 주요 데이터 구조에 대해 다룬다. 배열(Array)과 슬라이스(Slice), 맵(Map), 큐(Queue), 스택(Stack), 트리(Tree) 등을 통해 데이터를 효율적으로 관리하고 사용할 수 있는 방법을 설명한다. 더 나아가 Cosmos-SDK의 상태 저장에 사용되는 IAVL 트리를 이해해본다. | [Data Structure](./article/04_data_structure.md) |
