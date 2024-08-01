@@ -1,30 +1,23 @@
-# 04. Run a simapp(simulation appchain) node
+# 04. Run a Simapp (Simulation Appchain) Node
 
 ### Preview
 
-**Hello World!**, 안녕하세요! 코스모스 베이직 과정 네번째 챕터에 오신 걸 환영합니다!
+**Hello Eearth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 네번째 챕터에 온 걸 환영한다.
 
-이번 시간부터는 이제 아티클 위주의 lecture가 아닌 실습을 병행하면서 배울 예정입니다.
+이번 시간부터는 이제 아티클 위주의 lecture가 아닌 실습을 병행할 것이다. 🧑‍💻🧑‍💻🧑‍💻
 
-네번째 시간이 이번 강의에서는 코스모스 SDK로 만들어진 가장 기본적인 앱(앱체인)을 구동시켜볼 것입니다.
+네번째 시간인 이번 강의에서는 코스모스 SDK로 만들어진 가장 기본적인 앱(앱체인)을 구동시켜볼 것인데, 바로 simapp에 대한 아키텍쳐를 공부하고 어떻게 cosmos-sdk로 appchain을 custom해서 앱체인을 개발하는 지를 기대하셨던 분들도 있었을테지만 !!!
 
-바로 simapp에 대한 아키텍쳐를 공부하고 어떻게 cosmos-sdk로 appchain을 custom해서 앱체인을 개발하는 지를 기대하셨던 분들도 있겠지만!
+개인적으로 **먼저 어플리케이션을 경험한 뒤에 '이건 어떻게 만들어졌을까?' 고민하고 생각하면서 깊게 배우는 방식**이 좀 더 효과적일 것 같아서 순서를 바꾸었으니 이해바란다.
+(개인적으로 어떤 것을 이해하는데 있어서 다양한 방법들이 있겠지만, 직접 써보고 필요성과 흥미를 얻어야 좀 더 몰입이 잘될 것 같아서입니다)
 
-개인적으로 먼저 어플리케이션을 경험한 뒤에 '이건 어떻게 만들어졌을까?' 고민하고 생각하면서 깊게 배우는 방식이 좀 더 효과적일 것 같아서입니다.
+그래서, 이번 강의에서 우리가 배우게 될 내용은 simapp이라고 하는 앱체인을 구동(operating)하는 것이다. 여기서 operating이란 0번째 블록인 제네시스 블록부터해서 블록 3,4개를 합의를 통해서 생성하고 이번 강의를 마무리할 것이다.
 
-(어떤 것을 이해하는데 있어서 다양한 방법들이 있겠지만, 직접 써보고 필요성과 흥미를 얻어야 좀 더 몰입이 잘될 것 같아서입니다)
+참고로, 이번 글은 이 [링크](https://tutorials.cosmos.network/tutorials/3-run-node/)를 재구성한 것이고, [영상](https://www.youtube.com/watch?v=wNUjkp2PFQI)도 있으니 필요하면 글로만 구성된 이번 강의가 부족한 사람들은 각자가 선호하는 컨텐츠에 맞춰서 참고하셔도 좋을 것이다.
 
-그래서 이번 강의에서 저희가 배우게 될 내용은 simapp이라고 하는 앱체인을 구동시켜보는 것입니다.
+### Build a Simapp
 
-0번째 블록인 제네시스 블록부터해서 블록 3,4개를 합의를 통해서 생성하고 이번 강의를 마무리하게 될 것 같습니다.
-
-이번 글은 이 [링크](https://tutorials.cosmos.network/tutorials/3-run-node/)를 재구성한 것이고, [영상](https://www.youtube.com/watch?v=wNUjkp2PFQI)도 있으니 필요하면 글로된 강의가 부족하신 분들은 각자가 선호하는 컨텐츠에 맞춰서 참고하셔도 좋을 것 같습니다.
-
----
-
-### Build a simapp
-
-먼저 이번 강의를 진행하면서 사용할 working directory를 생성하고 cosmos-sdk git을 클론합니다.
+먼저 이번 강의를 진행하면서 사용할 작업 디렉토리(working directory)를 생성하고 cosmos-sdk git을 클론한다.
 
 ```bash
 # make your own working directory
@@ -34,9 +27,9 @@ mkdir ~/cosmos-basic && cd cosmos-basic
 git clone https://github.com/cosmos/cosmos-sdk && cd cosmos-sdk
 ```
 
-다음으로는 저희는 v0.45.4를 사용하고 해당 버젼에 맞춰서 앱체인 구조를 공부할 계획이기 때문에 `v0.45.4` branch로 switch 합니다.
+다음으로는 우린 v0.45.4 버젼에 맞춰서 앱체인 구조를 공부할 계획이기 때문에 `v0.45.4` branch로 switch 한다.
 
-하셨으면, `simd`라고 하는 simapp client를 build하고 version을 체크해봅니다.
+이제 `simd`라고 하는 simapp client를 build하고 version을 체크하자.
 
 ```bash
 # switch to v0.45.4
@@ -51,13 +44,11 @@ make build
 # >>> 0.45.4
 ```
 
-<!-- #rm -rf ./private/.simapp -->
+그리고 이제 먼저 simapp 뒤에 `help`라는 명령어를 통해서 간단히 어떤 명령어들이 있는지 눈으로만 확인하자.
 
-그리고 이제 먼저 simapp 뒤에 `help`라는 명령어를 통해서 간단히 어떤 명령어들이 있는지 눈으로만 봅시다.
+이번 강의에서는 해당 명령어 중 일부 명령어만 배울 예정이고, 다른 명령어들도 해보면 당연히 좋을 것이다.
 
-이번 강의에서는 해당 명령어 중 일부 명령어만 배울 예정이고, 다른 명령어들도 해보면 좋습니다.
-
-(혼자서 공부하다가 헷갈리면 뒤에 그냥 `help`를 붙여보면 어느정도의 example들이 포함되어 있으니 참고하세요)
+(혼자서 공부하다가 헷갈리면 뒤에 그냥 `help`를 붙여보면 어느정도의 example들이 포함되어 있으니 참고하길 바란다)
 
 ```bash
 
@@ -104,9 +95,9 @@ Use "simd [command] --help" for more information about a command.
 
 ---
 
-### Initialize simapp
+### Initialize Simapp
 
-`help` 명령어를 통해서 여러 커맨드들을 구경했으니 이제 `init` 명령어를 통해서 다음과 같이 내 로컬에 simapp 체인에 필요한 기본적 것들을 initiate해줍시다.
+`help` 명령어를 통해서 여러 커맨드들을 구경했으니 이제 `init` 명령어를 통해서 다음과 같이 내 로컬에 simapp 체인에 필요한 기본적 것들을 초기화하자.
 
 ```bash
 # initiate simapp node in local
@@ -115,9 +106,11 @@ Use "simd [command] --help" for more information about a command.
  --chain-id learning-chain-1 > init.json
 ```
 
-명령을 한 뒤에 `--home` flag에 위치한 디렉토리로 이동해서 initial app state인 genesis이 생성되었을텐데 우선 genesis가 아닌 위의 명령어로 생성된 result json를 봅시다. (jq와 같은 json syntax prettier가 없으면 그냥 vscode로 파일을 열어보셔도 됩니다)
+명령을 한 뒤에 `--home` flag에 위치한 디렉토리로 이동해서 initial app state인 genesis이 생성되었을텐데 우선 genesis가 아닌 위의 명령어로 생성된 result json를 확인한다.
 
-굉장히 다양한 key-value 값들이 존재하는데 우선 간단히만 보고 넘어갑니다.
+(jq와 같은 json syntax prettier가 없으면 그냥 vscode로 파일을 열어보셔도 무방하다)
+
+굉장히 다양한 key-value 값들이 존재하는데 우선 간단히만 보고 넘어간다.
 
 ```json
 // init command result
@@ -258,38 +251,35 @@ Use "simd [command] --help" for more information about a command.
 }
 ```
 
-위에서는 한번에 내용이 너무 많으니 이걸 좀 편하게 folding해서 보고 넘어가도록 하겠습니다.
+위에서는 한번에 내용이 너무 많으니 이걸 좀 편하게 folding해서 보도록 하자.
 
 ![04_init_result](./assets/04_init_result.png)
 
-저희가 init이란 명령어로 출력된 메세지에는 다음과 같이 크게 app_message, chain_id, moniker, node_id 값들이 존재합니다.
+우리가 init이란 명령어로 출력된 메세지에는 다음과 같이 크게 app_message, chain_id, moniker, node_id 값들이 존재하는 것을 볼 수 있다.
 
-각각의 값들은 다시 아래와 같은 파일들로 분리되어 각각의 출력된 값들이 정리됩니다.
+각각의 값들은 다시 아래와 같은 파일들로 분리되어 각각의 출력된 값들이 정리된다.
 
 - app_message & chain_id -> genesis.json
 - moniker -> config/config.toml
 - node_id -> node_key.json
 
-그리고 app_message 부분을 좀 더 살펴보면 다음과 같은 키들이 추가적으로 보일 것입니다. app_message 밑에 존재하는 각 키들은 simapp에서 사용되는 기본모듈들에 대한 initial state가 담겨있고 각 키가 존재한다는 의미는 auth, authz 같은 모듈들이 simapp에 포함되어있다는 것을 의미합니다.
+그리고 app_message 부분을 좀 더 살펴보면 다음과 같은 키들이 추가적으로 보일 것이다.
+
+app_message 밑에 존재하는 각 키들은 simapp에서 사용되는 기본 모듈들에 대한 initial state가 담겨있고 각 키가 존재한다는 의미로 auth, authz 같은 모듈들이 simapp에 포함되어있다는 것을 의미한다.
 
 ![04_init_result2](./assets/04_init_result2.png)
 
-이렇게 README를 통해서 각 기본모듈 listup과 설명을 보실 수도 있습니다.
-https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/README.md
+이렇게 [README](https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/README.md)를 통해서 각 기본모듈 listup과 설명을 보실 수도 있다.
 
----
+### Understand Init Module State & Catch Up Genesis State
 
-### Understand init module state & Catch up genesis state
+#### Understand Init Module State
 
-#### Understand init module state
+많은 기본 모듈들 중에 우린 스테이킹 모듈만 한번 살펴본다.
 
-많은 기본 모듈들 중에 저희는 스테이킹 모듈만 한번 살펴보겠습니다.
+각각의 모듈들은 사용성이 다르나, 기본적인 구조 자체는 비슷하므로 하나만 제대로 이해하시면 다른 모듈도 금방 이해가능할 것이다.
 
-각각의 모듈들은 사용성이 다르지만 기본적인 구조 자체는 비슷하므로 하나만 제대로 이해하시면 다른 모듈도 금방이해하실 수 있습니다.
-
-참고로 모든 앱체인들이 준수하지는 않지만 cosmos-sdk에서 기본적으로 제공하는 모듈들은 각각이 spec 문서가 존재하기 때문에 자세한 모듈의 목적과 의미 사용성등은 [스펙 문서](https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/staking/spec/README.md)를 살펴보는 것도 좋습니다.
-
-<!-- https://github.com/cosmos/cosmos-sdk/blob/v0.40.0/proto/cosmos/staking/v1beta1/staking.proto#L65-L99 -->
+참고로 모든 앱체인들이 해당 사항을 준수하지는 않지만 cosmos-sdk에서 기본적으로 제공하는 모듈들은 각각이 spec 문서가 존재하기 때문에 자세한 모듈의 목적과 의미 사용성등은 [스펙 문서](https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/staking/spec/README.md)를 살펴보는 것도 좋다.
 
 ```json
 // staking module example init state
@@ -315,28 +305,26 @@ https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/README.md
 }
 ```
 
----
+#### Catch Up Genesis State
 
-#### Catch up generated genesis
+이제 위의 app_message가 포함된 genesis state를 살펴보자.
 
-이제 위의 app_message가 포함된 genesis state를 살펴봅시다. init command를 통해서, result로 보았던 app_message와 chain_id는 제가 genesis.json에 포함된다고 했으므로 해당 파일을 살펴보겠습니다.
+init command를 통해서, result로 보았던 app_message와 chain_id는 제가 genesis.json에 포함된다고 했으므로 해당 파일을 살펴보면 될 것이다.
 
 ```bash
 # print initial app state
 jq ./private/.simapp/config/genesis.json
 ```
 
-역시나 너무나 많은 데이터들이 한번에 들어오는데 위에서 처럼 folding해서 봅시다.
+역시나 너무나 많은 데이터들이 한번에 들어오는데 위에서 처럼 folding해서 보자. 구조만 눈에 들어오는게 익숙해지고 이해가 된다면 생각보다 간단하다고 생각될 것이다.
 
-구조만 눈에 들어오는게 익숙해지고 이해가 된다면 생각보다 간단합니다!
-
-app_message에서 보았던 application state들은 app_state에 포함되어있고, 그 밖에 우리가 체크해보면 좋을 요소는 `init` 명령어에서 flag로 주입했던 `chain_id`가 잘 genesis에 포함되어있다는 걸 캐치하면 됩니다.
+app_message에서 보았던 application state들은 app_state에 포함되어있고, 그 밖에 우리가 체크해보면 좋을 요소는 `init` 명령어에서 flag로 주입했던 `chain_id`가 잘 genesis에 포함되어있다는 걸 캐치하면 된다.
 
 ![04_genesis_state](./assets/04_genesis_state.png)
 
 ---
 
-### Prepare to create a new block
+### Prepare to Create a New Block
 
 #### Alice Account
 
