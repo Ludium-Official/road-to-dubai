@@ -3,17 +3,17 @@
 
 ## 목차 
 0. 정보량이란? 
-1. 정보량을 줄이는 방법: Encoding
-2. Cosmos SDK의 Encoding 라이브러리 톺아보기 
+1. 정보량을 줄이는 방법: 인코딩(Encoding)
+2. Cosmos SDK의 인코딩(Encoding) 라이브러리 톺아보기 
 	1. `Any` 타입과 인터페이스 Encoding (ADR-019)
     2. Cosmos SDK `Any` Type
     3. 트랜잭션 Encoding (ADR-020)
 3. Codec
 
 ## 0. 정보량이란?
-[IPC](./14_rpc_basic.md#0-ipcinter-process-communication) 기법의 근간에는 섀넌의 정보이론이 있다. 기존 전문가들은 통신의 문제를 물리적으로 풀려고만 하였고 잡음 문제 극복 등 문제의 본질을 파악하지 못해 초보적인 수준에 머물러있었다. 1948년 섀넌은 [통신이란 무엇인지 정의]((https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf))하여 통신의 문제를 혁신적으로 바라보게 하였다.
+블록체인 네트워크에서는 수 많은 메시지가 오고가기 때문에 이러한 인코딩 개념은 매우 중요하다. 특히, [텐더민트](./99c1_tendermint_with_bft.md)의 경우에는 더더욱 그렇다. Cosmos SDK Encoding 라이브러리에 대해 알아보기 전에 인코딩을 왜 해야하며, 이를 하며 무엇이 좋은지에 대해 정보 이론에서 정의하는 정보량에 대한 개념을 통해 알아보자. 
 
-섀넌의 1948년 논문(정보이론)과 튜링의 1936년 논문(튜링기계)은 같은 플롯으로 구성되어 있다. 
+이전 아티클에서 알아본 [IPC 기법](./14_rpc_basic.md#0-ipcinter-process-communication)의 근간에는 섀넌의 정보이론이 있다. 기존 전문가들은 통신의 문제를 물리적으로 풀려고만 하였고 잡음 문제 극복 등 문제의 본질을 파악하지 못해 초보적인 수준에 머물러있었다. 1948년 섀넌은 [통신이란 무엇인지 정의]((https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf))하여 통신의 문제를 혁신적으로 바라보게 하였다. 섀넌의 1948년 논문(정보이론)과 튜링의 1936년 논문(튜링기계)은 같은 플롯으로 구성되어 있다:
 - 우선 애매했던 대상(섀넌은 '정보량', 튜링은 '기계적인 계산')을 과감하게 정의한다
 - 그리고 그 정의가 받아들일 만하다고 설득한다.
 - 그런 후 그 정의로부터 논리적으로 엄밀한 사실들(셰넌은 메시지 전달의 한계, 튜링은 기계적인 계산의 한계)을 유도한다. 세상을 바꾼 두 논문은 같은 패턴이다. 
@@ -23,26 +23,28 @@
 - 정보 많음: 차이 없이 모든 글자가 골고루 사용되는 세계에서 온 메시지는 정보가 많다.
 - 정보 적음: 반면에 그 차이가 있는 세계에서 온 메시지는 정보가 적다. 자주 보이는 글자는 흔히 나타날 것이므로 보지 않고도 맞추기 쉽기 때문이다. 
 
-정보의 양이란 무질서의 정도, 정보량 정의는 열역학에서 이야기하는 엔트로피의 정의와도 같다. 메시지의 정보량은 글자들의 예측불허의 정도와 일치한다. 메시지에 나타나는 글자들이, 흔하거나 드문 게 따로 있다면 정보가 적다. 흔한 것들이 대다수일 테고 이는 예측이 쉬우므로 무질서가 적은 대상이다.
-- 드문 단어 = 블필요한 단어가 끼면 정보량은 준다. '불필요하다'는 말 속에 이미 분별이 있다는 뜻이고, 분별이 있다는 건 그만큼 무질서가 적은 것이다.
-- 그러나 흔하거나 드문 차이 없이 골고루라면 예측이 어렵기 떄문에 정보가 많다. 무질서가 큰 것이다. 
+정보의 양이란 무질서의 정도, 정보량 정의는 열역학에서 이야기하는 엔트로피의 정의와도 같다. 메시지의 정보량은 글자들의 예측불허의 정도와 일치한다. 메시지에 나타나는 글자들이, 흔하거나 드문 게 따로 있다면 정보가 적다. 흔한 것들이 대다수일 테고 이는 예측이 쉬우므로 무질서가 적은 대상이다. 정리하면 다음과 같다: 
+- 정보량이 많은 경우: 흔하거나 드문 차이 없이 골고루라면 예측이 어렵기 떄문에 정보량이 많다고 볼 수 있다. 즉, 무질서가 큰 것이다. 
+- 정보량이 적은 경우: 드문 단어(= 불필요한 단어)가 맥락에 포함되면 해당 메시지의 정보량은 줄어든다고 볼 수 있다. 이는 '불필요하다'는 말 속에 이미 '분별이 있다'는 뜻이고, '분별이 있다'는 건 그만큼 무질서가 적은 것이다. 
  
-섀넌은 위와 같이 메시지의 정보량을 정의하고 그 정의가 적절하다고 설득한 후, 온전한 소통을 가능하게 하는 핵심 정리 두 개를 도출한다. 
+섀넌은 위와 같이 메시지의 정보량을 정의하고 그 정의가 적절하다고 설득한 후, 온전한 소통을 가능하게 하는 정리 두 개(잡음이 있는 채널, 잡음이 없는 채널)를 도출해내었다. 정리하면 다음과 같다:
 1. 잡음이 없는 채널: 전달하고자 하는 정보량이 H고, 채널 용량이 C라고 하자. 메시지 전달은 최대 초당 C/H로 항상 가능하다.
 2. 잡음이 있는 채널: 정보량이 초당 H라고 하고 채널 용량은 초당 C라고 하자. 
 	- H <= C 이면 온전히(잡음에 의한 생채기가 충분히 적어지도록) 전달할 수 있다. 
 	- H > C 이면 잡음에 의한 생채기를 (H-C) 미만으로 줄일 수 없다.
 
-<img src="./assets/15_diagram_of_a_general_communication_system.png" alt="Diagram of a General Communication System" width="700" height="400">
+이러한 섀넌의 정보 이론은 현대 디지털 통신의 기초가 되었다. 이를 통해 설계된 모든 정보 통신 시스템 구조는 다음과 같은 다이어그램의 구조를 가지고 있다.
 
-정보량을 줄이는 방법은 메시지에 있는 특정 패턴을 반복하거나 잡음으로 손상된 메시지를 복구시키는 방법을 추가하면 된다. 이런 부가적인(정보량 줄이기) 방법들을 메시지에 추가하다 보면 단위 시간당 전달할 수 있는 정보량은 언젠가는 H<=C 가 되어서 그런 메시지는 온전히 전달할 수 있게 된다.
-- 정보량 줄이기 = 엔트로피 낮추기 = 흔하거나 드문게 따로 있는 (예측 쉬운) 형태로 만들기
-- [Protobuf 인코딩 및 디코딩](./14_rpc_basic.md#protobuf-인코딩-및-디코딩)에서 field_tag가 존재하는 것도 이러한 이유에서이다. 
- 
-섀넌에 따르면 어떠한 잡음에서도 온전히 통신할 수 있고 방법은 하드웨어가 아니라 소프트웨어(메시지 자체)에 있다고 말한 것이다. 그렇게 찾은 방법이 인코딩(Encoding)이다. 
+<div style="text-align: center;">
+	<img src="./assets/15_diagram_of_a_general_communication_system.png" alt="Diagram of a General Communication System" width="650" height="400">
+</div>
 
-## 1. 정보량을 줄이는 방법: Encoding
-노드 간 통신에서 정보량을 줄이는 방법인 인코딩(Encoding)과 같은 맥락에서 사용되는 마샬링, 직렬화에 대해서 알아보자.
+
+## 1. 정보량을 줄이는 방법: 인코딩(Encoding)
+정보 이론에서 정의한 정보량을 줄이는 방법은 메시지에 있는 특정 패턴을 반복하거나 잡음으로 손상된 메시지를 복구시키는 방법을 추가하면 된다. 이런 부가적인(정보량 줄이기) 방법들을 메시지에 추가하다 보면 단위 시간당 전달할 수 있는 정보량은 언젠가는 H<=C 가 되어서 그런 메시지는 온전히 전달할 수 있게 된다.
+- 정보량 줄이기 = 엔트로피 낮추기(무질서 낮추기) = 흔하거나 드문게 따로 있는 (예측 쉬운) 형태로 만들기
+
+정보 이론에 따르면 어떠한 잡음에서도 온전히 통신할 수 있고 방법은 하드웨어가 아니라 소프트웨어(메시지 자체)에 있다고 말한 것이다. 그렇게 찾은 방법이 인코딩(Encoding)이다. 이러한 인코딩(Encoding)은 같은 맥락에서 사용되는 마샬링(Marshaling) 또는 직렬화(Serialization)라고 부르기도 하는데, 앞으로 사용할 용어를 정리하기 위해 이에 대해서 짚고 넘어가도록 하자.
 
 ### 인코딩(Encoding)
 > 'Encode'는 'En-'(안으로)와 'Code'(코드, 부호)의 결합으로, '특정한 형식으로 변환하다'라는 의미이다. 
@@ -68,15 +70,33 @@
 
 </br>
 
-정리하면 다음과 같다. 
+이를 정리하면 다음과 같다:
 - 인코딩 (Encoding): 데이터를 특정한 형식으로 변환하는 모든 과정을 포함하는 가장 큰 범주이다. 
 - 마샬링 (Marshalling): 데이터를 전송 가능하도록 정리하고 준비하는 과정으로, 직렬화를 포함한다.
 - 직렬화 (Serialization): 데이터를 바이트 스트림으로 변환하여 저장하거나 전송할 수 있게 과정을 나타낸다.
 
-인코딩은 마샬링, 직렬화의 개념을 내포하는 큰 개념으로 봐도 된다. 마샬링이 직렬화의 과정을 포함하고 있지만 서도 포함 개념이 아닌 유사한 개념으로 보는 게 더 좋을 듯 싶다. Cosmos SDK에서는 주로 인코딩 과정에 있어서 마샬링 단어를 주로 사용하니 참고하자. 
+인코딩은 마샬링, 직렬화의 개념을 내포하는 큰 개념으로 봐도 된다. 마샬링이 직렬화의 과정을 포함하고 있지만서도 포함 개념이 아닌 유사한 개념으로 보는 게 더 좋을 듯 싶다. Cosmos SDK에서는 주로 인코딩 과정에 있어서 마샬링 단어를 주로 사용하니 참고하자.
 
-## 2. Cosmos SDK의 Encoding 라이브러리 톺아보기 
-Cosmos SDK의 인코딩 라이브러리 변동 히스토리는 다음과 같다.
+
+### 인코딩(Encoding) 종류 
+이러한 인코딩은 현재 컴퓨터 과학에서 다양한 방식으로 이루어진다. 간략하게 알아보면 다음과 같다: 
+- 문자열 인코딩: ASCII, UTF-8, Base64 등
+- 이미지 인코딩: JPEG, PNG, GIF 등
+- 오디오 인코딩: MP3, WAV, AAC 등
+- 비디오 인코딩: MPEG, AVI, WMV 등
+- 압축 인코딩: ZIP, RAR, GZIP 등
+
+이러한 인코딩은 데이터를 효율적으로 네트워크를 통해 서로 간의 통신을 할 때 정보량을 줄여 많은 정보를 주고 받을 수 있게 사용된다. 이전 아티클에서 프로그래밍 언어로 작성된 애플리케이션 간의 통신을 위해 [JSON과 ProtoBuf와 같은 IDL](./14_rpc_basic.md#2-idlinterface-definitionlanguage)을 사용하는 것을 알아보았는데, 이도 마찬가지로 네트워크를 통해 통신을 하게 되면 인코딩 및 디코딩 과정을 위러서 통신이 이루어지고 있다. 그 중에서 [Protobuf는 메시지 정보를 줄이는 인코딩 및 디코딩 방식에 특화](./14_rpc_basic.md#protobuf-인코딩-및-디코딩)되어 설계되었기 때문에 블록체인 네트워크와 같이 수 많은 메시지가 오고가는 환경에서는 매우 유용하게 사용된다. Protobuf에 다음과 같이 1,2,3과 같은 `field_tag`가 존재하는 것도 이러한 이유에서이다. 
+```protobuf
+message Person { 
+	required string user_name = 1; 
+	optional int64 favourite_number = 2; 
+	repeated string interests = 3; 
+}
+```
+
+## 2. Cosmos SDK의 인코딩(Encoding) 라이브러리 톺아보기 
+우리가 알아볼 Cosmos SDK는 ProtoBuf를 기반으로 사용하여 통신을 하고 있다. Cosmos SDK의 인코딩 라이브러리 변동 히스토리는 다음과 같다:
 1. `Protobuf`의 단점 인터페이스 인코딩 기능을 탑재한 [`Amino`](https://github.com/tendermint/go-amino)
 2. Go 언어 공식 `Protobuf` 구현 라이브러리 커스텀한 [`Gogoproto`](https://github.com/cosmos/gogoproto)
 3. Go 언어 공식 [`Protobuf` 구현 라이브러리](https://github.com/golang/protobuf)
@@ -182,7 +202,7 @@ func NewValidator(operator sdk.ValAddress, pubKey cryptotypes.PubKey, descriptio
 ### 2-3. 트랜잭션 Encoding (ADR-020)
 Protobuf의 또 다른 중요한 용도는 트랜잭션의 인코딩과 디코딩이다. [ADR 019](https://docs.cosmos.network/main/build/architecture/adr-019-protobuf-state-encoding)의 주 목적은 `Any`를 사용하여 인터페이스 인코딩을 통해 많은 체인과 안전하게 호환될 수 있도록 하는 것이다. [ADR 020: Protocol Buffer Transaction Encoding](https://docs.cosmos.network/main/build/architecture/adr-020-protobuf-transaction-encoding)에서는 이러한 호환성을 깨지 않으면서 유연한 크로스체인 트랜잭션 형식을 제공하고자 하는 것을 주 목적으로 삼는다. 
 
-트랜잭션은 애플리케이션이나 Cosmos SDK에 의해 정의되지만, 기본 합의 엔진으로 전달되어 다른 피어에게 전달된다. 기본 합의 엔진은 애플리케이션에 구애받지 않으므로 합의 엔진은 `[]byte` 형태의 트랜잭션만 허용한다.
+트랜잭션은 애플리케이션이나 Cosmos SDK에 의해 정의되지만, 기본 합의 엔진으로 전달되어 다른 피어에게 전달된다. 이전 [트랜잭션 라이프사이클 브로드캐스팅](./10_transaction_and_mempool.md#1-트랜잭션-생성-및-브로드캐스팅하기) 과정에서 트랜잭션을 `[]byte` 형태의 인코딩을 한 예시를 잠깐 다뤄보았듯이, 기본 합의 엔진은 애플리케이션에 구애받지 않으므로 `[]byte` 형태의 트랜잭션만 허용하고 있다. 
 - [app -> cometbft] `TxEncoder` 객체는 인코딩을 수행한다. (`sdk.Tx` -> `[]byte` 변환)
 - [cometbft -> app] `TxDecoder` 객체는 디코딩을 수행한다. (`[]byte` ->  `sdk.Tx` 변환)
 ```go
@@ -193,9 +213,9 @@ type TxDecoder func(txBytes []byte) (Tx, error)
 type TxEncoder func(tx Tx) ([]byte, error)
 ```
 
-이 두 표준 구현은 [`auth/tx` 모듈](https://docs.cosmos.network/v0.47/build/modules/auth/tx)에서 찾을 수 있다.
-- [auth tx encoder](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/auth/tx/encoder.go)
-- [auth tx decoder](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/auth/tx/decoder.go)
+이 두 표준 구현 예시로는 [`x/auth모듈`의 tx](https://docs.cosmos.network/v0.47/build/modules/auth/tx)에서 찾을 수 있다:
+- [`x/auth` tx encoder](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/auth/tx/encoder.go)
+- [`x/auth` tx decoder](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/auth/tx/decoder.go)
 
 
 ## 3. Codec

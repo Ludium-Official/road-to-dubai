@@ -3,11 +3,25 @@
 
 ## 목차 
 0. Store
+   1. Store 읽기 캐싱 & 쓰기 브랜칭
+   2. Commit Store
 1. KVStore
+   1. IAVL Store 
+   2. KVStore
+   3. CommitKVStore
 2. KVStore Wrapper
+   1. CacheKVStore
+   2. `GasKv` Store
+   3. `TraceKv` Store
+   4. `Prefix` Store
+   5. `ListenKv` Store
 3. Multistore
+   1. Multistore Interface
+   2. CommitMultiStore
+   3. CacheMultistore
+   4. Cosmos SDK의 Store 관리 
 4. Keeper
-
+   1. object-capabilities 모델 
 
 ## 0. Store
 Cosmos SDK는 앱 상태를 유지 관리하기 위해 Store 기능을 제공한다. 다음은 가장 기본적인 [`Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L15-L18) 인터페이스를 나타낸다.
@@ -20,7 +34,7 @@ type Store interface {
 - `GetStoreType()`은 StoreType을 반환하는 Get 메서드이다.
 - [`CacheWrapper`]((https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L263-L287))는 `Write()` 메서드를 통해 Store 읽기 캐싱과 쓰기 브랜칭을 구현하는 간단한 인터페이스이다.
 
-### Store 읽기 캐싱 & 쓰기 브랜칭
+### 1. Store 읽기 캐싱 & 쓰기 브랜칭
 읽기 캐싱과 쓰기 브랜칭은 Cosmos SDK에서 보편적으로 사용되며 모든 `StoreType`에서 구현해야 한다. 브랜치는 기본 `Store`에 영향을 주지 않고 전달 및 업데이트할 수 있는 `Store`의 격리된 임시 브랜치를 생성한다. 이는 오류가 발생하면 나중에 쉽게 롤백할 수 있도록 하기 위해 임시 상태 전환을 하는 데 사용된다. 
 
 다음은 `rootmulti.Store`가 구현한 캐싱 스토어를 생성하는 [CacheMultiStore()](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/rootmulti/store.go#L477-L491) 메서드이다:
@@ -51,7 +65,7 @@ func (cms Store) Write() {
 }
 ```
 
-### Commit Store
+### 2. Commit Store
 [`CommitStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L29-L33)는 기본 트리 또는 DB에 대한 변경 사항을 커밋할 수 있는 Store를 나타낸다. Cosmos SDK는 `Committer`를 사용하여 기본 `Store` 인터페이스를 확장함으로써 simple store와 commit store를 구분해서 사용한다. 
 ```go
 // Stores of MultiStore must implement CommitStore.
@@ -79,7 +93,7 @@ type Committer interface {
 
 
 ## 1. KVStore
-### IAVL Store 
+### 1. IAVL Store 
 `baseapp`에서 사용되는 `KVStore` 및 `CommitKVStore`의 기본 구현은 [`iavl.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0-rc1/store/iavl/store.go#L37-L41)이다.
 ```go
 type Store struct {
@@ -94,7 +108,7 @@ iavl store는 다음을 보장하는 자체 밸런스를 조정하는 binary Tre
 - 각 트리 버전은 변경 불가능하며 커밋 후에도 (가지치기pruning 설정에 따라) 검색할 수 있다.
 
 
-### KVStore
+### 2. KVStore
 [`KVStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L206-L242)는 데이터를 저장하고 검색하는 데 사용되는 간단한 키-값 저장소이다. `KVStore` 인터페이스는 주로 모듈이 `Committer`에 액세스하지 못하도록 제한하는 데 사용된다. 앱의 각 모듈은 자신만의 `KVStore`를 가지고 있으며, 해당 모듈 `Keeper`가 가지고 있는 특정 `key`를 통해서만 액세스할 수 있다. 이러한 `KVStore`들은 글로벌 상태의 하위 집합을 관리하는 데 사용된다. 
 ```go
 type BasicKVStore interface {
@@ -116,7 +130,7 @@ type KVStore interface {
 	- 예시: 특정 account의 balance를 조회하기 위해 accountStore를 반복하는 `bank`의 모듈 keeper의 [IterateAccountBalances() 메서드](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/bank/keeper/view.go#L115-L132)
 
 
-### CommitKVStore
+### 3. CommitKVStore
 [`CommitKVStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L257-L261)는 `Committer`도 구현하는 `KVStore`이다. 
 ```go
 // CommitKVStore is an interface for MultiStore.
@@ -129,7 +143,7 @@ type CommitKVStore interface {
 Commit 기능을 허용하는 `baseapp`의 기본 `CommitKVStore`에 [마운트된 스토어는 `CommitKVStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/rootmulti/store.go#L64)이다. `KVStore`의 키 리스트(`keys`)는 프록시로 선언되고 앱을 실행할 때 `MultiStore`에 마운트된다. 그리고 해당 키 리스트(`keys`)를 각 스토어를 관리하는 모듈 `keeper`에게도 전달한다. 
 
 ## 2. KVStore Wrapper
-### CacheKVStore
+### 1. CacheKVStore
 [`cachekv.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachekv/store.go#L26-L35)는 기본 `KVStore`에 버퍼링된 쓰기/캐시된 읽기 기능을 제공하는 `KVStore Wrapper`이다. 해당 Wrapper는 일반적으로 롤백이 가능한 임시 저장소가 필요할 때마다 사용된다.
 ```go
 type Store struct {
@@ -153,23 +167,23 @@ type Store struct {
 #### Iterator 메서드
 [`Store.Iterator()`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachekv/store.go#L159-L162)는 캐시된 항목과 원본 항목 모두에서 순회해야 한다. [`Store.iterator()`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachekv/store.go#L169-L193)에서는 각각에 대해 두 개의 iterator가 생성되고 병합된다. 
 
-### `GasKv` Store
+### 2. `GasKv` Store
 Cosmos SDK 앱은 가스를 사용하여 리소스 사용량을 추적하고 스팸을 방지한다. [`GasKv.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0-rc1/store/gaskv/store.go#L11-L17)는 저장소를 읽거나 쓸 때마다 자동으로 가스를 소비할 수 있는 `KVStore Wrapper`이다. Cosmos SDK 앱에서 스토리지 사용량을 추적하기 위해 선택한 솔루션이다.
 
 
-### `TraceKv` Store
+### 3. `TraceKv` Store
 [`tracekv.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0-rc1/store/tracekv/store.go#L20-L43)는 기본 `KVStore`에 운영 추적 기능을 제공하는 `KVStore Wrapper`이다. root `Multistore`에서 추적이 활성화된 경우 모든 `KVStore`에 Cosmos SDK에 의해 자동으로 적용된다.
 
-### `Prefix` Store
+### 4. `Prefix` Store
 [`prefix.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0-rc1/store/prefix/store.go#L15-L21)는 기본 `KVStore`에 자동 키 접두사 기능을 제공하는 `KVStore Wrapper`이다.
 
-### `ListenKv` Store
+### 5. `ListenKv` Store
 [`listenkv.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0-rc1/store/listenkv/store.go#L11-L18)는 기본 KVStore를 통해 상태 수신 기능을 제공하는 `KVStore Wrapper`이다. 
 - 상태 스트리밍 구성 중에 `StoreKey`가 지정된 모든 `KVStore`에 Cosmos SDK에 의해 자동으로 적용된다. 
 - 상태 스트리밍 구성에 대한 추가 정보는 store/streaming/README.md에서 확인할 수 있다.
 
 ## 3. Multistore
-### Multistore Interface
+### 1. Multistore Interface
 [`Multistore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L101-L133) 는 아래 인터페이스를 따르는 일종의 `KVStore`이다: 
 ```go
 type MultiStore interface {
@@ -190,7 +204,7 @@ type MultiStore interface {
 
 각 Cosmos SDK 앱은 Root에서 `Multistore`의 확장형 구조인 저장소를 보유하여 상태를 유지 관리하게 된다. 
 
-### CommitMultiStore
+### 2. CommitMultiStore
 [`CommitMultiStore`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/types/store.go#L141-L203)는 `Multistore` 인터페이스에서 Commit 기능을 가지고 있는 `Committer`를 확장한 저장소이다. 
 ```go
 type CommitMultiStore interface {
@@ -205,13 +219,13 @@ type CommitMultiStore interface {
 `CommitMultiStore` 인터페이스의 구체적인 구현은 [`rootMulti.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/rootmulti/store.go)에서 볼 수 있다. `rootMulti.Store`는 여러 `KVStore`를 마운트할 수 있는 `DB`를 중심으로 구축된 base layer의 `Multistore`로, `baseapp`에서 사용되는 기본 `Multistore`이다.
 
 
-### CacheMultistore
+### 3. CacheMultistore
 `rootMulti.Store`를 브랜칭 할 때마다 [`cachemulti.Store`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachemulti/store.go)가 사용된다. 여기서 Store 읽기 캐싱과 쓰기 브랜칭을 주로 사용한다고 볼 수 있다. 
 - `cachemulti.Store`는 생성자에서 모든 서브스토어를 브랜치(각 서브스토어에 대해 가상 스토어를 생성)하여 [`Store.stores`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachemulti/store.go#L28)에 보관하고 모든 읽기 쿼리를 캐시한다. 
 - [`Store.GetKVStore()`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachemulti/store.go#L163-L170)는 `Store.stores`에서 스토어를 반환한다. 
 - [`Store.Write()`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/store/cachemulti/store.go#L122-L128)는 `Store.stores`에 포함된 모든 하위 스토어에서 `CacheWrap.Write()`를 재귀적으로 호출한다.
 
-### Cosmos SDK의 Store 관리 
+### 4. Cosmos SDK의 Store 관리 
 `baseapp`에서 사용되어 root `Store`라고도 잘 알려진 `CommitMultiStore`는 KVStore의 일종인 `MultiStore`와 `Commiter` 기능을 가지고 있다. 이러한 기능이 통합된 [`CommitKVStore`](./13_store_and_keeper.md#commitkvstore)를 통해 통해 여러 각 모듈의 데이터를 관리한다. `simapp`에 있는 [`NewSimapp 생성자`](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/simapp/app.go#L214-L531)를 통해 `CommitMultiStore-`를 어떻게 생성 및 마운트하고 사용하는지 알아보자.
 
 #### 1. 키 리스트(`keys`) 생성
@@ -261,7 +275,7 @@ Cosmos SDK 앱은 일반적으로 여러 모듈로 구성된다. 각 모듈은 �
 - [계정 잔액 조회(GetBalance)](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/x/bank/keeper/view.go#L21-L34): 특정 계정의 잔액을 조회한다. 
 
 
-### object-capabilities 모델 
+### 1. object-capabilities 모델 
 `Keeper`를 보면 객체지향 프로그래밍(OOP)에서 주로 사용하는 [Repository 패턴](https://martinfowler.com/eaaCatalog/repository.html)과 비슷한 구조로 `KVStore`의 상태를 관리하며 다른 모듈과 상호작용하는 것을 볼 수 있는데, 이는 Cosmos SDK는 개발자가 원치 않는 모듈 간 상호 작용으로부터 앱을 더 잘 보호할 수 있도록 [object-capabilities](https://github.com/cosmos/cosmos-sdk/blob/v0.47.0/docs/docs/core/10-ocap.md) 기반 접근 방식을 채택했기 때문이다. 
 
 object-capabilities은 코드 설계의 모듈성과 코드 구현의 안정적인 캡슐화를 보장한다는 장점이 있다. 이는 앱 상태를 업데이트하는 객체의 동작을 결정하는 코드를 객체 참조 및 연결하는 추상화된 수준에서 분석할 수 있다. 결과적으로 이러한 새로운 모듈이 추가되어도 쉽게 디버깅하고 잘 유지 관리될 수 있게 된다. 

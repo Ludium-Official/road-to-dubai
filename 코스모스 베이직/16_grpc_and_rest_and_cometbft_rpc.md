@@ -8,7 +8,8 @@
 3. ComettBFT RPC
 
 ## 0. Cosmos SDK의 IPC
-블록체인 노드에서 노드 간의 통신은 클라이언트-서버 아키텍처의 [REST 및 RPC와 같은 IPC 메커니즘](./14_rpc_basic.md#0-ipcinter-process-communication)을 통해 유지된다. 각 노드는 독립적인 프로세스이지만 상호 간의 효율적인 프로세스 간 통신을 통해 블록체인 네트워크 일관성과 지속적인 상태 동기화를 유지하여 블록체인을 분산 환경에서 신뢰할 수 있는 시스템으로 만든다.
+블록체인 노드에서 노드 간의 통신은 클라이언트-서버 아키텍처의 [REST 및 RPC와 같은 IPC 메커니즘](./14_rpc_basic.md#0-ipcinter-process-communication)을 통해 유지된다. 각 노드는 독립적인 프로세스이지만 상호 간의 효율적인 프로세스 간 통신을 통해 블록체인 네트워크 일관성과 지속적인 상태 동기화를 유지하여 블록체인을 분산 환경에서 신뢰할 수 있는 시스템으로 만든다. 
+> 기본적으로 Cosmos 관련 아티클에서 클라이언트와 서버를 논할 때는 서버는 Cosmos SDK 애플리케이션을 가리키며, 클라이언트는 이와 상호작용하는 합의 엔진(ex. CometBFT)을 가리킨다. 이는 [ABCI 아티클의 Client-Server 구조](./99c3_tendermint_core_and_abci.md#2-abci-client-server-구조)를 보면 더 명확하게 이해할 수 있다.
 
 Cosmos SDK 각 노드는 사용자가 노드와 상호 작용할 수 있도록 다음 Endpoint을 공개하고 있다. 
 - gRPC 서버(기본 포트: `9090`)
