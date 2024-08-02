@@ -52,7 +52,6 @@
 * 현재 등록된 AEZ 컨슈머 체인은 다음을 포함한다.
     1. [Neutron](https://twitter.com/Neutron_org/status/1805703229537403321): CosmWasm 기반의 통합 어플리케이션(Integrated Application) 체인으로 스마트 컨트랙트 배포만으로도 앱체인과 같은 성능을 제공하는 어플리케이션 인프라 체인이다.
     2. [Stride](https://twitter.com/stride_zone): IBC 기반 토큰들의 LST를 제공하는 체인이다.
-    3. [Noble](https://twitter.com/noble_xyz): $USDC를 발행한 Circle에서 개발한 체인으로 스테이블 토큰 기반 통화 발행, 관리를 담당하는 체인이다.
 * 2024년 6월 현재 AEZ의 파트너십은 공격적인 속도로 증가하고 있다. 승인 대기 중인 네트워크는 EVMOS와 같은 이더리움 호환 체인을 비롯하여 COMDEX, ELYS NETWORK와 같은 디파이 앱체인을 포함한다.
 
 ### 2\. 코스모스의 미래는 어떤 모습일까?

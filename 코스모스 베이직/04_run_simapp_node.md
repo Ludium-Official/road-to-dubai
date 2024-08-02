@@ -2,7 +2,7 @@
 
 ### Preview
 
-**Hello Eearth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 네번째 챕터에 온 걸 환영한다.
+**Hello Earth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 네번째 챕터에 온 걸 환영한다.
 
 이번 시간부터는 이제 아티클 위주의 lecture가 아닌 실습을 병행할 것이다. 🧑‍💻🧑‍💻🧑‍💻
 
@@ -13,7 +13,7 @@
 
 그래서, 이번 강의에서 우리가 배우게 될 내용은 simapp이라고 하는 앱체인을 구동(operating)하는 것이다. 여기서 operating이란 0번째 블록인 제네시스 블록부터해서 블록 3,4개를 합의를 통해서 생성하고 이번 강의를 마무리할 것이다.
 
-참고로, 이번 글은 이 [링크](https://tutorials.cosmos.network/tutorials/3-run-node/)를 재구성한 것이고, [영상](https://www.youtube.com/watch?v=wNUjkp2PFQI)도 있으니 필요하면 글로만 구성된 이번 강의가 부족한 사람들은 각자가 선호하는 컨텐츠에 맞춰서 참고하셔도 좋을 것이다.
+참고로, 이번 글은 이 [링크](https://tutorials.cosmos.network/tutorials/3-run-node/)를 재구성한 것이고, [영상](https://www.youtube.com/watch?v=wNUjkp2PFQI)도 있으니 필요하면 글로만 구성된 이번 강의가 부족한 사람들은 각자가 선호하는 컨텐츠에 맞춰서 참고해도 좋을 것이다.
 
 ### Build a Simapp
 
@@ -48,7 +48,7 @@ make build
 
 이번 강의에서는 해당 명령어 중 일부 명령어만 배울 예정이고, 다른 명령어들도 해보면 당연히 좋을 것이다.
 
-(혼자서 공부하다가 헷갈리면 뒤에 그냥 `help`를 붙여보면 어느정도의 example들이 포함되어 있으니 참고하길 바란다)
+(혼자서 공부하다가 헷갈리면 뒤에 그냥 `help`를 붙여보면 어느 정도의 example들이 포함되어 있으니 참고하길 바란다)
 
 ```bash
 
@@ -108,7 +108,7 @@ Use "simd [command] --help" for more information about a command.
 
 명령을 한 뒤에 `--home` flag에 위치한 디렉토리로 이동해서 initial app state인 genesis이 생성되었을텐데 우선 genesis가 아닌 위의 명령어로 생성된 result json를 확인한다.
 
-(jq와 같은 json syntax prettier가 없으면 그냥 vscode로 파일을 열어보셔도 무방하다)
+(jq와 같은 json syntax prettier가 없으면 그냥 vscode로 파일을 열어봐도 무방하다)
 
 굉장히 다양한 key-value 값들이 존재하는데 우선 간단히만 보고 넘어간다.
 
@@ -277,9 +277,9 @@ app_message 밑에 존재하는 각 키들은 simapp에서 사용되는 기본 �
 
 많은 기본 모듈들 중에 우린 스테이킹 모듈만 한번 살펴본다.
 
-각각의 모듈들은 사용성이 다르나, 기본적인 구조 자체는 비슷하므로 하나만 제대로 이해하시면 다른 모듈도 금방 이해가능할 것이다.
+각각의 모듈들은 사용성이 다르나, 기본적인 구조 자체는 비슷하므로 하나만 제대로 이해하시면 다른 모듈도 금방 이해 가능할 것이다.
 
-참고로 모든 앱체인들이 해당 사항을 준수하지는 않지만 cosmos-sdk에서 기본적으로 제공하는 모듈들은 각각이 spec 문서가 존재하기 때문에 자세한 모듈의 목적과 의미 사용성등은 [스펙 문서](https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/staking/spec/README.md)를 살펴보는 것도 좋다.
+참고로 모든 앱체인들이 해당 사항을 준수하지는 않지만 cosmos-sdk에서 기본적으로 제공하는 모듈들은 각각이 spec 문서가 존재하기 때문에 자세한 모듈의 목적과 의미 사용성 등은 [스펙 문서](https://github.com/cosmos/cosmos-sdk/blob/v0.45.4/x/staking/spec/README.md)를 살펴보는 것도 좋다.
 
 ```json
 // staking module example init state
@@ -328,11 +328,11 @@ app_message에서 보았던 application state들은 app_state에 포함되어있
 
 #### Alice Account
 
-그 다음으로는 account를 하나 만들 예정입니다. 제네시스 스테이트를 init한 뒤에 새로운 블록을 생성하기 위해서는 validator가 필요하기 때문입니다.
+그 다음으로는 account를 하나 만들 예정이다. 제네시스 스테이트를 init한 뒤에 새로운 블록을 생성하기 위해서는 validator가 필요하기 때문이다.
 
-우린 간단히 밸리데이터 alice를 genesis state에 포함시켜서 simapp을 구동하도록 하겠습니다.
+우린 간단히 밸리데이터 alice를 genesis state에 포함시켜서 simapp을 구동하도록 할 것이다.
 
-먼저, 현재 우리가 사용하고 있는 working directory에 initialized 된 key를 보겠습니다. 아마 아무런 결과도 출력되지 않을텐데, 그건 당연히 현재 우리가 사용하고 있는 home directory에는 아무런 키가 없기 때문입니다.
+먼저, 현재 우리가 사용하고 있는 working directory에 initialized 된 key를 보자. 아마 아무런 결과도 출력되지 않을텐데, 그건 당연히 현재 우리가 사용하고 있는 home directory에는 아무런 키가 없기 때문이다.
 
 ```bash
 ./build/simd keys list \
@@ -340,7 +340,7 @@ app_message에서 보았던 application state들은 app_state에 포함되어있
     --keyring-backend test
 ```
 
-이제 `alice`란 이름의 account를 생성합시다. 잘 생성했다면 아래와 같은 결과가 출력될 것입니다.
+이제 `alice`란 이름의 account를 생성해보자. 잘 생성했다면 아래와 같은 결과가 출력될 것이다.
 
 ```bash
 # create a alice account(mnemonic)
@@ -360,13 +360,13 @@ app_message에서 보았던 application state들은 app_state에 포함되어있
 # <random... >
 ```
 
-한 가지 알고 넘어갈 내용은 key-path입니다.
+한 가지 알고 넘어갈 내용은 key-path이다.
 
-명령어로 생성된 니모닉(그냥 엄청나게 큰 숫자를 의미함, 시드값)을 통해서 우리의 address가 derive되기 까지는 이러한 path가 정해져야 하는데 이건 각 프로토콜 마다 조금씩 다릅니다.
+명령어로 생성된 니모닉(그냥 엄청나게 큰 숫자를 의미함, 시드값)을 통해서 우리의 address가 derive되기 까지는 이러한 path가 정해져야 하는데 이건 각 프로토콜 마다 조금씩 다르다.
 
-저희가 배울 cosmos-sdk로 된 appchain에서는 주로 118 path를 사용합니다.
+저희가 배울 cosmos-sdk로 된 appchain에서는 주로 118 path를 사용한다.
 
-우선 해당 내용은 이런게 있다고만 하고 넘어가겠습니다. 더 자세한 내용은 제가 근무하고 있는 코스모스테이션에서 작성했던 이 [아티클](https://medium.com/cosmostation/mnemonic-phrase-hd-wallets-simplified-12b54f9e5031)를 참고바랍니다.
+우선 해당 내용은 이런게 있다고만 하고 넘어가자. 더 자세한 내용은 코스모스테이션에서 작성했던 이 [아티클](https://medium.com/cosmostation/mnemonic-phrase-hd-wallets-simplified-12b54f9e5031)를 참고한다.
 
 ```bash
 # default algorithm & key-path in simapp
@@ -383,7 +383,7 @@ app_message에서 보았던 application state들은 app_state에 포함되어있
 > and a bip32 HD path to derive a specific account. The key will be stored under the given name
 > and encrypted with the given password. The only input that is required is the encryption password.
 
-다시 본론으로 돌아와서 저희의 home directory에 생성된 키를 이렇게 재확인할 수 있습니다.
+다시 본론으로 돌아와서 저희의 home directory에 생성된 키를 이렇게 재확인할 수 있다.
 
 ```bash
 /build/simd keys show alice \\
@@ -397,7 +397,7 @@ app_message에서 보았던 application state들은 app_state에 포함되어있
 #   mnemonic: ""
 ```
 
-마지막으로 우린 alice에게 validator로 bond할 수 있는 토큰을 제네시스 스테이트에 업데이트 해주면 어카운트 준비가 끝납니다.
+마지막으로 우린 alice에게 validator로 bond할 수 있는 토큰을 제네시스 스테이트에 업데이트 해주면 어카운트 준비가 끝난다.
 
 ```bash
 # check bond denom for preparing alice validatror
@@ -413,15 +413,15 @@ grep bond_denom ./private/.simapp/config/genesis.json
 
 <!-- TODO -->
 
-genesis를 아래와 같이 비교해서 보면 어떤 것을 준비하는 단계인지 이해하기 더 쉬울 것입니다.
+genesis를 아래와 같이 비교해서 보면 어떤 것을 준비하는 단계인지 이해하기 더 쉬울 것이다.
 
 ![04_genesis_state2](./assets/04_genesis_state2.png)
 
 #### Validator
 
-이제 키도 만들었고, 앨리스에게 initial token도 업데이트 해줬으니 다음은 제네시스로 블록체인이 실행되면서 앨리스가 밸리데이터가 될 수 있도록 genesis transaction(gentx)를 만들겠습니다.
+이제 키도 만들었고, 앨리스에게 initial token도 업데이트 해줬으니 다음은 제네시스로 블록체인이 실행되면서 앨리스가 밸리데이터가 될 수 있도록 genesis transaction(gentx)를 만들어보자.
 
-이번 명렁어도 어떤 걸 의미하는지는 아래의 비교사진에서 다시 봅시다.
+이번 명렁어도 어떤 걸 의미하는지는 아래의 비교사진에서 다시 볼 수 있다.
 
 ```bash
 # Do not forget to use your own --chain-id.
@@ -432,7 +432,7 @@ genesis를 아래와 같이 비교해서 보면 어떤 것을 준비하는 단�
 Genesis transaction written to "private/.simapp/config/gentx/gentx-b5c926d6bcacbf7803a47b90e5dcb2b4576a8724.json"
 ```
 
-아래 json이 방금 생성한 gentx입니다. 해당 gentx는 alice account를 밸리데이터로 선언하는 transaction인 것을 볼 수 있습니다.
+아래 json이 방금 생성한 gentx이다. 해당 gentx는 alice account를 밸리데이터로 선언하는 transaction인 것을 볼 수 있다.
 
 ```json
 {
@@ -498,7 +498,7 @@ Genesis transaction written to "private/.simapp/config/gentx/gentx-b5c926d6bcacb
 }
 ```
 
-그리고 저희 환경에서는 앨리스만 밸리데이터로 세울 에정이니 아래의 collect-gentxs를 실행하겠습니다.
+해당 환경에서는 앨리스만 밸리데이터로 세울 에정이니 아래의 collect-gentxs를 실행한다.
 
 > collect-gentxs: After you have created this genesis transaction in its own file, collect all the genesis transactions with collect-gentxs to include them in your genesis file. Here you have only one anyway:
 
@@ -507,19 +507,19 @@ $ ./build/simd collect-gentxs \
     --home ./private/.simapp
 ```
 
-자 그럼 텅 비었던 genutil이란 모듈에 새로운 스테이트가 업데이트 된 것을 볼 수 있습니다. 바로 앨리스가 밸리데이터로 선언되는 tx입니다. 이후에 체인이 가동될 때 해당 gentxs들이 실행되면서 0번째 블록에서부터 앨리스를 밸리데이터로서 블록을 생성하는데 합의할 수 있는 party로 만듭니다.
+자 그럼 텅 비었던 genutil이란 모듈에 새로운 스테이트가 업데이트 된 것을 볼 수 있다. 바로 앨리스가 밸리데이터로 선언되는 tx이다. 이후에 체인이 가동될 때 해당 gentxs들이 실행되면서 0번째 블록에서부터 앨리스를 밸리데이터로서 블록을 생성하는데 합의할 수 있는 party로 만든다.
 
 ![04_genesis_state3](./assets/04_genesis_state3.png)
 
-보다 자세한 내용은 (해당 부분)[https://tutorials.cosmos.network/tutorials/3-run-node/#make-yourself-a-proper-validator]를 참고하시면 좋습니다.
+보다 자세한 내용은 (해당 부분)[https://tutorials.cosmos.network/tutorials/3-run-node/#make-yourself-a-proper-validator]를 참고하시면 좋다.
 
-ps. tip! 실제 프로덕션 환경에서는 이렇게 하나의 어카운트로 밸리데이터 파티를 구성하는 것이 아니라, 탈중앙화된 특정 파티들을 구성하고 각 파티가 gentx를 제출하여 collect한 state를 genesis로 사용합니다.
+ps. tip! 실제 프로덕션 환경에서는 이렇게 하나의 어카운트로 밸리데이터 파티를 구성하는 것이 아니라, 탈중앙화된 특정 파티들을 구성하고 각 파티가 gentx를 제출하여 collect한 state를 genesis로 사용한다.
 
 ### Run a node & Create new blocks
 
 모든 준비는 끝났습니다. 이제 `start` 커맨드를 통해서 앨리스가 밸리데이터로서 합의에 참여해 저희가 만든 learning chain에 새로운 블록들을 생성합시다.
 
-짜잔 아래 그림처럼 블록을 만든 것을 볼 수 있어!
+짜잔 아래 그림처럼 블록을 만든 것을 볼 수 있다!
 
 ```bash
 ./build/simd start \
@@ -541,9 +541,9 @@ ps. tip! 실제 프로덕션 환경에서는 이렇게 하나의 어카운트로
 
 ### Interaction state with our simapp
 
-블록체인을 정상적으로 가동시켰으면 해당 체인에 우리가 처음에 넣었던 앨리스의 잔액이 남아있는지 확인해봅시다.
+블록체인을 정상적으로 가동시켰으면 해당 체인에 우리가 처음에 넣었던 앨리스의 잔액이 남아있는지 확인해보자.
 
-앨리스의 주소는 cosmos1md732ndap5er8alc3sj87yra08gffp3u3qjrhf 였으니 아래와 같이 커맨드를 구성합니다.
+앨리스의 주소는 cosmos1md732ndap5er8alc3sj87yra08gffp3u3qjrhf 였으니 아래와 같이 커맨드를 구성한다.
 
 ```bash
 # query alice accont
@@ -566,10 +566,10 @@ ps. tip! 실제 프로덕션 환경에서는 이렇게 하나의 어카운트로
 }
 ```
 
-저희가 만든 로컬 체인을 구성하고 해당 체인과 인터랙션해보는 이번 강의는 여기까지입니다. 추가적으로 체인과 인터랙션을 하는 내용은 official docs에 더 내용이 있으니 해보고 싶으신 분들은 해보시길 추천드립니다.
+저희가 만든 로컬 체인을 구성하고 해당 체인과 인터랙션해보는 이번 강의는 여기까지이다. 추가적으로 체인과 인터랙션을 하는 내용은 official docs에 더 내용이 있으니 해보고 싶으신 분들은 해보시길 추천한다.
 
-그리고, 다음 시간에는 오늘 다룬 simapp의 architecture에 대해서 배우도록 하겠습니다.
+그리고, 다음 시간에는 오늘 다룬 simapp의 architecture에 대해서 배우도록 하겠다.
 
-ps. 오늘 배운 내용들에 대한 json file들은 assets에 다 올려놨으니 참고해도 좋습니다.
+ps. 오늘 배운 내용들에 대한 json file들은 assets에 다 올려놨으니 참고해도 좋다.
 
 **과제 : 각자 로컬에서 simapp chain를 구동시켜볼 것**

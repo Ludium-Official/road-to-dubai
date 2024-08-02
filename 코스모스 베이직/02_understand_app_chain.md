@@ -2,7 +2,7 @@
 
 ### Preview
 
-**Hello Eearth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 두번째 챕터에 온 걸 환영한다.
+**Hello Earth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 두번째 챕터에 온 걸 환영한다.
 
 두번째로 우리가 다룰 주제는 **'앱 체인 아키텍쳐 이해하기'** 이다.
 

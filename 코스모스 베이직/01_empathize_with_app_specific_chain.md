@@ -2,7 +2,7 @@
 
 ### Preview
 
-**Hello Eearth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 첫번째 챕터에 온걸 환영한다.
+**Hello Earth 🌏!, Welcome to Cosmos 🌌**, 코스모스 베이직 과정 첫번째 챕터에 온걸 환영한다.
 
 첫번째로 우리가 다룰 주제는 ‘왜 App Specific Chain(이하 app chain)이 등장했는가?**(Understanding Why App-Specific blockcahins Emerged)**’ 이다.
 
