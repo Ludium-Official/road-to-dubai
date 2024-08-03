@@ -22,7 +22,7 @@ VSCode https://code.visualstudio.com/
 
 ## nodejs 및 관련 패키지 설치
 
-dApp 개발 미션은 nodejs, nextjs, shadcn/ui를 프론트앤드 개발에 사용하고, 패키지 매니저는 yarn을 사용하기로 한다.
+dApp 개발 미션은 `nodejs`, `nextjs`, `shadcn/ui`를 프론트앤드 개발에 사용하고, 패키지 매니저는 `yarn`을 사용하기로 한다.
 
 ```bash
 #nodejs 설치
@@ -52,7 +52,7 @@ Cosmos에는 [Cosmostation](https://chromewebstore.google.com/detail/cosmostatio
     - https://neutron.celat.one/pion-1
   - Faucet
     - https://docs.neutron.org/neutron/faq/#where-is-the-testnet-faucet
-- ## Osmosis Testnet
+- Osmosis Testnet
   - Explorer
     - https://www.mintscan.io/osmosis-testnet
   - Faucet
