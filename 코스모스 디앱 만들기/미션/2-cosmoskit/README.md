@@ -1,17 +1,18 @@
-# dApp 프로젝트 생성 및 지갑 연결
+# cosmos-kit 템플릿 프로젝트
 
-- cosmos-kit을 설치하고 프로젝트를 생성한다.
-- cosmos-kit에서 제공하는 여러 템플릿들을 생성해보고 이해한다.
+cosmos-kit에서 제공하는 여러 템플릿 프로젝트를 생성하고 이해한다.
 
-## cosmos-kit?
+## 사전 준비
+
+### cosmos-kit?
 
 cosmos-kit은 Cosmos생태계의 지갑 Cosmostation, Keplr, Leap 등 다양한 지갑연결 및 CosmJS를 활용하여 Cosmos-SDK를 활용한 앱체인들과 쉽게 통신할 수 있다.
 
 제공되는 예제로는 Cosmos-SDK에서 제공되는 기본 모듈 외에도 대표 NFT Marketplace, DEX인 Stargaze, Osmosis 컨트랙트를 활용하는 예제들도 있다.
 
-## cosmos-kit 설치
+## 구현
 
-nodejs 설치 확인
+### nodejs 설치 확인
 
 ```
 $ node -v
@@ -19,7 +20,7 @@ $ node -v
 # 버전은 맞출 필요는 없지만 지원이 안되는 경우 nvm을 사용하여 nodejs 버전을 변경하여 사용하도록 한다.
 ```
 
-cosmos-kit 설치
+### cosmos-kit 설치
 
 ```
 $ npm i -g create-cosmos-app
@@ -31,7 +32,7 @@ $ cca -v
 > 2.3.3
 ```
 
-## cosmos-kit 프로젝트 생성 및 실행
+### cosmos-kit 프로젝트 생성
 
 ```
 # `cca` 또는 `create-cosmos-app`을 통해 프로젝트 생성을 한다.
@@ -50,20 +51,25 @@ $ cca
 # package.json에서 "packageManager": "yarn@4.3.1" 부분을 제거 후 실행한다
 ```
 
-# 프로젝트 실행 및 확인
+### 프로젝트 실행
 
 ```
+$ yarn
 $ yarn dev
 ```
 
+## 결과
+
 http://localhost:3000 주소로 테스트를 진행한다.
+
+### 단일 체인 프로젝트
 
 ![m1-1](../../images/m1-1.png)
 
 설치된 지갑을 찾아서 연결 및 주소를 확인한다.
 ![m1-2](../../images/m1-2.png)
 
-# Multichain 프로젝트
+### 멀티 체인 프로젝트
 
 cosmos-kit 생성시 template 를 connect-multi-chain으로 설정하여 프로젝트를 생성 후 실행한다.
 
@@ -73,7 +79,7 @@ cosmos-kit 생성시 template 를 connect-multi-chain으로 설정하여 프로�
 
 여러 체인으로 계정이 변경 되는 것을 확인한다.(Cosmos 앱 체인은 체인별로 Address의 Prefix가 존재한다.)
 
-## 기타 cosmos-kit 템플릿 분석
+## 참조 - 기타 cosmos-kit 템플릿 분석
 
 https://cosmology.zone/products/create-cosmos-app 에 제공되는 템플릿을 생성하여 코드를 분석한다.
 

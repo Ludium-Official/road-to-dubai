@@ -1,10 +1,9 @@
 # cosmos-kit을 연동
 
-cosmos-kit을 템플릿을 사용하지 않고 직접 연동한다.
+cosmos-kit을 템플릿을 사용하지 않고 신규 nextjs 프로젝트 생성 후 연동한다.
 
-Wallet 연결부터 State 조회, Transcation 전송 등 모든 기능을 Step-by-step으로 이해하며 따라한다.
 
-## 프로젝트 생성 및 라이브러리 추가
+## 구현
 
 아래 nextjs 프로젝트를 생성해서 빈 프로젝트부터 필요한 라이브러리 및 cosmos-kit을 추가한다.
 
@@ -34,9 +33,10 @@ $ ✔ Would you like to use CSS variables for colors? … no / yes
 > Success! Project initialization completed. You may now add components.
 ```
 
-프로젝트 실행
+### nextjs + shadcn/ui 프로젝트 실행
 
 ```bash
+$ yarn
 $ yarn dev
 ```
 
@@ -44,7 +44,7 @@ $ yarn dev
 
 ![m3-1](../../images/m3-1.png)
 
-### cosmos-kit
+### cosmos-kit 연동
 
 https://docs.cosmology.zone/cosmos-kit/get-started
 
@@ -100,7 +100,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        //코드 수정
         <Providers>{children}</Providers>
       </body>
     </html>
@@ -108,9 +107,9 @@ export default function RootLayout({
 }
 ```
 
-## 지갑 연결 기능 구현
+### 지갑 연결 기능 구현
 
-shadcn 버튼 모듈 추가
+shadcn/ui 버튼 모듈 추가
 
 ```bash
 npx shadcn-ui@latest add button
@@ -152,7 +151,8 @@ import Wallet from "@/components/wallet";
 export default function Home() {
   return (
     <main>
-      <div className="mt-10 grid place-items-center">
+      <div className="m-10 grid gap-14 w-2/5 mx-auto">
+        <h1 className="text-3xl font-bold">Cosmos dApp</h1>
         <Wallet />
       </div>
     </main>
@@ -162,4 +162,14 @@ export default function Home() {
 
 위 코드를 통해 지갑 연결이 정상적으로 되는지 확인한다.
 
+## 결과
+
+지갑 연결 및 주소를 확인한다.
+
 ![m3-2](../../images/m3-2.png)
+
+![m3-3](../../images/m3-3.png)
+
+![m3-4](../../images/m3-4.png)
+
+![m3-5](../../images/m3-5.png)
