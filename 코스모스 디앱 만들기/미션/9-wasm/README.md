@@ -23,6 +23,53 @@ Cosmwasm 코드 및 컨트랙트 업로드, initiate를 권한을 통해 관리�
 Cosmwasm에서 컨트랙을 개발하는 것을 배운 상태이므로,
 이미 구현된 code를 배포, initiate, query, execute 하는 것을 배워보도록 한다.
 
+### Neutron signing option 추가
+
+Cosmwasm 미션은 Neutron Testnet에서 진행하므로, Neutron 테스트넷 관련 signing 옵션을 추가해둔다.
+
+#### **`app/providers.tsx`**
+
+```ts
+"use client";
+import React from "react";
+import { wallets } from "@cosmos-kit/cosmostation";
+import assets from "chain-registry/assets";
+import { chains } from "chain-registry";
+import { ChainProvider } from "@cosmos-kit/react";
+import "@interchain-ui/react/styles";
+import { SignerOptions } from "@cosmos-kit/core";
+import { GasPrice } from "@cosmjs/stargate";
+import { Chain } from "@chain-registry/types";
+export default function Providers({ children }: { children: React.ReactNode }) {
+  const signerOptions: SignerOptions = {
+    signingStargate(chain) {
+      if ((chain as Chain)?.chain_name === "cosmoshubtestnet") {
+        return {
+          gasPrice: GasPrice.fromString("0.025uatom"),
+        };
+      }
+    },
+    signingCosmwasm(chain) {
+      if ((chain as Chain)?.chain_name === "neutrontestnet") {
+        return {
+          gasPrice: GasPrice.fromString("0.025untrn"),
+        };
+      }
+    },
+  };
+  return (
+    <ChainProvider
+      chains={chains}
+      assetLists={assets}
+      wallets={wallets}
+      signerOptions={signerOptions}
+    >
+      {children}
+    </ChainProvider>
+  );
+}
+```
+
 ## 구현
 
 Cosmoshub는 Cosmwasm이 지원되지 않는 체인이기 때문에, Neutron 체인에서 테스트 한다.
