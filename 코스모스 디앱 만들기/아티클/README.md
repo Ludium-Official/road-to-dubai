@@ -42,19 +42,34 @@ Blockchain node |  |           Consensus           |  |
   - ibc-go : 앱체인간 토큰, 데이터 전송을 가능하게 하는 모듈
   - ibc-apps : packet forward middleware라는 ibc로 특정 데이터를 전송하고 수신한 체인에서 자동으로 처리되는 기능이 구현 가능하다.
 
+- Cosmos-SDK는 상태 값을 조회할 수 있도록 REST API / gRPC 방식 모두 제공한다.
+  - 실제 노드를 운영하지 않는 프로젝트에선, Public Endpoint를 찾거나, API 서비스를 찾아 사용하게 된다.
+  - Production 레벨에서는 API 서비스 이용 또는 직접 노드 운영해야 프로젝트의 안정성을 줄 수 있다.
+  - 미션을 위해서는 cosmos-kit의 훅을 통해 제공되는 public endpoint를 사용한다.
+
+- Cosmos-SDK에서 Amino, Direct, Text 방식으로 Message Sign을 제공한다.
+
 - Cosmos-SDK에서 기본 모듈을 제외한 기능을 구현하려면
 
   - Custom Module을 제작해서 새로운 기능을 활용할 수 있다. 모듈은 체인 업데이트를 통해 보통 적용된다.
+    - 앱체인에 기능을 추가하려면 앱체인에 Contribution을 하여 코드를 반영하고 그 코드가 반영된 앱체인 클라이언트가 모든 검증인들에게 반영되어야 한다.
+    - 위 flow는 일반 빌더들에겐 많은 허들이 있다. 따라서 Smart Contract관련 모듈이 나오게 된다.
 
   - Smart Contract 관련 기능을 활용해 Cosmwasm 컨트랙트 또는 EVM 컨트랙트를 활용할 수 있다.
+    - 스마트 컨트랙트는 위 모듈과는 다르게 코드, 컨트랙트, 스테이트 정보들이 온체인에 있고, 체인 업그레이드와 상관없이 새로운 기능을 사용할 수 있다.
+
 
 - Smart Contract?
 
   - 블록체인은 State Machine으로 볼 수 있는데, 어떤 상태들이 기록되 있는 것이다. 컨트랙트 코드도 그 중 일부이고, 컨트랙트의 상태도 저장되어 있다. 그 내용들을 EVM 또는 WASM 모듈을 통해 활용하는 것이다.
 
-- Cosmos-SDK는 상태 값을 조회할 수 있도록 REST API / gRPC 방식 모두 제공한다.
+  - WASM
+    - Cosmwasm은 wasm 코드안에서 cosmos-sdk의 기본 모듈을 사용할 수 있는 라이브러리를 제공한다.
+  - EVM
+    - Precompile해 둔 contract를 바탕으로 앱체인의 네이티브 기능도 사용할 수 있다.
 
-- Cosmos-SDK에서 Amino, Direct, Text 방식으로 Message Sign을 제공한다.
+
+
 
 ## dApp 개발을 위한 기초 지식
 
@@ -92,7 +107,7 @@ Blockchain node |  |           Consensus           |  |
 
 ## Cosmos 생태계에서 지원을 하는 dApp 개발을 위한 툴 킷
 
-- CosmJS
+- CosmJS https://github.com/cosmos/cosmjs
 
   - Cosmos-SDK의 대표 typescript/javascript 라이브러리로 앱체인과 통신합니다.
 
@@ -106,13 +121,13 @@ Blockchain node |  |           Consensus           |  |
 
     - Cosmos SDK 모듈에서 발생하는 이벤트를 수신합니다.
 
-- cosmos-kit
+- cosmos-kit https://cosmology.zone/products/cosmos-kit
 
   - cosmos-kit은 Cosmos생태계의 지갑 Cosmostation, Keplr, Leap 등 다양한 지갑연결 및 CosmJS를 활용하여 Cosmos-SDK를 활용한 앱체인들과 쉽게 통신할 수 있다.
 
   - create-cosmos-app을 활용해서 다양한 예제를 제공하고 있다.
 
-- Mintscan
+- Mintscan https://mintscan.io
 
   - 코스모스 생태계의 대표적인 Explorer
 
@@ -120,26 +135,8 @@ Blockchain node |  |           Consensus           |  |
 
   - 지갑이 내장되어 있어 x/bank, x/staking, x/governance 등 Cosmos 주요 기능을 바로 활용 가능하다.
 
-- Ignite
+- Ignite https://docs.ignite.com/
 
   - Cosmos-SDK의 scaffold 기능을 하는 cli
 
   - 체인 생성, 모듈 생성, 릴레이어 등 생성을 쉽게 한다.
-
-## 주요 생태계 dApp
-
-- Astroport
-
-  - Cosmos 생태계의 대표 DeFi 프로젝트
-
-- Stargaze
-
-  - Cosmos 생태계의 대표 NFT 프로젝트
-
-- Osmosis
-
-  - Cosmos 생태계의 대표 DeFi 프로젝트
-
-- Stride
-
-  - Cosmos 생태계의 주요 Liquid Staking 프로젝트
