@@ -65,10 +65,85 @@ Goroutine(이하 고루틴)이라는 비동기 메커니즘을 통해 동시성�
 ## 2. Go 언어 설치하기
 기초 문법을 알아보기 전에 Go를 처음으로 개발하는 사람들은 기본 설정을 해야한다. Go언어 설치는 OS 환경에 따라 방법에 제각각이다. [Go 공식 다운로드 링크](https://go.dev/doc/install)를 통해 다운로드 해보자. 
 
+### Linux Ubuntu
+```sh
+sudo apt install golang -y or
+sudo apt-get install golang -y or
+```
+go 버전이 맞지 않거나, 설치가 제대로 안된다면
+```sh
+wget https://golang.org/dl/go1.20.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.20.linux-amd64.tar.gz
+```
+go 버전 1.20 버전을 다운로드 해서 /usr/local 위치에 압축을 풀어 설치하는 명령어이다.
+### MacOS
+```sh
+brew install go
+```
+### Windows
+https://go.dev/doc/install 
+들어가서 다운로드 후 설치하면 된다.
+
 설치가 끝났으면, 명령 프롬프트를 열고 다음 명령을 입력하여 Go가 제대로 설치되었는지 확인해본다:
 ```sh
 $ go version
 ```
+
+만약 설치 후에도 go command not found 에러가 난다면
+## 환경변수 설정
+#### PATH:
+Go 실행 파일이 위치한 디렉토리를 시스템 PATH에 추가하여 터미널에서 Go 명령어(go)를 어디서나 실행할 수 있도록 한다. 
+
+설정된 값: $PATH:$HOME/go/bin
+
+
+#### GOPATH:
+Go 작업 공간(모듈, 패키지, 바이너리 등을 저장하는 위치)을 지정한다.
+
+설정된 값: $HOME/go (일반적으로 GOPATH는 $HOME/go로 설정되어야 한다).
+
+
+#### GOROOT:
+Go 설치 경로를 지정합니다. 일반적으로 Go의 설치 디렉토리이다.
+ 
+설정된 값: $HOME (일반적으로는 /usr/local/go 등 Go가 설치된 디렉토리여야 한다).
+
+##### 기본 커맨드
+```sh
+which go   # go 설치 위치 확인
+export PATH=$PATH:$HOME/go/bin   # go 커맨드 실행
+export GOPATH=$HOME/go   # go 작업공간 지정
+export GOROOT=$HOME   # which go로 확인한 위치 넣기
+```
+
+
+### Linux Ubuntu
+```sh
+nano ~/.bashrc  # or nano ~/.profile   # nano 텍스트 편집기로 환경변수 파일 열기
+source ~/.bashrc  # 또는 source ~/.profile
+```
+
+
+### MacOS
+```
+nano ~/.bash_profile  # 또는 nano ~/.zshrc
+source ~/.bash_profile  # 또는 source ~/.zshrc
+```
+
+
+### Windows
+##### 1. 환경 변수 설정 창 열기:
+시작 메뉴에서 "환경 변수 편집"을 검색하고 "시스템 속성" 창을 연다.
+"고급" 탭에서 "환경 변수" 버튼을 클릭한다.
+##### 2. GOPATH 설정:
+"사용자 변수"에서 "새로 만들기"를 클릭하고 GOPATH를 설정한다. 예를 들어, C:\Users\YourUsername\go.
+##### 3. PATH 변수 수정:
+"시스템 변수"에서 Path를 선택하고 "편집"을 클릭한다.
+C:\Go\bin 및 %GOPATH%\bin을 추가한다.
+##### 4. 적용:
+모든 창에서 "확인"을 클릭하여 변경 사항을 적용한다.
+
+
 
 Go를 지원하는 개발 도구는 JetBrains의 Golang가 있지만 이는 유료이고, vscode의 [Go 플러그인](https://code.visualstudio.com/docs/languages/go)을 설치하면 쉽게 Go 언어 개발을 할 수 있다. 
 
