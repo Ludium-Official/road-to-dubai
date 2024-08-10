@@ -1,10 +1,4 @@
-# 20. Cosmwasm Basic
-## 목차
-0. Cosmwasm 소개
-1. Cosmwasm 특징
-2. Cosmos SDK와 Cosmwasm의 상호작용 
-   1. Execution
-   2. Query
+# Cosmwasm Basic
 
 ## 0. Cosmwasm 소개
 Cosmos SDK는 앱 개발자들이 자유롭게 모듈 커스텀을 가능하기 위해 간단하고 쉬운 문법을 가지고 있는 Golang으로 작성되었지만, 다양한 프로그래밍 언어를 지원하는 것은 확장성 면에서도 중요하다. 최종적으로는 Cosmos 생태계는 블록체인 인터넷(Interchain)을 활성화하여 Inter-Blockchain Communication Protocol(IBC)로 연결된 수많은 구현 및 기능을 지원하는 더 큰 목표를 바라보고 있다. 

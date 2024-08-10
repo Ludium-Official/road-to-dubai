@@ -1,16 +1,10 @@
-# 31. EntryPoint 생성하기
-## 목차
-0. EntryPoint 함수 생성하기
-   1. `instantiate` EntryPoint
-   2. `execute` EntryPoint
-   3. `query` EntryPoint
-1. 컨트랙트 빌드 후 검증하기
+# EntryPoint 생성하기
 
 ## 사전 지식
-- [22_entrypoint](./22_entrypoint.md)
+- [04_entrypoint](./04_entrypoint.md)
 
 ## 0. EntryPoint 함수 생성하기
-이전에 프로젝트 생성에서 전체적인 프로젝트 구조를 생성하였을 것이다. [EntryPoint](./22_entrypoint.md) 함수는 `contract.rs`에서 관리하고 있다.
+이전에 프로젝트 생성에서 전체적인 프로젝트 구조를 생성하였을 것이다. [EntryPoint](./04_entrypoint.md) 함수는 `contract.rs`에서 관리하고 있다.
 
 ### 1. `instantiate` EntryPoint
 그럼 이제 `src/contract.rs`에 EntryPoint를 만들어보자:

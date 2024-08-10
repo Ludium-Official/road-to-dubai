@@ -1,19 +1,9 @@
-# 00. register execute 구현하기
-## 목차
-0. register 기능
-1. `ExecuteMsg` 메세지 생성하기 
-2. `NameRecord` 상태 추가하기
-3. register 비즈니스 로직 구현하기
-4. name 중복 커스텀 에러 생성하기
-5. `ResolveRecord` 쿼리 추가하기
-   1. `QueryMsg` 메세지에 `ResolveRecord` 타입 추가하기
-   2. `ResolveRecord` 쿼리 조회 비즈니스 로직 구현하기 
-6. 비즈니스 로직 테스트 
+# register execute 구현하기
 
 ## 사전 지식
-- [21_state](./21_state.md)
-- [23_message_and_event](./23_message_and_event.md)
-- [24_query](./24_query.md)
+- [03_state](./03_state.md)
+- [05_message_and_event](./05_message_and_event.md)
+- [06_query](./06_query.md)
 
 ## 0. register 기능 
 register 함수는 사용자가 입력한 이름을 등록하는 기능을 한다. 이름은 고유해야 하며, 중복된 이름은 등록할 수 없다.

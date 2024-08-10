@@ -1,9 +1,4 @@
-# 23. Message and Event
-## 목차
-0. Messages
-1. CosmosMsg
-2. SubMessages
-3. Event
+# Message and Event
 
 ## 0. Messages
 메시지는 CosmWasm 스마트 컨트랙트와 상호작용하는 방법이다. 대부분의 컨트랙트에는 메시지를 정의하는 [`msg.rs`](./nameservice/src/msg.rs) 파일이 있다. 세 가지 주요 메시지 유형이 있다:
@@ -125,7 +120,7 @@ pub struct SubMsg<T> {
 
 재진입 공격을 방지하기 위해, CosmWasm은 컨트랙트 메모리에 컨텍스트를 저장하는 것을 허용하지 않는다. 컨트랙트 간에 상태를 전파하는 방법은 두 가지가 있다:
 1. SubMsg에서 반환된 모든 이벤트는 Reply 메시지에서 읽을 수 있다.
-2. [`cw_storage_plus::Item`](./21_state.md#1-item)을 사용하여 임시 상태를 저장하고 Reply 핸들러에서 이를 로드한다.
+2. [`cw_storage_plus::Item`](./03_state.md#1-item)을 사용하여 임시 상태를 저장하고 Reply 핸들러에서 이를 로드한다.
 
 ### 1. Reply 전략
 Submessage는 다른 컨트랙트가 응답을 제공하는 다양한 옵션을 제공합니다. 네 가지 Reply 옵션이 있다:
@@ -144,7 +139,7 @@ pub enum ReplyOn {
 - 
 
 ### 2. Reply 핸들러 
-다른 컨트랙트로부터의 응답을 처리하려면 호출하는 컨트랙트에서 새로운 [entry_point](./22_entrypoint.md) 함수 중 하나인 `reply 함수`를 구현해야 한다. 다음은 새로운 컨트랙트 인스턴스화 처리하는 [Reply 예제 코드](https://github.com/CosmWasm/cw-plus/blob/main/packages/utils/src/parse_reply.rs)이다:
+다른 컨트랙트로부터의 응답을 처리하려면 호출하는 컨트랙트에서 새로운 [entry_point](./04_entrypoint.md) 함수 중 하나인 `reply 함수`를 구현해야 한다. 다음은 새로운 컨트랙트 인스턴스화 처리하는 [Reply 예제 코드](https://github.com/CosmWasm/cw-plus/blob/main/packages/utils/src/parse_reply.rs)이다:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
