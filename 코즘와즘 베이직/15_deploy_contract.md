@@ -78,7 +78,6 @@ GUI를 제공하고 있어서 쉽게 테스트넷에 배포할 수 있다.
 ![](./assets/32_contract_upload_complete.png)
 
 
-
 ## 4. nameservice 컨트랙트 배포 트랜잭션 결과 제출하기
 다음과 같이 nameservice 컨트랙트를 배포한 결과를 제출해야 한다:
 - code id: 5509
