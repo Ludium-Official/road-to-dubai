@@ -1,13 +1,7 @@
 # 31c. transfer execute 구현하기
-## 목차
-0. transfer 기능 
-1. `ExecuteMsg` 메세지에 `Transfer` 타입 추가하기
-2. 커스텀 에러 추가하기
-3. transfer 비즈니스 로직 구현하기
-4. 비즈니스 로직 테스트
 
 ## 사전 지식
-- [23_message_and_event](./23_message_and_event.md)
+- [05_message_and_event](./05_message_and_event.md)
 
 ## 0. transfer 기능 
 transfer 기능은 등록된 이름을 다른 사용자에게 전송하는 기능이다. 이 기능은 이름의 소유권을 변경하며, 소유권 이전 시 수수료를 지불해야 한다. 
