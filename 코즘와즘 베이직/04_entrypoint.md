@@ -1,9 +1,4 @@
 # 22. Entrypoint
-## 목차
-0. Entrypoint
-   1. `entry_point` 매크로
-   2. 함수 인자 
-   3. 반환 타입
 
 ## 0. Entrypoint 
 Entrypoint(진입점)는 메시지나 쿼리가 컨트랙트에 의해 처리되는 지점을 말한다. 

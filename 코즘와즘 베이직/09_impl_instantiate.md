@@ -1,19 +1,9 @@
-# 31a. instantiate 함수 구현하기
-## 목차
-0. instantiate 함수
-1. 라이브러리 추가하기 
-2. `InstantiateMsg` 메세지 생성하기
-3. `Config` 상태 추가하기
-4. instantiate 비즈니스 로직 구현하기
-5. `Config` 쿼리 추가하기 
-   1. `QueryMsg` 메세지 생성하기
-   2. `Config` 쿼리 조회 비즈니스 로직 구현하기 
-6. 비즈니스 로직 테스트 
+# instantiate 함수 구현하기
 
 ## 사전 지식
-- [21_state](./21_state.md)
-- [23_message_and_event](./23_message_and_event.md)
-- [24_query](./24_query.md)
+- [03_state](./03_state.md)
+- [05_message_and_event](./05_message_and_event.md)
+- [06_query](./06_query.md)
 
 ## 0. instantiate 함수
 `instantiate` 함수에서는 `config` 값을 초기한다. 여기서 초기화할 값은 `purchase_price`와 `transfer_price`이다.

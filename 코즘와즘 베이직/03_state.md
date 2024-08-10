@@ -1,11 +1,4 @@
-# 21. Contract 상태
-## 목차
-0. State
-1. cw-storage-plus 
-   1. Item
-   2. Map
-   3. IndexedMap
-   4. Others
+# Contract 상태
 
 ## 0. State
 State(상태)는 스마트 컨트랙트가 데이터를 저장하고 조회하는 저장소이다. 기존 앱 아키텍처에서 DB 상호작용 계층(예, orm)과 비슷하다고 보면 된다. 상태를 작성하는 가장 간단한 방법은 단일 항목을 작성하는 것입니다. 

@@ -1,9 +1,4 @@
-# 00. Nameservice Contract 빌드하기
-## 목차
-0. Nameservice
-1. 사전 설치
-2. 프로젝트 생성하기 
-3. 프로젝트 빌드하기
+# Nameservice Contract 빌드하기
 
 ## 0. Nameservice
 Nameservice는 블록체인에서 이름을 등록하고, 조회하고, 관리하는 스마트 컨트랙트이다. 이 문서에서는 Rust로 Nameservice 컨트랙트를 빌드하는 과정을 설명한다.

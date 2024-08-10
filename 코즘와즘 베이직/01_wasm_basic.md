@@ -1,10 +1,5 @@
-# 10. WebAssembly Basic
+# WebAssembly Basic
 > Cosmwasm에 대해 배우기에 앞서 해당 기술의 핵심이 되는 WebAssembly(Wasm)에 대한 이해를 키워나가고자 해당 아티클이 작성되었다.
-## 목차
-0. WebAssmebly(Wasm)
-1. WebAssmebly(Wasm) 특징 
-2. WebAssembly Interface(WASI)
-3. Wasm 런타임 - Wasmer
 
 ## 0. WebAssembly(Wasm)
 WebAssembly(Wasm)는 다양한 소스 언어로부터 이식 가능한 바이너리 실행 파일을 생성할 수 있는 바이너리 명령 형식을 정의하는 개방형 표준이다. 이러한 바이너리는 다양한 환경에서 실행될 수 있으며, 웹에서 기원하여 모든 주요 브라우저에서 지원된다. Wasm을 사용하면 서버, 엣지 등 어디서든 이전보다 더 이식성(portable) 있고 보안(security)이 뛰어난 프로그램을 실행할 수 있다.

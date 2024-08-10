@@ -13,15 +13,15 @@
 |                         | 구분   | 설명                                                                   | 자료 링크                                                           |
 | ----------------------- | ------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | 코스모스 디앱 제작 개요 | 아티클 | 코스모스 디앱 아키텍처 이해                                            | [Article1](../코스모스%20디앱%20만들기/아티클/README.md)            |
-| 코스모스 디앱 개발환경  | 미션   | 코스모스 디앱 개발 환경 구축                                           | [Mission1](../코스모스%20디앱%20만들기/미션/1-environment/)         |
-| cosmos-kit 템플릿       | 미션   | Cosmos Kit 제공 템플릿을 활용한 프로젝트 생성, 지갑 연결 페이지 만들기 | [Missions2](../코스모스%20디앱%20만들기/미션/2-cosmoskit)           |
-| Integrage cosmos-kit    | 미션   | 신규 프로젝트 생성하여 cosmos-kit 연동                                 | [Mission3](../코스모스%20디앱%20만들기/미션/3-integrate-cosmoskit/) |
-| Balance                 | 미션   | Bank 모듈을 활용하여 Balance 조회 기능 만들기                          | [Mission4](../코스모스%20디앱%20만들기/미션/4-balance/)             |
-| Bank                    | 미션   | Bank 모듈을 활용하여 Send 기능 만들기                                  | [Mission4](../코스모스%20디앱%20만들기/미션/5-send/)                |
-| IBC                     | 미션   | Token을 다른 체인으로 보내는 IBC 기능 만들기                           | [Mission6](../코스모스%20디앱%20만들기/미션/6-ibc/)                 |
-| Staking                 | 미션   | Staking 모듈을 통해 Staking, Reward Claim 하는 기능 만들기             | [Mission7](../코스모스%20디앱%20만들기/미션/7-staking/)             |
-| Governance              | 미션   | Governance 모듈을 통한 제안, 투표 디앱 만들기                          | [Mission8](../코스모스%20디앱%20만들기/미션/8-gov/)                 |
-| WASM                    | 미션   | CosmWasm Code/Contract 배포 기능 만들기                                | [Mission9](../코스모스%20디앱%20만들기/미션/9-wasm/)                |
+| 코스모스 디앱 개발환경  | 아티클   | 코스모스 디앱 개발 환경 구축                                           | [Mission1](../코스모스%20디앱%20만들기/미션/01-environment/)         |
+| cosmos-kit 템플릿       | 미션   | Cosmos Kit 제공 템플릿을 활용한 프로젝트 생성, 지갑 연결 페이지 만들기 | [Missions2](../코스모스%20디앱%20만들기/미션/02-cosmoskit)           |
+| Integrage cosmos-kit    | 미션   | 신규 프로젝트 생성하여 cosmos-kit 연동                                 | [Mission3](../코스모스%20디앱%20만들기/미션/03-integrate-cosmoskit/) |
+| Balance                 | 미션   | Bank 모듈을 활용하여 Balance 조회 기능 만들기                          | [Mission4](../코스모스%20디앱%20만들기/미션/04-balance/)             |
+| Bank                    | 미션   | Bank 모듈을 활용하여 Send 기능 만들기                                  | [Mission4](../코스모스%20디앱%20만들기/미션/05-send/)                |
+| IBC                     | 미션   | Token을 다른 체인으로 보내는 IBC 기능 만들기                           | [Mission6](../코스모스%20디앱%20만들기/미션/06-ibc/)                 |
+| Staking                 | 미션   | Staking 모듈을 통해 Staking, Reward Claim 하는 기능 만들기             | [Mission7](../코스모스%20디앱%20만들기/미션/07-staking/)             |
+| Governance              | 미션   | Governance 모듈을 통한 제안, 투표 디앱 만들기                          | [Mission8](../코스모스%20디앱%20만들기/미션/08-gov/)                 |
+| WASM                    | 미션   | CosmWasm Code/Contract 배포 기능 만들기                                | [Mission9](../코스모스%20디앱%20만들기/미션/09-wasm/)                |
 | NFT                     | 미션   | CW721 기능 만들기                                                      | [Mission10](../코스모스%20디앱%20만들기/미션/10-nft/)               |
 
 ## 미션

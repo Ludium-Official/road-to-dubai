@@ -1,12 +1,4 @@
 # 32. 컨트랙트 배포하기 
-## 목차
-0. Neutron
-1. Neutron 테스트넷 faucet 받기 
-2. nameservice 컨트랙트 빌드하기
-   1. 기본으로 빌드하기
-   2. wasm 사이즈 압축해서 빌드하기 
-3. celatone으로 테스트넷에 배포하기
-4. nameservice 컨트랙트 배포 트랜잭션 결과 제출하기
 
 ## 0. Neutron
 [Neutron](https://docs.neutron.org/)은 Cosmwasm을 사용해 스마트 컨트랙트를 Cosmos 계열 블록체인에 도입한 블록체인 네트워크이다. Neutron은 IBC 프로토콜을 사용하는 네트워크에서 작동한다. Neutron 보안(블록 검증)은 ICS(Interchain Security)을 통해 Cosmos Hub 네트워크에서 제공한다. 
@@ -84,7 +76,6 @@ GUI를 제공하고 있어서 쉽게 테스트넷에 배포할 수 있다.
 - code id: 5509
 - hash: 5497E176EBE4107F6BCD65A96071325D8E3DFD75201F17BA89FC421D76D9BC6E
 ![](./assets/32_contract_upload_complete.png)
-
 
 
 ## 4. nameservice 컨트랙트 배포 트랜잭션 결과 제출하기
