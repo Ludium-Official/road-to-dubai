@@ -1,97 +1,95 @@
 # Cosmwasm Basic
 
-## 0. Cosmwasm 소개
-Cosmos SDK는 앱 개발자들이 자유롭게 모듈 커스텀을 가능하기 위해 간단하고 쉬운 문법을 가지고 있는 Golang으로 작성되었지만, 다양한 프로그래밍 언어를 지원하는 것은 확장성 면에서도 중요하다. 최종적으로는 Cosmos 생태계는 블록체인 인터넷(Interchain)을 활성화하여 Inter-Blockchain Communication Protocol(IBC)로 연결된 수많은 구현 및 기능을 지원하는 더 큰 목표를 바라보고 있다. 
+## 0. Cosmwasm Introduction
+Cosmos SDK is written in Golang, which has simple and easy grammar to allow app developers to freely customize modules, but supporting various programming languages is also important in terms of scalability. Finally, the Cosmos ecosystem is looking at the bigger goal of supporting numerous implementations and functions connected by Inter-Blockchain Communication Protocol (IBC) by activating blockchain Internet.
 
-2019년 6월 Cosmos 네트워크에서 구축에 관심이 있는 개발자를 위한 툴링 확장을 위해 개최된 Cosmos HackAtom Berlin에서 CosmWasm의 시작을 알렸다. Cosmos SDK에서 WebAssembly(WASM) 가상 머신(VM)을 활성화하는 프로젝트인 Cosmwasm은 개발자 툴링과 관련하여 인터체인 재단으로부터 보조금을 받게 된 여러 프로젝트 중 하나였다.
+It marked the beginning of CosmWasm at the Cosmos HackAtom Berlin, held in June 2019 to extend tooling for developers interested in building on the Cosmos network. Cosmwasm, a project to activate WebAssembly (WASM) virtual machines (VMs) in the Cosmos SDK, was one of several projects that received grants from the Interchain Foundation regarding developer tooling.
 
-Cosmos SDK 애플리케이션 위에서 실행되는 WASM 가상 머신의 첫 번째 구현은 Confio의 Ethan Frey가 설계했다. Cosmos SDK에 WASM을 추가하면 다양한 언어로 작성된 소프트웨어가 블록체인에서 안전하게 실행될 수 있다. 그리고 그 첫 번째 언어로 Rust가 선택되었다. 
+The first implementation of the WASM virtual machine running on top of the Cosmos SDK application was designed by Ethan Frey of Confio. Adding WASM to the Cosmos SDK can safely execute software written in various languages on the blockchain. And Rust was selected as the first language.
 
-### WASM 컨트랙트 첫 번째 언어로 Rust를 선택한 이유 
-스마트 컨트랙트 구축할 때 성능에 있어 중요한 고려 사항은 데이터 패킷 크기이다. WASM 코드는 더 많은 범용성을 제공하기 때문에 당연히 스마트 컨트랙트에 특화되어 제작된 EVM 바이트코드보다는 사이즈가 크다. 
+### Why did you choose Rust as your first language for WASM Contract
+An important consideration in performance when building a smart contract is the size of the data packet. Because WASM code provides more versatility, it is of course larger than EVM byte code specialized in smart contracts.
 
-Rust에는 GC가 없고 표준 라이브러리를 빌드에서 제외할 수 있으므로 최소화된 단순 에스크로 컨트랙트에는 약 50kB(압축 시 16kB)가 필요하다. Golang이나 Haskell도 대안이 될 수 있지만, 수백 KB의 컨트랙트를 생성할 가능성이 높다.
+Rust does not have a GC and standard libraries can be excluded from the build, so a minimal simple escrow contract requires about 50kB (16kB when compressed). Golang or Haskell could be an alternative, but it is likely to create hundreds of KB contracts.
 
-이러한 고려와 블록체인 생태계에서 Rust 인기로 인해 텐더민트 팀은 이를 Cosmos SDK의 WASM 컨트랙트를 위한 첫 번째 구현 언어로 사용하기로 결정했다.
+Due to this consideration and Rust popularity in the blockchain ecosystem, the TenderMint team decided to use it as the first implementation language for WASM contracts in Cosmos SDK.
 
-## 1. Cosmwasm 특징
-Cosmwasm은 코스모스 생태계를 위해 구축된 스마트 컨트랙트 플랫폼이다. Cosmwasm은 Cosmos SDK에 플러그인할 수 있는 [모듈](../코스모스%20베이직/20_module_basic.md)로 작성되었다. 즉, 현재 Cosmos SDK를 사용해 블록체인을 구축 중인 누구나 기존 로직을 조정하지 않고도 빠르고 쉽게 Cosmwasm 스마트 컨트랙트 지원을 체인에 추가할 수 있다.
+## 1. Cosmwasm Features
+Cosmwasm is a smart contract platform built for the Cosmos ecosystem. Cosmwasm is written as a [module] (../Cosm%20 basic/20_module_basic.md) that can be plugged into the Cosmos SDK. In other words, anyone who is currently building a blockchain using the Cosmos SDK can quickly and easily add Cosmwasm smart contract support to the chain without having to adjust the existing logic.
 
-Cosmos 네트워크는 기본적으로 애플리케이션 영역과 합의 엔진 영역으로 나뉘어진다. Cosmwasm은 스마트 컨트랙트를 작성을 통해 애플리케이션 영역에 큰 이점을 가져다줄 수 있다. 그 이유는 다음과 같다:
-1. 개발자는 Cosmos SDK와 원활하게 통합되는 모듈을 Rust로 작성할 수 있으므로, 메인넷에서 검증된 Cosmos SDK 모듈과 텐더민트 합의 알고리즘을 활용하면서 Rust 기반의 애플리케이션 로직을 개발할 수 있다. 
-2. 체인을 재시작하지 않고 트랜잭션에서 코드를 업로드할 수 있기 때문에 새로운 기능을 훨씬 빠르게 배포할 수 있다. 물론, 핵심 로직을 변경할 때는 Cosmos Hub 업그레이드 절차가 필요하다. 
+Cosmos networks are basically divided into application areas and consensus engine areas. Cosmwasm can bring great advantages to application areas by creating smart contracts. The reasons are as follows:
+1. Developers can write modules that integrate smoothly with the Cosmos SDK as Rust, so they can develop Rust-based application logic while utilizing the Cosmos SDK module verified on the mainnet and the Tender Mint consensus algorithm.
+2. New features can be deployed much faster because you can upload code from transactions without restarting the chain. Of course, changing the core logic requires a Cosmos Hub upgrade procedure.
 
-### Cosmwasm 모듈(`x/wasm`)
-Cosmwasm은 또 다른 Cosmos SDK 모듈이므로 다음과 같은 의존성 바이너리 하나만으로도 블록체인에 통합을 시작할 수 있다. 
+### Cosmwasm Module(`x/wasm`)
+Cosmwasm is another Cosmos SDK module, so the following dependency binary alone can initiate integration into the blockchain.
 ```go
-// go.mod 
+// go.mod
 require (
-    github.com/CosmWasm/wasmd v0.16.0
+github.com/CosmWasm/wasmd v0.16.0
 )
 ```
 
-[Cosmos Hub](https://github.com/cosmos/gaia/blob/main/app/modules.go#L65)에서는 [wasmd](https://github.com/CosmWasm/wasmd)라는 cosmwasm 샘플 바이너리를 사용하고 있다. 그리고 [Neutron](https://www.neutron.org/)이라는 Cosmwasm 스마트 컨트랙트 플랫폼 체인이 있다. 이를 통해 코스모스 네트워크에 cosmwasm 컨트랙트를 배포하며, 초기화 및 쿼리해서 사용할 수 있다. 
+[Cosmos Hub](https://github.com/cosmos/gaia/blob/main/app/modules.go#L65) uses a cosmwasm sample binary called [wasmd](https://github.com/CosmWasm/wasmd). And there is a Cosmwasm smart contract platform chain called [Neutron](https://www.neutron.org/). Through this, the cosmwasm contract is distributed to the Cosm network, which can be initialized and queried and used.
 
 
-## 2. Cosmos SDK와 Cosmwasm의 상호작용 
-CosmWasm 컨트랙트가 Cosmos SDK와 어떻게 상호작용하는지 대략적으로 알아보자. CosmWasm 컨트랙트는 두 가지 주요 작업을 수행한다:
-1. `DepsMut`을 받아 블록체인 상태 업데이트하기 (Execution)
-2. 데이터를 읽기 전용으로 액세스하여 블록체인 상태 쿼리하기 (Query)
+## 2. Cosmos SDK and Cosmwasm Interaction
+Let's get a rough idea of how the CosmWasm contract interacts with the Cosmos SDK. The CosmWasm contract performs two main tasks:
+1. Update blockchain status by receiving 'DepsMut' (Execution)
+2. Query blockchain status with read-only access to data (Query)
 
 ### 1. Execution
-#### Cosmos SDK 의 역할 
-텐더민트 합의를 이뤄 블록이 커밋되면, 트랜잭션은 차례로 Cosmos SDK에 전달되어 실행된다. Cosmos SDK의 `BaseApp`은 각 트랜잭션을 분리된 컨텍스트에서 처리한다:
-- 먼저 모든 서명을 확인하고 가스 요금을 공제한다. 그런 다음 `Gas Meter`를 설정하여 지불된 가스의 양에 따라 실행을 제한한다. ([코스모스 베이직/14.gas fees 참고](../코스모스%20베이직/14_rpc_basic.md))
-- 그런 다음 트랜잭션을 실행할 분리된 컨텍스트를 만든다. 이는 코드가 체인의 현재 상태를 읽을 수 있게 하되 (마지막 트랜잭션이 끝난 후), 캐시에만 기록할 수 있게 하여 오류 시 커밋하거나 롤백할 수 있게 한다. ([코스모스 베이직/13.Store and Keepers의 읽기 캐싱 및 쓰기 브랜칭 참고](../코스모스%20베이직/13_store_and_keepers.md))
+#### Role of Cosmos SDK
+When a tendermint agreement is reached and the block is committed, the transactions are sequentially delivered to the Cosmos SDK and executed. The 'BaseApp' of the Cosmos SDK processes each transaction in a separate context:
+- First, check all signatures and deduct gas charges. Then, set 'Gas Meter' to limit execution depending on the amount of gas paid. (See [Cosmos Basic/14.gas features](../Cosmos%20Basic/14_rpc_basic.md))
+- It then creates a separate context to run the transaction. This allows the code to read the current state of the chain (after the last transaction has ended), but only write to the cache, allowing it to commit or roll back in the event of an error. ([Refer to Cosmos Basic/13.Store and Keepers' Read Caching and Write Branching](../Cosmos%20Basic/13_store_and_keepers.md))
 
-트랜잭션은 여러 메시지로 구성될 수 있으며 각 메시지는 동일한 컨텍스트와 Gas Limit 내에서 차례로 실행된다. 이는 관계형 데이터베이스 ACID 트랜잭션 방식과 유사하게, 원자성을 매우 중요시 한다. 모든 메시지가 성공하면 컨텍스트는 기본 블록체인 상태에 커밋되고, 하나의 메시지가 실패하면 모든 이후 메시지는 건너뛰고 모든 상태 변경이 되돌려진다. 그렇게 각 트랜잭션은 결과나 오류와 함께 이벤트 로그를 반환한다. 
+Transactions can consist of multiple messages, and each message is executed in the same context and within Gas Limit in turn. Similar to the relational database ACID transaction method, atomicity is very important.
 
+#### CosmWasm Contract Run (Basic Execution)
+'x/wasm' is a user-defined Cosmos SDK module that processes messages in transactions and uses them to upload, instantiate, and execute smart contracts. If the contract's 'execute' is executed, it receives an appropriately signed 'MsgExecuteContract' and routes it to 'Keeper.Execute' and loads and executes an appropriate smart contract. This corresponds to the execution of a message in the transaction, which can lead to success or failure. If it fails, the entire transaction of the block will be rolled back.
 
-#### CosmWasm 컨트랙트 실행 (Basic Execution)
-`x/wasm`은 트랜잭션의 메시지를 처리하고 스마트 컨트랙트를 업로드, 인스턴스화 및 실행하는 데 사용하는 사용자 정의 Cosmos SDK 모듈이다. 만약 컨트랙트의 `execute`가 실행된다고 하면, 적절히 서명된 `MsgExecuteContract`를 받아 `Keeper.Execute`로 라우팅하고, 적절한 스마트 컨트랙트를 로드하여 이를 실행한다. 이는 트랜잭션의 메시지 실행에 해당되어 성공 또는 실패를 할 수 있다. 만약 실패한다면 블록의 전체 트랜잭션을 롤백하게 된다.
-
-트랜잭션 메세지로 실행되는 `execute` 함수는 Cosmwasm 컨트랙트를 구현할 때 [Entrypoint(진입점)](./22_entrypoint.md)로 제공하고 있다: 
+The 'execute' function executed as a transaction message is provided as [Entrypoint] (./22_entrypoint.md) when implementing the Cosmwasm contract:
 ```rust
 pub fn execute(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    msg: ExecuteMsg,
+deps: DepsMut,
+env: Env,
+info: MessageInfo,
+msg: ExecuteMsg,
 ) -> Result<Response, ContractError> { }
 ```
 
-`DepsMut`을 통해 상태 읽기 및 쓰기, 모듈의 상태 쿼리를 수행할 수 있다. 작업이 완료되면 Ok(Response) 또는 Err(ContractError)를 반환한다. 메세지가 성공할 경우에는 Response 객체가 구문 분석되고 처리된다. 하지만 오류를 반환하게 되면 이는 문자열로 SDK 모듈에 전달되어 블록 전체 트랜잭션 롤백으로 이어진다. 성공될 경우 [Response 객체가 반환되어 이벤트](./23_message_and_event.md)로 기록된다. 
+It is possible to read and write the state and query the state of the module through 'DepsMut'. It returns Ok (Response) or Err (ContractEr) when the task is completed. If the message is successful, the Response object is parsed and processed. However, if an error is returned, it is delivered to the SDK module as a string, leading to a rollback of the entire transaction of the block. If successful, the Response object is returned and recorded as an event (./23_message_and_event.md).
 
-#### 메시지 디스패치 
-교차 컨트랙트 호출이 있는 함수가 실행된다면 메시지 디스패치가 이뤄진다. CosmWasm 컨트랙트는 다른 컨트랙트를 호출하거나 토큰을 이동하기 위해 [`CosmosMsg`](./05_message.md#1-cosmosmsg)를 반환한다. 만약 컨트랙트가 M1, M2 두 개의 메시지를 반환한다고 하면, 이는 `x/wasm`에서 컨트랙트의 권한으로 구문 분석되고 실행된다:
-- 성공 시, 이벤트가 방출되고, 반환된 메시지가 처리된다.
-- 오류 발생 시, 전체 트랜잭션이 롤백된다. 
+#### Message Dispatch
+If a function with a cross-contract call is executed, a message dispatch is made. CosmWasm Contract returns ['CosmosMsg' (./05_message.md#1-cosmmsg) to call other contracts or move tokens. If a contract returns two messages, M1 and M2, it is parsed and executed as the contract's authority in 'x/wasm':
+- Upon success, the event is released and the returned message is processed.
+- In the event of an error, the entire transaction is rolled back.
 
-CosmosMsg는 깊이 우선으로 실행된다. 예를 들어, 계약 A가 M1 및 M2를 반환하고, 계약 B가 N1 및 N2를 반환하면, 실행 순서는 [M1 -> N1 -> N2 -> M2]가 된다.  
+CosmosMsg is executed in depth priority. For example, if contract A returns M1 and M2, and contract B returns N1 and N2, the execution order is [M1 -> N1 -> N2 -> M2.
 
-#### 서브 메시지
-[`SubMessage`](./05_message.md#2-submessages)를 통해 호출 결과를 얻을 수 있는 기능이다. 서브메시지는 오류 결과를 캡처하여 전체 트랜잭션을 중단하지 않고 오류 메시지를 저장하고 메시지를 실행된 것으로 표시할 수 있다. 
+#### Sub-Message
+['SubMessage'](./05_message.md#2-submessages) is a function that allows you to obtain a call result. A sub-message can capture an error result, store an error message without interrupting the entire transaction, and mark the message as executed.
 
-서브메시지가 완료되면 호출자는 결과를 처리할 기회를 얻는다. 이는 서브콜의 원래 ID와 실행 결과를 모두 포함한다. 필요 시 추가 상태를 저장하려면 원래 execute에서 서브메시지를 반환하기 전에 로컬 컨텍스트를 스토어에 저장하고, reply에서 이를 로드해야 한다. 서브메시지 실행 및 응답은 메시지보다 먼저 실행된다. 예를 들어, 계약 A가 서브메시지 S1 및 S2, 메시지 M1을 반환한다. 서브메시지 S1이 메시지 N1을 반환하면, 실행 순서는 [S1 -> N1 -> reply(S1) -> S2 -> reply(S2) -> M1]이 된다.
+When a sub-message is completed, the caller gets an opportunity to process the result. It contains both the original ID of the sub-call and the execution result. To save the additional state if necessary, you must save the local context in the store and load it from reply before returning the sub-message from the original execute. Sub-message execution and response are executed before the message. For example, contract A returns sub-messages S1 and S2, and message M1. If sub-message S1 returns a message N1, the execution sequence becomes [S1->N1 -> S2 -> reply(S2) -> M1].
 
 ### 2. Query
-실행 중 컨트랙트의 Bank 잔액 조회와 같이 다른 컨트랙트의 정보를 중간에 액세스해야 할 경우가 있다. 이를 위해 읽기 전용 Querier를 사용하여 동기 호출을 실행 중에 수행하는 기능을 제공한다. 쿼리를 수행할 때, 가능한 모든 호출을 나타내는 [`QueryRequest` 구조체](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/query/mod.rs#L43-L71)를 직렬화하고, 이를 FFI를 통해 런타임으로 전달하여 `x/wasm` SDK 모듈에서 해석되어 실행된다. 이는 `CosmosMsg`가 커스텀을 수용하는 것처럼 블록체인별 사용자 정의 쿼리로 확장 가능하다. 또한 원시 protobuf "Stargate" 쿼리를 수행할 수 있는 기능을 제공한다:
+In some cases, information from other contracts needs to be accessed in the middle, such as a contract's Bank balance inquiry during execution. For this, it provides the function of performing synchronization calls during execution using a read-only querier. When performing a query, the ['QueryRequest' structure'](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/query/mod.rs#L43-L71)', which represents all possible calls, is serialized and delivered to the runtime through FFI to be interpreted and executed in the 'x/wasm' SDK module. It can be extended to custom queries for each blockchain, just as 'CosmosMsg' accepts customization. It also provides the ability to perform a raw protobuf "Stargate" query:
 ```rust
 pub enum QueryRequest<C: CustomQuery> {
-    Bank(BankQuery),
-    Custom(C),
-    Staking(StakingQuery),
-    Distribution(DistributionQuery),
-    Stargate {
-        path: String,
-        data: Binary,
-    },
-    Ibc(IbcQuery),
-    Wasm(WasmQuery),
-    Grpc(GrpcQuery),
+Bank(BankQuery),
+Custom(C),
+Staking(StakingQuery),
+Distribution(DistributionQuery),
+Stargate {
+path: String,
+data: Binary,
+},
+Ibc(IbcQuery),
+Wasm(WasmQuery),
+Grpc(GrpcQuery),
 }
 ```
-
 
 ## Resources
 - https://blog.cosmos.network/announcing-the-launch-of-cosmwasm-cc426ab88e12
