@@ -1,9 +1,9 @@
 # Message and Event
 
 ## 0. Messages
-메시지는 CosmWasm 스마트 컨트랙트와 상호작용하는 방법이다. 대부분의 컨트랙트에는 메시지를 정의하는 [`msg.rs`](./nameservice/src/msg.rs) 파일이 있다. 세 가지 주요 메시지 유형이 있다:
-- 인스턴스화 메시지 (`InstantiateMsg`): 이는 컨트랙트를 초기화할 때 전송된다. 일반적으로 컨트랙트를 올바르게 초기화하는 데 필요한 데이터를 포함하고 있습니다. 이는 대부분의 경우 단순한 구조로 이루어져 있다.
-- 실행 메시지 (`ExecuteMsg`) 및 쿼리 메시지 (`QueryMsg`): 둘 다 열거형(enum) 메시지이다. 이들은 각각 실행 및 쿼리에 사용되는 메시지 유형을 나타낸다. 
+Messages are ways to interact with CosmWasm smart contracts. Most contracts have files [`msg.rs `](./nameservice/src/msg.rs) that define messages. There are three main message types:
+- Instantiate message (`InstantiateMsg`): This is sent when the contract is initialized. It usually contains the data needed to properly initialize the contract. It consists mostly of a simple structure.
+- Execution message (`ExecuteMsg`) and query message (`QueryMsg`): Both are enum messages. These represent the message types used for execution and query, respectively.
 
 ### 메시지 정의 예시
 다음은 nameservice 컨트랙의 간단한 [`execute` 메시지 정의 예시](./nameservice/src/msg.rs)이다:
