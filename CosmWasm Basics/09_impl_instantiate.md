@@ -1,15 +1,15 @@
-# instantiate 함수 구현하기
+# Implementing the Instantiate Function
 
-## 사전 지식
+## Prior knowledge
 - [03_state](./03_state.md)
 - [05_message_and_event](./05_message_and_event.md)
 - [06_query](./06_query.md)
 
-## 0. instantiate 함수
-`instantiate` 함수에서는 `config` 값을 초기한다. 여기서 초기화할 값은 `purchase_price`와 `transfer_price`이다.
+## 0. INSTANTATE FUNCTION
+In the `instantiate` function, the value of `config` is initialized. Here, the values to be initialized are `purchase_price` and `transfer_price`.
 
-## 1. 라이브러리 추가하기 
-먼저, `Cargo.toml` 파일에 필요한 라이브러리를 추가한다. `cw-storage-plus`는 컨트랙트 내부 상태를 관리하는 라이브러리이고, `cosmwasm-schema`는 메세지 직렬화 기능과 함께 스키마를 생성해주는 라이브러리이다:
+## 1. Add a library
+First, add the necessary library to the `Cargo.toml` file. `cw-storage-plus` is a library that manages the internal state of the contract, and `cosmwasm-schema` is a library that creates a schema along with a message serialization function:
 ```
 [package]
 name = "nameservice"
@@ -26,8 +26,8 @@ cw-storage-plus = "0.13.4"
 
 ```
 
-## 2. `InstantiateMsg` 메세지 생성하기
-`src/msg.rs`에 `InstantiateMsg`를 생성한다: 
+## 2. Create `InstantiateMsg` message
+Create `InstantiateMsg` on `src/msg.rs`: 
 ```rust
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::Coin;
@@ -38,11 +38,11 @@ pub struct InstantiateMsg {
     pub transfer_price: Option<Coin>,
 }
 ```
-- 여기서 `Coin`은 Cosmwasm의 기본 코인 타입이며, [`cw_serde`](./23_message_and_event.md#cw_serde)는 구조체를 쉽게 인코딩 및 디코딩할 수 있도록 도와준다.
+- Here, `Coin` is Cosmwasm's basic coin type, and [`cw_serde`](./23_message_and_event.md#cw_serde) helps to easily encode and decode the structure.
 
 
-## 3. Config 상태 추가하기
-`src/config.rs` 파일에 `Config` 상태를 추가한다: 
+## 3. Add Config Status
+Add `Config` status to file `src/config.rs`: 
 ```rust
 use cosmwasm_schema::cw_serde;
 use cosmwasm_std::Coin;
@@ -56,10 +56,10 @@ pub struct Config {
 
 pub const CONFIG: Item<Config> = Item::new("config");
 ```
-- `CONFIG`는 상태는 [`Item`](./21_state.md#1-item)을 사용하여 구현하였다. 
+- The state of `CONFIG` was implemented using [`Item`](./21_state.md#1-item).
 
-## 4. instantiate 비즈니스 로직 구현하기
-`src/contract.rs` 파일에 `instantiate` 함수를 구현한다:
+## 4. Implementing of instantaneous business logic
+Implement the `instantiate` function in the `src/contract.rs` file:
 ```rust
 use crate::{msg::InstantiateMsg, state::{Config, CONFIG}};
 
@@ -80,9 +80,9 @@ pub fn instantiate(
 }
 ```
 
-## 5. `Config` 쿼리 추가하기 
-### 1. `QueryMsg` 메세지 생성하기
-`msg.rs` 파일에 `QueryMsg`와 `ConfigResponse` 구조체를 추가한다:
+## 5. Add `Config` query 
+### 1. Create `QueryMsg` message
+Add  `QueryMsg`와 `ConfigResponse` structure to `msg.rs` file:
 ```rust
 // --- New!
 use crate::state::Config;
@@ -111,8 +111,8 @@ impl From<Config> for ConfigResponse {
 }
 ```
 
-### 2. `Config` 쿼리 조회 비즈니스 로직 구현하기 
-`src/contract.rs` 파일에 `query` 함수를 추가한다:
+### 2. Implemeting a business logic `Config` query  
+Add `query` function to `src/contract.rs` file:
 ```rust
 use cosmwasm_std::to_json_binary;
 use crate::msg::ConfigResponse;
@@ -131,11 +131,11 @@ pub fn query(
 ```
 
 
-## 6. 비즈니스 로직 테스트 
-컨트랙트를 직접 업로드하여 기능을 테스트하기에는 리소스 측면에서 비효율적이기 떄문에 테스트를 꼼꼼하게 작성하여 구현한 함수들이 정상적으로 동작하는지 확인하는 것이 좋다. 
+## 6. Business logic test
+Since it is inefficient in terms of resources to test the function by uploading the contract directly, it is recommended to carefully write the test to ensure that the functions implemented work normally.
 
-### 1. 테스트 작성하기 
-`src/tests.rs` 파일에 테스트 코드를 작성해보자:
+### 1. Create a test
+Try writing the test code in the file `src/tests.rs`:
 ```rust
 #[cfg(test)]
 mod test_module {
@@ -217,14 +217,14 @@ mod test_module {
     }
 }
 ```
-- `proper_init_no_fees`: `InstantiateMsg`에서 가격 정보가 없는 경우를 처리하는지 확인한다. 
-- `proper_init_with_fees`: `InstantiateMsg`에서 가격 정보를 포함하는 경우를 처리하는지 확인한다. 
-- `assert_config_state`: 쿼리 결과를 확인하여 상태가 예상대로 설정되었는지 확인하는 helper 함수이다. 
-- `mock_init_with_price`: `InstantiateMsg`에 가격 정보를 포함하여 instantiate 함수를 호출하는 helper 함수이다. 
-- `mock_init_no_price`: `InstantiateMsg`에 가격 정보 없이 instantiate 함수를 호출하는 helper 함수이다. 
+- `proper_init_no_fees`: Check if `InstantiateMsg` handles no price information.
+- `proper_init_with_fees`: Check if `InstantiateMsg` handles the case of including price information.
+- `assert_config_state`: This is a helper function that checks the query result to see if the state is set as expected.
+- `mock_init_with_price`: a helper function that calls the instantiate function including price information in `InstantiateMsg`.
+- `mock_init_no_price`: a helper function that calls the instantiate function without price information in `InstantiateMsg`.
 
-### 2. 테스트 실행하기 
-`cargo test`로 테스트 코드를 실행해보자. 그러면 다음과 같이 정상적으로 테스트가 실행된 것을 확인할 수 있다:
+### 2. Running a test
+Let's run the test code with `cargo test`. Then we can see that the test was executed normally as follows:
 ```sh
 $ cargo test
 running 2 tests
@@ -235,5 +235,4 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 ```
 
 
-이제 instantiate 함수와 query 함수가 정상적으로 동작함을 확인할 수 있다. 다음으로는 nameservice 핵심 로직인 name을 등록하는 기능을 구현헤보자. 
-
+Now, it can be confirmed that the instantiate function and the query function operate normally. Next, let's implement the function of registering the name, the core logic of the nameservice.

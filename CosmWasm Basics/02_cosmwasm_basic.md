@@ -1,6 +1,6 @@
 # Cosmwasm Basic
 
-## 0. Cosmwasm Introduction
+## 0. Introduction to CosmWasm
 Cosmos SDK is written in Golang, which has simple and easy grammar to allow app developers to freely customize modules, but supporting various programming languages is also important in terms of scalability. Finally, the Cosmos ecosystem is looking at the bigger goal of supporting numerous implementations and functions connected by Inter-Blockchain Communication Protocol (IBC) by activating blockchain Internet.
 
 It marked the beginning of CosmWasm at the Cosmos HackAtom Berlin, held in June 2019 to extend tooling for developers interested in building on the Cosmos network. Cosmwasm, a project to activate WebAssembly (WASM) virtual machines (VMs) in the Cosmos SDK, was one of several projects that received grants from the Interchain Foundation regarding developer tooling.
@@ -47,9 +47,9 @@ When a tendermint agreement is reached and the block is committed, the transacti
 Transactions can consist of multiple messages, and each message is executed in the same context and within Gas Limit in turn. Similar to the relational database ACID transaction method, atomicity is very important.
 
 #### CosmWasm Contract Run (Basic Execution)
-'x/wasm' is a user-defined Cosmos SDK module that processes messages in transactions and uses them to upload, instantiate, and execute smart contracts. If the contract's 'execute' is executed, it receives an appropriately signed 'MsgExecuteContract' and routes it to 'Keeper.Execute' and loads and executes an appropriate smart contract. This corresponds to the execution of a message in the transaction, which can lead to success or failure. If it fails, the entire transaction of the block will be rolled back.
+`x/wasm` is a user-defined Cosmos SDK module that processes messages in transactions and uses them to upload, instantiate, and execute smart contracts. If the contract's `execute` is executed, it receives an appropriately signed `MsgExecuteContract` and routes it to 'Keeper.Execute' and loads and executes an appropriate smart contract. This corresponds to the execution of a message in the transaction, which can lead to success or failure. If it fails, the entire transaction of the block will be rolled back.
 
-The 'execute' function executed as a transaction message is provided as [Entrypoint] (./22_entrypoint.md) when implementing the Cosmwasm contract:
+The 'execute' function executed as a transaction message is provided as [Entrypoint](./22_entrypoint.md) when implementing the Cosmwasm contract:
 ```rust
 pub fn execute(
 deps: DepsMut,
@@ -59,10 +59,10 @@ msg: ExecuteMsg,
 ) -> Result<Response, ContractError> { }
 ```
 
-It is possible to read and write the state and query the state of the module through 'DepsMut'. It returns Ok (Response) or Err (ContractEr) when the task is completed. If the message is successful, the Response object is parsed and processed. However, if an error is returned, it is delivered to the SDK module as a string, leading to a rollback of the entire transaction of the block. If successful, the Response object is returned and recorded as an event (./23_message_and_event.md).
+It is possible to read and write the state and query the state of the module through `DepsMut`. It returns Ok (Response) or Err (ContractEr) when the task is completed. If the message is successful, the Response object is parsed and processed. However, if an error is returned, it is delivered to the SDK module as a string, leading to a rollback of the entire transaction of the block. If successful, the [Response object is returned and recorded as an event](./23_message_and_event.md).
 
 #### Message Dispatch
-If a function with a cross-contract call is executed, a message dispatch is made. CosmWasm Contract returns ['CosmosMsg' (./05_message.md#1-cosmmsg) to call other contracts or move tokens. If a contract returns two messages, M1 and M2, it is parsed and executed as the contract's authority in 'x/wasm':
+If a function with a cross-contract call is executed, a message dispatch is made. CosmWasm Contract returns [`CosmosMsg`](./05_message.md#1-cosmmsg) to call other contracts or move tokens. If a contract returns two messages, M1 and M2, it is parsed and executed as the contract's authority in `x/wasm`:
 - Upon success, the event is released and the returned message is processed.
 - In the event of an error, the entire transaction is rolled back.
 
@@ -74,7 +74,7 @@ CosmosMsg is executed in depth priority. For example, if contract A returns M1 a
 When a sub-message is completed, the caller gets an opportunity to process the result. It contains both the original ID of the sub-call and the execution result. To save the additional state if necessary, you must save the local context in the store and load it from reply before returning the sub-message from the original execute. Sub-message execution and response are executed before the message. For example, contract A returns sub-messages S1 and S2, and message M1. If sub-message S1 returns a message N1, the execution sequence becomes [S1->N1 -> S2 -> reply(S2) -> M1].
 
 ### 2. Query
-In some cases, information from other contracts needs to be accessed in the middle, such as a contract's Bank balance inquiry during execution. For this, it provides the function of performing synchronization calls during execution using a read-only querier. When performing a query, the ['QueryRequest' structure'](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/query/mod.rs#L43-L71)', which represents all possible calls, is serialized and delivered to the runtime through FFI to be interpreted and executed in the 'x/wasm' SDK module. It can be extended to custom queries for each blockchain, just as 'CosmosMsg' accepts customization. It also provides the ability to perform a raw protobuf "Stargate" query:
+In some cases, information from other contracts needs to be accessed in the middle, such as a contract's Bank balance inquiry during execution. For this, it provides the function of performing synchronization calls during execution using a read-only querier. When performing a query, the [`QueryRequest` structure](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/query/mod.rs#L43-L71), which represents all possible calls, is serialized and delivered to the runtime through FFI to be interpreted and executed in the `x/wasm` SDK module. It can be extended to custom queries for each blockchain, just as `CosmosMsg` accepts customization. It also provides the ability to perform a raw protobuf "Stargate" query:
 ```rust
 pub enum QueryRequest<C: CustomQuery> {
 Bank(BankQuery),

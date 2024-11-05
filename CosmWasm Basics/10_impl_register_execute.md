@@ -1,25 +1,25 @@
-# register execute 구현하기
+# Implement register execute
 
-## 사전 지식
+## Prior knowledge
 - [03_state](./03_state.md)
 - [05_message_and_event](./05_message_and_event.md)
 - [06_query](./06_query.md)
 
-## 0. register 기능 
-register 함수는 사용자가 입력한 이름을 등록하는 기능을 한다. 이름은 고유해야 하며, 중복된 이름은 등록할 수 없다.
+## 0. register function
+The register function registers the name entered by the user. The name must be unique and duplicate names cannot be registered.
 
-## 1. `ExecuteMsg` 메세지 생성하기 
-`msg.rs` 파일에 `ExecuteMsg`를 추가한다:
+## 1. Generating `ExecuteMsg` message
+Add `ExecuteMsg` to the `msg.rs` file:
 ```rust
 #[cw_serde]
 pub enum ExecuteMsg {
     Register { name: String },
 }
 ```
-- `ExecuteMsg` 열거형에 `Register` 타입을 추가하여, 사용자가 이름을 등록할 수 있는 메시지를 정의한다.
+- The `Register` type is added to the `ExecuteMsg` enumeration to define a message that a user can register a name.
 
-## 2. `NameRecord` 상태 추가하기
-`src/config.rs` 파일에 `NameRecord` 상태를 추가한다:
+## 2. Add `NameRecord` status
+Add the `NameRecord` status to the `src/config.rs` file:
 ```rust
 use cosmwasm_std::Addr;
 use cw_storage_plus::Map;
@@ -33,11 +33,11 @@ pub struct NameRecord {
 pub const CONFIG: Item<Config> = Item::new("config");
 pub const NAME_RESOLVER: Map<&[u8], NameRecord> = Map::new("name_resolver");
 ```
-- `NameRecord`는 이름을 소유하는 사용자(owner)의 주소(Addr)를 저장하는 구조체이다.
-- `NameRecord`는 상태는 [`Map`](./21_state.md#2-map)을 사용하여 소유자 이름과 소유자 주소를 key-value 형태로 저장한다.
+- `NameRecord` is a structure that stores the address (Addr) of the owner of the name.
+- `NameRecord` uses [`Map`](./21_state.md#2-map) to store the owner name and owner address in key-value form.
 
-## 3. register 비즈니스 로직 구현하기
-`src/contract.rs` 파일에 기본 구조를 작성한다:
+## 3. Implement register business logic
+Create the default structure in the file `src/contract.rs`:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
@@ -53,7 +53,7 @@ pub fn execute(
 ```
 
 
-이제 `execute_register` 함수를 작성해보자: 
+Now let's write the `execute_register` function: 
 ```rust 
 pub fn execute_register(
     deps: DepsMut,
@@ -69,14 +69,14 @@ pub fn execute_register(
     Ok(Response::default())
 }
 ```
-- 이 함수는 msg에 등록된 name을 인자로 받아 이를 컨트랙트 내부 상태인 `NameRecord`에 등록한다. 
-- `Map<Key, Value>` 형태로, `String`으로 입력된 이름을 `byte`로 변환하여 `key`로 사용하고, 그 이름을 등록한 계정 주소를 `value`로 매핑하여 저장한다. 이름은 고유해야 하기 때문에 중복된 이름은 등록할 수 없다.
+- This function takes the name registered in msg as a factor and registers it in the contract's internal state, `NameRecord`.
+- In the form of `Map<Key, Value>`, the name entered with `String` is converted into `byte` and used as `key`, and the account address to which the name is registered is mapped and stored as `value`. Duplicate names cannot be registered because the name must be unique.
 
-## 4. name 중복 커스텀 에러 생성하기
-name이 중복으로 요청되면 이에 대해 잘못된 요청임을 반환해줘야 한다. 
+## 4. Name Create duplicate custom errors
+If the name is repeatedly requested, you must return that it is an invalid request.
 
-### 1. 라이브러리 추가하기
-우선 `thiserror` 라이브러리를 `Cargo.toml` 파일에 추가한다:
+### 1. Add a library
+First, add the `thiserror` library to the `Cargo.toml` file:
 ```
 [package]
 name = "nameservice"
@@ -93,8 +93,8 @@ cw-storage-plus = "0.13.4"
 thiserror = "1.0.31" # 추가
 ``` 
 
-### 2. 커스텀 에러 생성하기 
-`src/error.rs` 파일에 커스텀 에러를 추가한다:
+### 2. Create a cusotom error 
+Add a custom error to `src/error.rs` file:
 ```rust
 // --- New!
 use cosmwasm_std::StdError;
@@ -109,9 +109,9 @@ pub enum ContractError {
     NameTaken { name: String },
 }
 ```
-- `ContractError` 열거형에 `NameTaken` 에러를 추가하여, 중복된 이름이 요청될 때 에러를 발생시킨다.
+- `NameTaken` error is added to the `ContactError` enumeration to generate an error when a duplicate name is requested.
 
-이제 중복된 이름을 등록하려고 할 때 발생하는 에러를 처리하도록 `execute_register` 함수를 업데이트한다: 
+Now update the function `execute_register` to handle errors that occur when trying to register duplicate names: 
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
@@ -119,9 +119,9 @@ pub fn execute(
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
-) -> Result<Response, ContractError> { // StdError -> ContractError 업데이트!
+) -> Result<Response, ContractError> { // StdError -> ContractError Update!
 	match msg {
-        // --- 업데이트! 
+        // --- Update! 
         ExecuteMsg::Register { name } => execute_register(deps, env, info, name),
     }
 }
@@ -131,11 +131,11 @@ pub fn execute_register(
     _env: Env,
     info: MessageInfo,
     name: String,
-) -> Result<Response, ContractError> { // StdError -> ContractError 업데이트!
+) -> Result<Response, ContractError> { // StdError -> ContractError Update!
     let key = name.as_bytes();
     let record = NameRecord { owner: info.sender };
 
-    // --- 추가! 
+    // --- Add! 
     if (NAME_RESOLVER.may_load(deps.storage, key)?).is_some() {
         return Err(ContractError::NameTaken { name });
     }
@@ -146,21 +146,21 @@ pub fn execute_register(
     Ok(Response::default())
 }
 ```
-- 에러 반환타입을 `ContractError`로 변경해준다.
-- 이미 등록된 이름에 대해서 재등록이 불가능하도록 비즈니스 로직을 추가해준다.
+- Change the error return type to `ContactError`.
+- It adds business logic to prevent re-registration of already registered names.
 
-## 5. `ResolveRecord` 쿼리 추가하기
-이제 `ResolveRecord` 쿼리를 추가하여 등록된 이름을 조회할 수 있도록 한다.
+## 5. Add `ResolveRecord` query
+Now add a `ResolveRecord` query so that the registered name can be viewed.
 
-### 1. `QueryMsg` 메세지에 `ResolveRecord` 타입 추가하기
-`msg.rs` 파일에 `QueryMsg`와 `ResolveRecordResponse` 구조체를 추가한다:
+### 1. Add `Resolve Record` type to `QueryMsg` message
+Add `QueryMsg` and `ResolveRecordResponse` structures to the `msg.rs` file:
 ```rust
 #[cw_serde]
 #[derive(QueryResponses)]
 pub enum QueryMsg {
     #[returns(ConfigResponse)]
     Config {},
-    // --- 추가! 
+    // --- Add! 
     #[returns(ResolveRecordResponse)]
     ResolveRecord { name: String },
 }
@@ -170,11 +170,11 @@ pub struct ResolveRecordResponse {
     pub address: Option<String>,
 }
 ```
-- `QueryMsg`에 `ResolveRecord` 타입을 추가하여 이름을 조회할 수 있도록 한다.
-- `ResolveRecordResponse` 구조체는 조회 결과를 반환하는 구조체이다.
+- Add the `Resolve Record` type to `QueryMsg` so that the name can be searched.
+- The `Resolve Record Response` structure is a structure that returns the inquiry result.
 
-### 2. `ResolveRecord` 쿼리 조회 비즈니스 로직 구현하기 
-`src/contract.rs` 파일에 쿼리 함수를 추가한다:
+### 2. Implementing 'Resolve Record' query inquiry business logic
+Add a query function to the file `src/contract.rs`:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(
@@ -189,7 +189,7 @@ pub fn query(
     }
 }
 
-// --- 추가! 
+// --- Add! 
 fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
     let key = name.as_bytes();
 
@@ -203,11 +203,11 @@ fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
 }
 
 ```
-- `query_resolver` 함수는 이름을 조회하여 해당 소유자의 주소를 반환한다.
+- The `query_resolver` function queries the name and returns the address of the owner.
 
-## 6. 비즈니스 로직 테스트 
-### 1. 테스트 작성하기
-`src/tests.rs` 파일에 테스트 코드를 추가한다:
+## 6. Business logic test
+### 1. Create a test
+Add the test code to the file `src/tests.rs`:
 ```rust
     #[test]
     fn register_available_name_and_query_works() {
@@ -244,7 +244,7 @@ fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
         mock_init_no_price(deps.as_mut());
         mock_alice_registers_name(deps.as_mut(), &[]);
         
-        // "alice" 이름 중복 
+        // "alice" name redundant 
         let info = mock_info("bob_key", &coins(2, "token"));
         let msg = ExecuteMsg::Register {
             name: "alice".to_string(),
@@ -257,7 +257,7 @@ fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
             Err(_) => panic!("Unknown error"),
         }
         
-        // "alice" 이름 중복 
+        // "alice" name redundant
         let info = mock_info("alice_key", &coins(2, "token"));
         let msg = ExecuteMsg::Register {
             name: "alice".to_string(),
@@ -294,16 +294,16 @@ fn query_resolver(deps: Deps, _env: Env, name: String) -> StdResult<Binary> {
         assert_eq!(Some(owner.to_string()), value.address);
     }
 ```
-- `register_available_name_and_query_works`: 사용자가 새로운 이름을 등록하고, 등록된 이름을 쿼리하여 소유자를 확인하는 테스트이다.
-- `register_available_name_and_query_works_with_fees`: 등록 수수료가 필요한 상황에서 사용자가 새로운 이름을 등록하고, 등록된 이름을 쿼리하여 소유자를 확인하는 테스트이다.
-- `fails_on_register_already_taken_name`: 이미 등록된 이름을 다시 등록하려고 할 때, 적절한 에러가 발생하는지 확인하는 테스트이다
-- `mock_alice_registers_name`: alice_key로 이름을 등록하는 테스트 helper 함수이다.
-- `assert_name_owner`: 등록된 이름의 소유자가 예상한 소유자인지 확인하는 테스트 helper 함수이다.
+- `register_available_name_and_query_works`: a test in which a user registers a new name and queries the registered name to identify the owner.
+- `register_available_name_and_query_works_with_fees`: a test in which a user registers a new name and queries the registered name to identify the owner when a registration fee is required.
+- `fails_on_register_already_taken_name`: a test to see if an appropriate error occurs when attempting to re-register an already registered name
+- `mock_alice_registers_name`: It is a test helper function that registers a name with ice_key.
+- `assert_name_owner`: A test helper function that verifies that the owner of the registered name is the expected owner.
 
 
-## 마무리 
-nameservice에서 중요한 기능인 register에 대해 구현하고 이를 쿼리하는 기능도 추가하여 테스트까지 완료했다. 그러나 아직 비즈니스 로직에서 부족한 부분이 있다.
-- 컨트랙트를 초기화할 때 수수료 최소 금액을 입력하였는데 이에 대한 사전 검증이 필요하다.
-- 데이터 관리를 위해 입력된 name에 대한 길이, 문자열에 대한 규칙이 필요하다.
+## Wrap it up
+It was implemented for register, which is an important function in nameservice, and added a function to query it to complete the test. However, there are still deficiencies in business logic.
+- When the contract was initialized, the minimum amount of fee was entered, which requires prior verification.
+- For data management, rules are required for length and string for the entered name.
 
-이에 대해서 하나씩 개선해보록 하자.
+Let's improve one by one on this.

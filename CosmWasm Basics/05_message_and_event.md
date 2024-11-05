@@ -37,14 +37,14 @@ pub enum ExecuteMsg {
 - `Transfer`: 이름을 다른 주소로 전송하는 메시지
 
 #### `cw_serde`
-[`cw_serde`](https://github.com/CosmWasm/cosmwasm/blob/main/packages/schema-derive/src/cw_serde.rs)는 CosmWasm 스마트 컨트랙트 개발에서 주로 사용되는 매크로이다. 이는 Rust의 `serde` 라이브러리를 기반으로 하며, JSON 형식으로 데이터를 인코딩하고 디코딩하는 데 사용된다. 이 매크로를 사용하면 메시지와 데이터 구조를 간편하게 처리할 수 있다. 주요 기능은 다음과 같다: 
-- 자동 직렬화 및 역직렬화: `cw_serde` 매크로는 `serde` 라이브러리의 `Serialize` 및 `Deserialize` 트레잇을 자동으로 구현한다. 이를 통해 데이터를 JSON 형식으로 손쉽게 변환할 수 있다.
-- 스키마 생성: `schemars` 라이브러리를 사용하여 JSON 스키마를 자동으로 생성한다. 이는 메시지와 데이터 구조의 예상 형식과 타입을 정의하는 데 유용하다.
+[`cw_serde`](https://github.com/CosmWasm/cosmwasm/blob/main/packages/schema-derive/src/cw_serde.rs) is a macro mainly used in CosmWasm smart contract development. It is based on Rust's `serde` library and is used to encode and decode data in JSON format. This macro makes it easy to process messages and data structures. Its main functions are as follows:
+- Automatic serialization and deserialization: The `cw_serde` macro automatically implements the `Serialize` and `Deserialize` traces of the `serde` library. Through this, data can be easily converted into JSON format.
+- Schema creation: Automatically creates JSON schema using the `chemars` library. This is useful for defining expected formats and types of message and data structures.
 
-[nameservice 컨트랙트의 스키마 폴더](./nameservice/schema/)를 보면, `cw_serde`로 생성한 스키마 파일을 볼 수 있다.
+If you look at [the schema folder of the nameservice contract](./nameservice/schema/), you can see the schema file created as `cw_serde`.
 
-### 메시지 핸들링
-이 메시지들은 [contract.rs 파일의 execute 함수](./nameservice/src/contract.rs)에서 다음과 같이 처리된다:
+### Message Handling
+These messages are processed in [execute function in file contract.rs](./nameservice/src/contract.rs ):
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
@@ -59,10 +59,10 @@ pub fn execute(
   }
 }
 ```
-- 위의 `execute` 함수는 `ExecuteMsg` 열거형의 각 변형을 매치하여 해당하는 함수를 호출한다. 예를 들어, `ExecuteMsg::Register` 메시지가 수신되면 `execute_register` 함수가 호출된다.
+- The above `execute` function matches each variation of the `ExecuteMsg` enumeration and calls the corresponding function. For example, when the `ExecuteMsg:Register` message is received, the `Execute_register` function is called.
 
 ## 1. CosmosMsg
-[`CosmosMsg`](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/results/cosmos_msg.rs)는 다양한 메시지 유형을 포함하는 열거형이다. 이는 다른 컨트랙트와 상호작용하거나 블록체인 내에서 특정 작업을 수행하는 데 사용된다.
+[`CosmosMsg`](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/results/cosmos_msg.rs) is an enumeration that includes various message types. It is used to interact with other contracts or to perform certain tasks within the blockchain.
 ```rust
 pub enum CosmosMsg<T = Empty> {
     Bank(BankMsg),
@@ -81,7 +81,7 @@ pub enum CosmosMsg<T = Empty> {
 ```
 
 ### 1. WasmMsg
-[WasmMsg](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/results/cosmos_msg.rs#L180-L270)는 CosmosMsg의 한 종류로, 다른 스마트 컨트랙트와의 상호작용을 위한 메시지를 포함한다. 여기에는 다음과 같은 종류들이 있다:
+[WasmMsg](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/results/cosmos_msg.rs#L180-L270) is a type of CosmosMsg that contains messages for interaction with other smart contracts. There are the following types:
 ```rust
 pub enum WasmMsg {
     Execute {
@@ -108,57 +108,57 @@ pub enum WasmMsg {
     ClearAdmin { contract_addr: String },
 }
 ```
-- `Execute`: 다른 컨트랙트를 실행한다
-- `Instantiate`: 새로운 컨트랙트를 인스턴스화한다
-- `Migrate`: 기존 컨트랙트를 마이그레이션한다
-- `UpdateAdmin`: 컨트랙트의 관리자를 업데이트한다
-- `ClearAdmin`: 컨트랙트의 관리자를 제거한다
+- `Execute`: Run a different contract
+- `Instantiate`: Instantly instantiate a new contract
+- `Migrate`: Migrate existing contracts
+- `UpdateAdmin`: Update the contract's administrator
+- `ClearAdmin`: Remove the contract's administrator
 
 ### 2. BankMsg
-`BankMsg`는 네이티브 토큰을 다른 컨트랙트로 전송하거나 소각할 수 있는 메시지를 포함한다. 이는 블록체인 자체에서 처리되므로 진정한 스마트 컨트랙트는 아니지만, 네이티브 토큰을 처리하는 데 유용하다.
+`BankMsg` contains a message that can transmit or incinerate the native token to another contract. This is not a true smart contract because it is processed by the blockchain itself, but it is useful for processing native tokens.
 
 ### 3. Custom
-Custom은 특정 블록체인에서 처리하는 메시지를 추가하기 위해 존재한다. 이는 블록체인에 특화된 메시지 타입을 정의할 수 있게 해준다. 예를 들어, 다른 CosmWasm 기반 블록체인에서만 사용되는 메시지를 추가할 수 있다.
+Custom exists to add messages that are processed by a particular blockchain. This makes it possible to define message types specific to the blockchain. For example, messages used only on other CosmWasm-based blockchains may be added.
 
 
 ## 2. SubMessages
-Submessages는 SDK 모듈이나 다른 Cosmwasm 스마트 컨트랙트와 상호작용할 때 사용된다. `CosmosMsg`는 호출이 성공했는지 여부를 알 수 없지만, SubMessage를 사용하면 호출 결과를 얻을 수 있다. 이는 다음과 같은 경우에 유용하다:
-- 새로운 컨트랙트를 인스턴스화하고 컨트랙트 주소를 얻을 때
-- 액션을 실행하고 결과가 성공적인지 확인할 때 (예: 특정 토큰이 컨트랙트에 전송되었는지 확인)
-- 교차 컨트랙트 호출에서 발생한 오류를 처리하여 트랜잭션을 롤백하지 않을 때
+Submessages are used to interact with SDK modules or other Cosmwasm smart contracts. `CosmosMsg` does not know if the call was successful, but SubMessage can be used to obtain the call result. This is useful in the following cases:
+- When you instantiate a new contract and obtain a contract address
+- When you run an action and verify that the results are successful (for example, make sure that a particular token has been sent to the contract)
+- When you do not roll back a transaction by processing an error that occurred on a cross-contract call
 
-Submessage를 사용하려면 CosmosMsg를 SubMsg 구조체로 감싸서 전송해야 한다. SubMsg 구조체는 다음과 같은 필드를 가지고 있다:
+To use Submessage, CosmosMsg must be wrapped in a SubMsg structure and transmitted. The SubMsg structure has the following fields:
 ```rust
 pub struct SubMsg<T> {
-    pub id: u64,                // 응답을 처리할 때 사용되는 reply_id
-    pub msg: CosmosMsg<T>,      // 전송할 메시지
-    pub gas_limit: Option<u64>, // 서브메시지의 가스 한도
-    pub reply_on: ReplyOn,      // 언제 응답을 받을지 결정하는 플래그
+    pub id: u64,                // reply_id used for processing the response
+    pub msg: CosmosMsg<T>,      // Message to send
+    pub gas_limit: Option<u64>, // Gas limit for the submessage
+    pub reply_on: ReplyOn,      // Flag that determines when the response will be received
 }
 ```
 
-재진입 공격을 방지하기 위해, CosmWasm은 컨트랙트 메모리에 컨텍스트를 저장하는 것을 허용하지 않는다. 컨트랙트 간에 상태를 전파하는 방법은 두 가지가 있다:
-1. SubMsg에서 반환된 모든 이벤트는 Reply 메시지에서 읽을 수 있다.
-2. [`cw_storage_plus::Item`](./03_state.md#1-item)을 사용하여 임시 상태를 저장하고 Reply 핸들러에서 이를 로드한다.
+To prevent reentry attacks, CosmWasm does not allow context to be stored in contract memory. There are two ways to propagate states between contracts:
+1. All events returned from SubMsg can be read from the Reply message.
+2. Use [`cw_storage_plus:Item`] (./03_state.md#1-item) to save the temporary status and load it from the Reply handler.
 
-### 1. Reply 전략
-Submessage는 다른 컨트랙트가 응답을 제공하는 다양한 옵션을 제공합니다. 네 가지 Reply 옵션이 있다:
+### 1. Reply Strategy
+Submessage offers a variety of options for different contracts to respond to. There are four Reply options:
 ```rust
 pub enum ReplyOn {
-    /// SubMsg가 처리된 후 항상 콜백 수행
+    /// Perform Callback after SubMsg is processed
     Always,
-    /// SubMsg가 오류를 반환한 경우에만 콜백 수행, 성공 시에는 콜백 없음
+    /// Callback if SubMsg returns error, no callback if successful
     Error,
-    /// SubMsg가 성공한 경우에만 콜백 수행, 오류 시에는 콜백 없음
+    /// Callback if SubMsg suceeds no call back if error
     Success,
-    /// 콜백 수행 안 함 - 이는 원래의 CosmosMsg 의미와 같음
+    /// No callback - the same as the original CosmoMsg
     Never,
 }
 ```
 - 
 
-### 2. Reply 핸들러 
-다른 컨트랙트로부터의 응답을 처리하려면 호출하는 컨트랙트에서 새로운 [entry_point](./04_entrypoint.md) 함수 중 하나인 `reply 함수`를 구현해야 한다. 다음은 새로운 컨트랙트 인스턴스화 처리하는 [Reply 예제 코드](https://github.com/CosmWasm/cw-plus/blob/main/packages/utils/src/parse_reply.rs)이다:
+### 2. Reply Handler
+To process responses from other contracts, you must implement one of the new [entry_point](./04_entrypoint.md) functions on the calling contract. Here is the [Reply example code](https://github.com/CosmWasm/cw-plus/blob/main/packages/utils/src/parse_reply.rs) ) that processes new contracts instantiated:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
@@ -169,16 +169,16 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> StdResult<Response> {
 }
 
 fn handle_instantiate_reply(deps: DepsMut, msg: Reply) -> StdResult<Response> {
-    // 메시지 데이터를 처리하고 컨트랙트 주소를 저장
+    // Save contract address after processing the message data
     let res = parse_reply_instantiate_data(msg)?;
 
-    // res.contract_address 저장
+    // Save res.contract_address
     Ok(Response::new())
 }
 ```
 
 ## 3. Event
-대부분의 `entry_point` 함수는 `Result<Response, ContractError>` 유형을 반환한다. 여기서 [`Response` 객체](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/results/response.rs#L63-L87)는 Cosmos SDK에서 이벤트를 래핑하는 역할을 한다. 다음은 해당 객체의 구성 요소이다:
+Most `entry_point` functions return the type `Result<Response, ContactError>`. Here [`Response` object](https://github.com/CosmWasm/cosmwasm/blob/main/packages/std/src/results/response.rs#L63-L87) is responsible for wrapping events in Cosmos SDK. Here are the components of the object:
 ```rust
 pub struct Response<T = Empty> {
     pub submessages: Vec<SubMsg<T>>,
@@ -188,14 +188,14 @@ pub struct Response<T = Empty> {
 }
 ```
 
-`Response` 타입은 컨트랙트 `entry_point`(예: `instantiate` 또는 `execute`)의 메시지가 성공될 경우 결과로 반환된다. 함수 본문에서 이를 변경할 수 있도록 mutable로 선언할 수 있지만, 더 일반적인 패턴은 함수 끝에서 이를 구성하고 반환하는 것이다. 아래 예제에서, `Response`는 `Result` 타입의 일부로 반환되므로 `Ok`로 감싸져 있다. 예외는 query로, Cosmos SDK 인터페이스 때문에 `StdResult<Binary>`를 반환한다.
+The `Response` type is returned as a result if the message of the contract `entry_point` (e.g., `instantiate` or `execute`) is successful. It can be declared mutable so that it can be changed in the body of the function, but a more common pattern is to configure it at the end of the function and return it. In the example below, `Response` is wrapped in `Ok` because it is returned as part of the `Result` type. The exception is query, which returns `StdResult<Binary>` because of the Cosmos SDK interface.
 
-Response의 가장 단순한 사용 예시는 다음과 같다:
+Here are some of the simplest use examples of Response:
 ```rust
 Ok(Response::default())
 ```
 
-이는 `instantiate` 함수에서 클라이언트에 메시지를 반환하지 않을 때 일반적으로 사용된다. 그러나 대부분의 `execute` 처리 사례에서는 `Response`가 반환된다:
+It is commonly used when the `instantiate` function does not return a message to the client. However, in most cases of `execute` processing, `Response` is returned:
 ```rust
 let res = Response::new()
     .add_attribute("action", "transfer")
@@ -204,8 +204,8 @@ let res = Response::new()
     .add_attribute("amount", amount);
 Ok(res)
 ```
-- `Response`를 생성하고 여러 key-value 쌍을 추가한 뒤, 이를 Result 타입으로 감싸서 반환한다. CLI를 통해 컨트랙트를 호출하면 raw_log 응답의 일부로 이를 확인할 수 있다.
-- `attirbute`을 추가하는 대신 `.add_event`를 사용하여 래핑되지 않은 이벤트를 추가할 수도 있다. 이러한 이벤트는 다른 클라이언트나 컨트랙트와 상호작용할 수 있다.
+- Create a `Response` and add several key-value pairs, wrap them in a result type and return them. By calling the contract through the CLI, it can be seen as part of the raw_log response.
+- Instead of adding `attirbute`, you can also use `.add_event` to add unwrapped events. These events can interact with other clients or contracts.
 
 
 ## Resources
