@@ -1,98 +1,100 @@
 # WebAssembly Basic
-> Cosmwasm에 대해 배우기에 앞서 해당 기술의 핵심이 되는 WebAssembly(Wasm)에 대한 이해를 키워나가고자 해당 아티클이 작성되었다.
+> Before learning about Cosmwasm, the article was created to develop an understanding of WebAssembly (Wasm), which is the core of the technology
 
 ## 0. WebAssembly(Wasm)
-WebAssembly(Wasm)는 다양한 소스 언어로부터 이식 가능한 바이너리 실행 파일을 생성할 수 있는 바이너리 명령 형식을 정의하는 개방형 표준이다. 이러한 바이너리는 다양한 환경에서 실행될 수 있으며, 웹에서 기원하여 모든 주요 브라우저에서 지원된다. Wasm을 사용하면 서버, 엣지 등 어디서든 이전보다 더 이식성(portable) 있고 보안(security)이 뛰어난 프로그램을 실행할 수 있다.
+WebAsembly (Wasm) is an open standard that defines the format of binary commands that may generate implantable binary executable files from various source languages. These binaries may run in a variety of environments and are supported by all major browsers originating from the web. Using Wasm, programs that are more portable and secure than ever before can be executed anywhere, such as a server or an edge.
 
 
-## 1. WebAssmebly(Wasm) 특징 
-### 1. 리소스 효율성 및 속도
-Wasm 응용 프로그램은 최소한의 메모리 공간과 CPU 요구 사항으로 실행되도록 설계되었다. 이는 네이티브 코드와 유사한 속도를 제공하며, VM 부팅이나 컨테이너 시작과 달리 콜드 스타트 시간이 없다.
+## 1. Charaterisatics of WebAssmebly(Wasm)
+### 1. Resource Efficiency and Speed
+Wasm applications are designed to run with minimal memory space and CPU requirements. It provides speeds similar to native code and has no cold start time, unlike VM booting or container startup.
 
-### 2. 뛰어난 보안
-Wasm 런타임은 기본적으로 샌드박스 환경에서 실행되며, 메모리에 안전하게 접근할 수 있다. 기능 기반 모델은 Wasm 애플리케이션이 명시적으로 허용된 항목에만 접근할 수 있도록 한다. 이로 인해 공급망 보안이 강화된다.
-- 대부분의 언어는 런타임에서 함수에 주소를 할당한다. 메모리를 바이트 배열 형태로 보면 함수 코드가 제대로 구별되지 않아 안전하지 않다.
-- Wasm은 프로그램 메모리를 안전한 영역에 캡슐화하여 프로그램을 실행하는 호스트에 영향을 미치거나 보안을 손상시킬 수 있는 코드를 허용하지 않는다.
+### 2. Outstanding Security
+Wasm runtime basically runs in a sandbox environment and allows secure access to memory. The feature-based model allows Wasm applications to access only explicitly permitted items. This strengthens supply chain security.
+- Most languages assign addresses to functions at runtime. If you look at memory in the form of a byte array, it is not secure because the function code is not properly distinguished.
+- Wasm encapsulates program memory in a secure area, so it does not allow code that can affect or compromise the security of the host running the program.
 
-### 3. 휴대성
-Wasm은 여러 주요 런타임에서 대부분의 CPU 아키텍처(x86, ARM, RISC-V)를 지원하며, Linux, Windows, macOS 및 Non-POSIX 운영 체제에서도 실행될 수 있다.
+### 3. Portability
+Wasm supports most CPU architectures (x86, ARM, RISC-V) at multiple major run-time and can also run on Linux, Windows, macOS, and Non-POSIX operating systems.
 
-### 4. 이식성
-다양한 프로그래밍 언어를 Wasm으로 컴파일할 수 있으며, 현대적이고 지속적으로 개선되는 툴체인을 사용한다. 컴파일러는 LLVM(Low Level Virtual Machine) 백엔드를 활용하여 LLVM 중간 표현(IR)로 컴파일한 후 Wasm 프로그램을 생성할 수 있다.
+### 4. Transpilability
+Various programming languages can be compiled into Wasm, and a modern and continuously improved toolchain is used. Compilers can create Wasm programs after compiling into LLVM Intermediate Expression (IR) using the low-level virtual machine (LLVM) backend.
 
 
 ## 2. WebAssembly Interface(WASI)
-WASI와 Wasm 런타임은 Wasm 생태계에서 중요한 역할을 한다. 
-- WASI는 WebAssembly 프로그램이 운영 체제와 상호작용할 수 있도록 하여, WebAssembly의 활용 범위를 웹 브라우저 밖으로 확장한다. 
-- Wasm 런타임은 이러한 WebAssembly 프로그램이 다양한 환경에서 원활히 실행될 수 있도록 지원한다.
+WASI and Wasm runtime play an important role in the Wasm ecosystem.
+- WASI allows WebAssembley programs to interact with the operating system, extending the scope of WebAssembley's utilization outside of the web browser.
+- Wasm runtime supports these WebAscemly programs to run smoothly in a variety of environments.
 
-애플리케이션 레벨에서는 파일 열기 또는 생성과 같은 작업을 수행할 액세스 권한이 없다. 이는 파일, 메모리 및 네트워크 연결과 같은 시스템 리소스가 안정성과 보안에 있어 매우 중요하기 때문이다. 한 프로그램이 실수로 다른 프로그램의 리소스를 망가뜨리면 해당 프로그램이 중단될 수 있다. 더욱이, 프로그램(또는 사용자)이 다른 프로그램의 리소스를 고의로 건드리면 중요한 데이터를 탈취할 수 있는 위험이 있다.
+At the application level, you do not have access to perform tasks such as opening or creating files. This is because system resources such as files, memory, and network connections are very important for stability and security. If one program accidentally destroys the resources of another program, that program can be stopped. Moreover, if a program (or user) deliberately touches the resources of another program, there is a risk of stealing important data.
 
-### protection ring security
-protection ring security는 어떤 프로그램과 사용자가 어떤 리소스에 액세스할 수 있는지 제어하는 방법으로 사용된다. OS는 커널에 의해 시스템 리소스 주위에 보안 장벽을 세운다. 커널은 새 파일을 생성하거나 열거나 네트워크 연결을 하는 작업들을 수행한다. 사용자 프로그램은 '사용자 모드'라는 커널 외부에서 실행된다. 프로그램이 파일 열기와 같은 작업을 수행하려면 커널에게 요청해야 한다.
+### Protection ring security
+Protection ring security is used as a way to control which programs and users can access which resources. The OS places a security barrier around system resources by the kernel. The kernel performs the tasks of creating, opening, or making network connections. User programs run outside the kernel called `user mode`. A program must ask the kernel to perform tasks such as opening a file.
 
-프로그램이 커널에게 작업을 요청할 때는 system call을 사용한다. 이를 통해 커널은 어떤 사용자가 요청하는지 파악할 수 있고, 해당 사용자가 요청한 파일에 접근할 권한이 있는지 확인할 수 있다. 대부분의 장치에서 이 system call을 통한 시스템 리소스 액세스 방식이 사용된다. OS는 system call을 사용할 수 있게 만들어준다. 그러나 각 OS마다 system call이 있다면 OS마다 다른 버전의 코드가 필요하지 않을까? 다행히도 그렇지 않다. 시스템 인터페이스가 있기 때문이다.
+When a program requests a kernel to work, it uses system call. This allows the kernel to determine which users are requesting and to determine whether they are authorized to access the requested file. Most devices use the system resource access method through this system call. The OS makes system call available. However, if each OS has a system call, wouldn't a different version of code be needed for each OS? Fortunately, that's not the case. This is because there is a system interface.
 
-### System Interface 
-대부분의 프로그래밍 언어는 표준 라이브러리를 제공한다. 코딩할 때 프로그래머는 OS나 시스템에 대해 알 필요가 없고, 단지 인터페이스(프레임워크, 라이브러리)를 잘 다루면 된다. 컴파일할 때 툴 체인은 대상 시스템에 따라 사용할 인터페이스 구현을 선택한다. 이 구현은 OS API의 기능을 사용하므로 시스템에 따라 다르다. 이러한 예시는 다음고 같다:
-- Docker Desktop, JVM 같은 도구를 설치할 때 OS와 시스템 아키텍처(x86, ARM)을 선택하는 것도 그 이유다. 
-- `printf` 함수가 Windows 머신용으로 컴파일되 면 Windows API를 사용하고, Mac 또는 Linux용으로 컴파일되면 POSIX를 대신 사용한다. 
+### System Interface
+Most programming languages provide standard libraries. When coding, programmers do not need to know about the OS or system, they only need to handle the interface (framework, library). When compiling, the toolchain selects the interface implementation to be used depending on the target system. This implementation uses the functions of the OS API, so it depends on the system. These examples are as follows:
+- That's why you choose OS and system architecture (x86, ARM) when installing tools such as Docker Desktop and JVM.
+- If the 'printf' function is compiled for a Windows machine, it uses the Windows API, and if it is compiled for Mac or Linux, it uses POSIX instead.
 
-시스템 인터페이스는 이처럼 각각 다른 환경에서도 사용될 수 있는 공통의 인터페이스를 의미한다.
+The system interface refers to a common interface that may be used even in different environments.
 
-### WASM의 인터페이스 부재
-이러한 구조는 Wasm에게 문제를 야기한다. Wasm을 사용할 때 컴파일 시 어떤 종류의 OS를 대상으로 하는지 알 수 없으므로, 표준 라이브러리의 Wasm 구현 내에서는 단일 OS의 시스템 인터페이스를 사용할 수 없다. 이전에 "WebAssembly는 실제 기계가 아닌 개념적 기계를 위한 기계어다."라고 말한 적이 있다. 같은 맥락으로, WebAssembly는 실제 OS가 아닌 개념적 OS를 위한 시스템 인터페이스가 필요하다.
+### Absence of interface in WASM
+This structure creates problems for Wasm. When using Wasm, you cannot use the system interface of a single OS within the Wasm implementation of the standard library, because you do not know what type of OS it is targeting when compiling. Previously, "WebAssetbly is a machine language for conceptual machines, not real machines." In the same vein, WebAssetbly needs a system interface for conceptual OSs, not real OSs.
 
+Most early Wasm codes were run with Emscripten, so when I tried to run Wasm outside of the browser, I ran the code compiled with Emscripten in the same way. There were a number of issues with this:
+- Legacy overhead: Emscripten was designed to compile C/C++ code via wasm after ams.js. Relying on emulation of emscripten also required unnecessary legacy overhead for the latest wasm app outside the browser.
+- Emulation of Emulation: Emscripten uses the JS Glue code to emulate POSIX on the web. Relying on this structure outside of the browser means that Wasm runtime essentially emulates the emulation. This has high potential for inefficiency, complex code paths, and performance degradation.
+- Non-standard interface: JS Glue Code is not designed as a public system interface for Wasm. Therefore, it is more difficult to achieve interoperability and standardization as runtime outside the browser risks involving non-standard behavior when implementing versions based on Emscripten's Glue Code.
+- Security issues: Emscripten does not provide a sandbox. It is likely to be exposed to risks in relation to direct system interaction.
 
-대부분 초기 Wasm 코드는 Emscripten으로 실행되었기 때문에 브라우저 외부에서 Wasm을 실행하려고 할 때에도 마찬가지로 Emscripten으로 컴파일된 코드를 실행했다. 여기에는 여러 문제가 있었다:
-- 레거시 오버헤드: Emscripten은 ams.js 이후 Wasm을 통해 C/C++ 코드를 컴파일하도록 설계되었다. Emscripten의 에뮬레이션에 의존함으로써 브라우저 외부의 최신 Wasm 앱에서도 불필요한 레거시 오버헤드를 감당해야 했다.
-- 에뮬레이션의 에뮬레이션: Emscripten은 JS 글루 코드를 사용하여 웹에서 POSIX를 에뮬레이션하여 사용한다. 브라우저 외부에서 이 구조에 의존한다는 것은 Wasm 런타임이 본질적으로 에뮬레이션을 에뮬레이트한다는 것을 의미한다. 이는 비효율성, 복잡한 코드 경로 및 성능 저하에 대한 잠재 가능성이 크다. 
-- 비표준 인터페이스: JS 글루 코드는 Wasm용 공용 시스템 인터페이스로 설계되지 않았다. 따라서 브라우저 외부의 런타임이 Emscripten의 글루 코드를 기반으로 버전을 구현할 때 비표준 동작을 포함할 위험이 있어 상호 운용성과 표준화를 달성하기가 더 어려워진다.
-- 보안 문제: Emscripten은 샌드박스를 제공하지 않는다. 직접적인 시스템 상호 작용과 관련하여 위험에 노출될 가능성이 있다.  
+Because of this, we had to create our own implementation of all the features in JS Glue code in these Wasm runtime structures.
 
+#### The Rise of WASI
+In conclusion, Emscripten played an important role in the early days of Wasm, but it was considered that excessive dependence on the emulation layer in a non-browser environment is likely to result in inefficiency, security issues, and barriers to standardization and innovation. The standard cannot consistently be the emulation of emulation. As the Wasm ecosystem grew, it was determined that it was more important to build a robust and future-oriented foundation than the legacy emulation layer. So it came out with WASI, the WebAsembly system interface.
 
-이 때문에 이러한 Wasm 런타임 구조에서 JS 글루 코드에 있는 모든 기능에 대한 자체 구현을 만들어야 했다.
+### 1. WASI Features
+#### 1. Portability Portability Portability
+POSIX is a technology that allows the compilation of the same source code on various operating systems. This allows developers to execute code once created in multiple locations without the need to write code for multiple systems.
 
-#### WASI의 등장 
-결론적으로 Emscripten은 Wasm 초기에 중요한 역할을 했지만, 브라우저가 아닌 환경에서 에뮬레이션 계층에 과도하게 의존하면 비효율성, 보안 문제 및 표준화와 혁신에 대한 장벽이 발생할 가능성이 높다고 보았다. 지속적으로 표준이 에뮬레이션의 에뮬레이션이 될 수는 없다. Wasm 생태계가 성장함에 따라 레거시 에뮬레이션 계층보다는 견고하고 미래 지향적인 기반을 구축하는 것이 중요하다고 판단하였다. 그래서 나온 것이 WebAssembly 시스템 인터페이스인 WASI이다.
+WebAssembly goes one step further. Code written in WebAssembly is designed to be 'compiled once and executed on various devices'. For example, if the basic module of Node.js is written in WebAssembly, users can easily install apps without a complicated installation process. Developers do not need to write codes separately for multiple platforms.
 
-### 1. WASI 특징 
-#### 1. Portability 휴대성
-POSIX는 다양한 운영 체제에서 동일한 소스 코드를 컴파일할 수 있게 해주는 기술이다. 이를 통해 개발자는 여러 시스템에 맞게 코드를 작성할 필요 없이, 한 번 작성한 코드를 여러 곳에서 실행할 수 있다. 
+#### 2. Security Security Security
+##### 1. Existing access methods
+Traditionally, computer operating systems (OS) verify permissions when users access files or use networks. This is a method created for security between users.
+- For example, when multiple employees of a company use the same computer, each employee's file is not easily opened by another employee.
 
-WebAssembly는 이보다 한 단계 더 나아간다. WebAssembly로 작성된 코드는 '한 번 컴파일하고 다양한 기기에서 실행'할 수 있도록 설계되었다. 예를 들어, Node.js의 기본 모듈이 WebAssembly로 작성된 경우, 사용자는 별도의 복잡한 설치 과정 없이 쉽게 앱을 설치할 수 있다. 개발자는 여러 플랫폼에 맞게 따로따로 코드를 작성할 필요가 없게 된다.
+##### 2. Risk of third party code
+These days, however, most systems have a single user running multiple programs. The problem here arises when the program we use itself is unreliable.
+- For example, if a program we use contains malicious code, it can sneak open our files or steal our information over the network.
 
-#### 2. Security 보안
-##### 1. 기존 접근 권한 방식
-전통적으로 컴퓨터 운영 체제(OS)는 사용자가 파일에 접근하거나 네트워크를 사용할 때 권한을 확인한다. 이는 사용자 간의 보안을 위해 만들어진 방식이다. 
-- 예를 들어, 회사의 여러 직원이 같은 컴퓨터를 사용할 때, 각 직원의 파일이 다른 직원에 의해 쉽게 열리지 않도록 하는 것이다.
+Because of this risk, it is very dangerous to use unreliable third-party programs.
 
-##### 2. 써드파티 코드의 위험
-하지만 요즘은 대부분의 시스템이 한 명의 사용자가 여러 프로그램을 실행하는 방식이다. 여기서 문제가 되는 것은 우리가 사용하는 프로그램 자체가 믿을 수 없는 경우에 발생한다. 
-- 예를 들어, 우리가 사용하는 어떤 프로그램이 악의적인 코드를 포함하고 있다면, 그 프로그램은 우리의 파일을 몰래 열어보거나, 네트워크를 통해 우리 정보를 빼돌릴 수 있다. 
-
-이런 위험 때문에 신뢰할 수 없는 써드파티 프로그램을 사용하는 것은 매우 위험하다. 
-
-##### 3. WASI의 보안 접근 방식 
-호스트 환경(브라우저나 Wasm 런타임)은 Wasm 프로그램이 사용할 수 있는 WASI 함수를 선택할 수 있다. 이는 프로그램이 불필요한 시스템 권한을 가지지 않도록 하여 보안을 강화한다. 그리고 WASI는 프로그램을 샌드박스 안에서 실행하여 직접적인 시스템 접근을 제한한다. 
-- 샌드박스 안에서 프로그램이 실행되기 때문에, 프로그램이 마음대로 파일에 접근하거나 네트워크를 사용할 수 없다. 
-- 호스트 환경이 프로그램이 할 수 있는 작업을 제한할 수 있다. 이렇게 하면 프로그램이 운영 체제 전체 권한을 갖고 위험한 작업을 하지 못하게 막을 수 있다.
+##### 3. WASI's approach to security
+The host environment (browser or Wasm runtime) may select the WASI function that may be used by the Wasm program. This enhances security by preventing the program from having unnecessary system privileges. And WASI limits direct system access by executing the program in a sandbox.
+- Because the program runs in a sandbox, the program cannot access files or use the network at will.
+- The host environment can limit what a program can do. This prevents programs from doing risky tasks with full operating system privileges.
 
 
-#### 3. 모듈식 설계
-WASI는 기본적인 시스템 인터페이스 기능을 제공하는 'wasi-core' 모듈을 포함한다. 파일 접근, 네트워크 연결, 시간 확인 및 난수 생성 등 필수 기능을 제공한다. WASI는 이러한 표준화된 인터페이스를 제공하여, 다양한 호스트 환경에서 일관된 방식으로 Wasm 프로그램이 동작할 수 있도록 한다.
+#### 3. Modular Design
+WASI includes a 'wasi-core' module that provides basic system interface functions. It provides essential functions such as file access, network connection, time check, and random number generation. WASI provides this standardized interface so that the Wasm program may operate in a consistent manner in various host environments.
 
-## 3. Wasm 런타임 - Wasmer
-Wasm 런타임은 웹어셈블리 코드를 로드하고 실행할 수 있는 환경으로, WASM 바이너리를 실행하는 데 필요한 인프라를 제공한다. 런타임은 WASM 명령어를 실행하기 위한 인터프리터 또는 가상 머신이라고 생각하면 된다. 브라우저가 아닌 환경을 위해 특별히 개발된 다양한 Wasm 런타임이 있다. 이러한 런타임은 점점 더 WASI 인터페이스를 지원하기 시작하여 표준화된 시스템 액세스를 통해 브라우저 외부에서 Wasm 애플리케이션을 실행할 수 있게 되었다. 현재 wasm 런타임으로 Wasmer, Wasmtime, WasmEdge 등 존재한다.
+## 3. Wasm Runtime - Wasmer
+Wasm runtime is an environment in which web assembly code can be loaded and executed, providing the infrastructure required to execute WASM binaries. The runtime is an interpreter or virtual machine for executing WASM instructions. There are various Wasm runtime developed specifically for environments other than browsers. These runtime increasingly began to support WASI interfaces, allowing Wasm applications to be executed outside of the browser through standardized system access. Currently, Wasm runtime exists as Wasm runtime, such as Wasmer, WasmTime, and WasmEdge.
 
-Wasmer는 WebAssembly 런타임 중 하나로, 다양한 환경에서 WebAssembly 바이너리를 실행할 수 있게 해준다. Wasmer는 CLI, 네이티브 애플리케이션, 서버 애플리케이션 등 여러 형태로 사용할 수 있다.
+WASI and Wasm runtime allow Wasm modules to run safely and quickly on existing operating systems such as Linux, Windows, and macOS. This process is largely similar to browser execution. WASI provides a consistent interface that abstracts system-specific differences, ensuring that Wasm binaries can be universally executed on servers.
+1. Compile to Wasm: Like browser scenarios, source code is compiled into Wasm directly through tools such as Emscripten or through the Wasm backend of LLVM.
+2. Runtime Utilization: Deploy Wasm binaries to servers with Wasm runtime, such as Wasmer.
+3. Run: Runtime loads Wasm modules and interacts seamlessly with server resources, including file systems, network protocols, etc., with the help of WASI.
 
-### Wasm이 OS에서 실행되는 과정
-WASI와 Wasm 런타임 덕분에 Linux, Windows, macOS와 같은 기존 운영 체제에서 Wasm 모듈을 안전하고 빠르게 실행할 수 있다. 이 프로세스는 브라우저 실행과 대체로 유사하다. WASI는 시스템별 차이를 추상화하는 일관된 인터페이스를 제공하여 서버에서 Wasm 바이너리가 보편적으로 실행될 수 있도록 보장한다.
-1. Wasm으로 컴파일: 브라우저 시나리오와 마찬가지로 소스 코드는 Emscripten과 같은 도구를 사용하거나 LLVM의 Wasm 백엔드를 통해 직접 Wasm으로 컴파일된다.
-2. 런타임 활용: Wasmer와 같은 Wasm 런타임이 탑재된 서버에 Wasm 바이너리를 배포한다.
-3. 실행: 런타임은 Wasm 모듈을 로드하고 WASI의 도움으로 파일 시스템, 네트워크 프로토콜 등을 포함한 서버 리소스와 원활하게 상호 작용한다.
+Wasmer is one of the WebAssembley runtime, which allows WebAssembley binaries to be executed in a variety of environments. Wasmer can be used in many forms, including CLI, native applications, and server applications.
 
+### The process by which Wasm runs on the OS
+WASI and Wasm runtime allow Wasm modules to run safely and quickly on existing operating systems such as Linux, Windows, and macOS. This process is largely similar to browser execution. WASI provides a consistent interface that abstracts system-specific differences, ensuring that Wasm binaries can be universally executed on servers.
+1. Compile to Wasm: Like browser scenarios, source code is compiled into Wasm directly through tools such as Emscripten or through the Wasm backend of LLVM.
+2. Runtime Utilization: Deploy Wasm binaries to servers with Wasm runtime, such as Wasmer.
+3. Run: Runtime loads Wasm modules and interacts seamlessly with server resources, including file systems, network protocols, etc., with the help of WASI.
 
 ## Resources
 - https://hacks.mozilla.org/category/code-cartoons/a-cartoon-intro-to-webassembly/

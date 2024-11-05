@@ -131,7 +131,7 @@ $ cargo add cosmwasm-std@1.5.4
 ```
 
 
-그러면 다음과 같이 dependecies 항목에 라이브러리가 추가된 것을 확인할 수 있다:
+그러면 다음과 같이 dependencies 항목에 라이브러리가 추가된 것을 확인할 수 있다:
 ```toml
 [package]
 name = "nameservice"
