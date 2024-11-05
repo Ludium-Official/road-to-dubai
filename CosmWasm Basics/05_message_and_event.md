@@ -5,6 +5,25 @@ Messages are ways to interact with CosmWasm smart contracts. Most contracts have
 - Instantiate message (`InstantiateMsg`): This is sent when the contract is initialized. It usually contains the data needed to properly initialize the contract. It consists mostly of a simple structure.
 - Execution message (`ExecuteMsg`) and query message (`QueryMsg`): Both are enum messages. These represent the message types used for execution and query, respectively.
 
+### Message Definition Example
+The following is a brief example of the 'execute' message definition in the nameservice contract (./nameservice/src/msg.rs ):
+```rust
+#[cw_serde]
+pub enum ExecuteMsg {
+Register { name: String },
+Transfer { name: String, to: String },
+}
+```
+- 'Register': Message to register a name
+- 'Transfer': a message that sends a name to another address
+
+#### `cw_serde`
+['cw_serde'](https://github.com/CosmWasm/cosmwasm/blob/main/packages/schema-derive/src/cw_serde.rs) is a macro mainly used in CosmWasm smart contract development. It is based on Rust's 'serde' library and is used to encode and decode data in JSON format. This macro makes it easy to process messages and data structures. Its main functions are as follows:
+- Automatic serialization and deserialization: The 'cw_serde' macro automatically implements the 'Serialize' and 'Deserialize' traces of the 'serde' library. Through this, data can be easily converted into JSON format.
+- Schema creation: Automatically creates JSON schema using the 'chemars' library. This is useful for defining expected formats and types of message and data structures.
+
+If you look at the schema folder of the nameservice contract (./nameservice/schema/), you can see the schema file created as 'cw_serde'.
+
 ### 메시지 정의 예시
 다음은 nameservice 컨트랙의 간단한 [`execute` 메시지 정의 예시](./nameservice/src/msg.rs)이다:
 ```rust
