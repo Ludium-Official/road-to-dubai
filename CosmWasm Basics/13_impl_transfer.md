@@ -1,25 +1,25 @@
-# 31c. transfer execute 구현하기
+# Implement transfer execute
 
-## 사전 지식
+## Prior knowledge
 - [05_message_and_event](./05_message_and_event.md)
 
-## 0. transfer 기능 
-transfer 기능은 등록된 이름을 다른 사용자에게 전송하는 기능이다. 이 기능은 이름의 소유권을 변경하며, 소유권 이전 시 수수료를 지불해야 한다. 
+## 0. transfer function
+The transfer function is the function of transferring a registered name to another user. This function changes ownership of the name and requires payment of a fee for transfer of ownership.
 
-## 1. `ExecuteMsg` 메세지에 `Transfer` 타입 추가하기
-`src/msg.rs` 파일에 Transfer 타입을 추가한다:
+## 1. Add `Transfer` type to `ExecuteMsg` message
+Add Transfer type to file `src/msg.rs`:
 ```rust
 #[cw_serde]
 pub enum ExecuteMsg {
     Register { name: String },
-	// --- 추가!
+	// --- Add!
     Transfer { name: String, to: String },
 }
 ```
-- `ExecuteMsg` 열거형에 `Transfer` 타입을 추가하여, 사용자가 이름을 전송할 수 있는 메시지를 정의한다.
+- The `Transfer` type is added to the `ExecuteMsg` enumeration to define the message that a user can send a name.
 
-## 2. 커스텀 에러 추가하기
-`src/error.rs` 파일에 transfer 기능에 필요한 커스텀 에러를 사전 정의한다:
+## 2. Add Custom Errors
+Pre-defined custom errors for transfer functionality in file `src/error.rs`:
 ```rust
 #[derive(Error, Debug)]
 pub enum ContractError {
@@ -28,7 +28,7 @@ pub enum ContractError {
 
     // ...
 
-    // --- 추가!
+    // --- Add!
     #[error("Unauthorized")]
     Unauthorized {},
 
@@ -37,10 +37,10 @@ pub enum ContractError {
     // ------
 }
 ```
-- `ContractError` 열거형에 `Unauthorized`와 `NameNotExists` 에러를 추가하여, 전송 중 발생할 수 있는 오류를 추가해준다.
+- `Unauthorized` and `NameNotExists` errors are added to the `ContractError` enumeration to add errors that may occur during transmission.
 
-## 3. transfer 비즈니스 로직 구현하기
-`src/contract.rs` 파일에 `transfer` 기능을 추가한다:
+## 3. Implement transfer business logic
+Add `transfer` function to file `src/contract.rs`:
 ```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn execute(
@@ -51,7 +51,7 @@ pub fn execute(
 ) -> Result<Response, ContractError> {
     match msg {
         ExecuteMsg::Register { name } => execute_register(deps, env, info, name),
-		// --- 추가!
+		// --- Add!
         ExecuteMsg::Transfer { name, to } => execute_transfer(deps, env, info, name, to),
     }
 }
@@ -84,14 +84,14 @@ pub fn execute_transfer(
     Ok(Response::default())
 }
 ```
-- `execute_transfer` 함수는 이름을 다른 사용자에게 전송하는 기능을 구현한다.
-- 설정된 전송 수수료를 확인하고, 충분한 수수료가 지불되지 않으면 에러를 반환한다.
-- 이름의 현재 소유자가 전송 요청을 한 사용자인지 확인하고, 그렇지 않으면 `Unauthorized` 에러를 반환한다.
-- 이름이 존재하지 않으면 `NameNotExists` 에러를 반환한다.
+- The `execute_transfer` function implements the ability to transfer names to other users.
+- Check the set transmission fee and return the error if sufficient fee is not paid.
+- Verify that the current owner of the name is the user who made the transfer request, or return an `Unauthorized` error.
+- Returns `NameNotExists` error if the name does not exist.
 
-## 4. 비즈니스 로직 테스트 
-### 1. 테스트 작성하기
-`src/tests.rs` 파일에 테스트 코드를 추가한다:
+## 4. Business logic test
+### 1. Create a test
+Add the test code to the file `src/tests.rs`:
 ```rust
 #[test]
 fn transfer_works() {
@@ -99,7 +99,7 @@ fn transfer_works() {
     mock_init_no_price(deps.as_mut());
     mock_alice_registers_name(deps.as_mut(), &[]);
 
-    // alice_key 보유자가 'alice'를 bob_key로 전송
+    // Onwer of alice_key sends 'alice' to bob_key
     let info = mock_info("alice_key", &[]);
     let msg = ExecuteMsg::Transfer {
         name: "alice".to_string(),
@@ -119,7 +119,7 @@ fn transfer_works_with_fees() {
     mock_init_with_price(deps.as_mut(), coin(2, "token"), coin(2, "token"));
     mock_alice_registers_name(deps.as_mut(), &coins(2, "token"));
 
-    // alice_key 보유자가 'alice'를 bob_key로 전송
+    // Onwer of alice_key sends 'alice' to bob_key
     let info = mock_info("alice_key", &[coin(1, "earth"), coin(2, "token")]);
     let msg = ExecuteMsg::Transfer {
         name: "alice".to_string(),
@@ -139,7 +139,7 @@ fn fails_on_transfer_non_existent() {
     mock_init_no_price(deps.as_mut());
     mock_alice_registers_name(deps.as_mut(), &[]);
 
-    // frank_key 보유자가 등록되지 않은 'alice42'를 bob_key로 전송
+    // Onwer of frank_key sends unregistered 'alice42' to bob_key
     let info = mock_info("frank_key", &coins(2, "token"));
     let msg = ExecuteMsg::Transfer {
         name: "alice42".to_string(),
@@ -164,7 +164,7 @@ fn fails_on_transfer_from_nonowner() {
     mock_init_no_price(deps.as_mut());
     mock_alice_registers_name(deps.as_mut(), &[]);
 
-    // frank_key 보유자가 자신 보유하고 있지 않은 'alice'를 bob_key로 전송
+    // Onwer of frank_key sends unowned 'alice' to bob_key
     let info = mock_info("frank_key", &coins(2, "token"));
     let msg = ExecuteMsg::Transfer {
         name: "alice".to_string(),
@@ -188,7 +188,7 @@ fn fails_on_transfer_insufficient_fees() {
     mock_init_with_price(deps.as_mut(), coin(2, "token"), coin(5, "token"));
     mock_alice_registers_name(deps.as_mut(), &coins(2, "token"));
 
-    // alice_key 보유자가 'alice'를 bob_key로 충분하지 않은 금액과 함께 전송
+    // Onwer of alice_key sends 'alice' to bob_key without the sufficient fund
     let info = mock_info("alice_key", &[coin(1, "earth"), coin(2, "token")]);
     let msg = ExecuteMsg::Transfer {
         name: "alice".to_string(),
@@ -206,14 +206,12 @@ fn fails_on_transfer_insufficient_fees() {
     assert_name_owner(deps.as_ref(), "alice", "alice_key");
 }
 ```
-- `transfer_works`: 등록된 이름을 다른 사용자에게 정상적으로 전송하는지 확인하는 테스트이다. `alice_key`가 `alice`라는 이름을 `bob_key`로 전송하고, 소유권이 제대로 변경되었는지 확인한다.
-- `transfer_works_with_fees`: 수수료가 있는 상황에서 등록된 이름을 다른 사용자에게 정상적으로 전송하는지 확인하는 테스트이다. `alice_key`가 `alice`라는 이름을 `bob_key`로 전송하고, 소유권이 제대로 변경되었는지 확인한다.
-- `fails_on_transfer_non_existent`: 등록되지 않은 이름을 전송하려고 할 때, 적절한 에러가 발생하는지 확인하는 테스트이다. `frank_key`가 존재하지 않는 `alice42`라는 이름을 `bob_key`로 전송하려고 할 때 `NameNotExists` 에러가 발생하는지 확인한다.
-- `fails_on_transfer_from_nonowner`: 소유자가 아닌 사용자가 이름을 전송하려고 할 때, 적절한 에러가 발생하는지 확인하는 테스트이다. `frank_key`가 소유하지 않은 `alice`라는 이름을 `bob_key`로 전송하려고 할 때 `Unauthorized` 에러가 발생하는지 확인한다.
-- `fails_on_transfer_insufficient_fees`: 충분한 수수료가 지불되지 않았을 때, 이름을 전송하려고 하면 적절한 에러가 발생하는지 확인하는 테스트이다. `alice_key`가 충분하지 않은 수수료와 함께 alice라는 이름을 `bob_key`로 전송하려고 할 때 `InsufficientFundsSend` 에러가 발생하는지 확인한다.
+- `transfer_works`: a test that verifies that the registered name is transmitted normally to another user. `alice_key` transmits the name `alice` to `bob_key` and checks whether ownership has been changed properly.
+- `transfer_works_with_fees`: a test that checks whether the registered name is transmitted normally to another user in the case of a fee. `alice_key` transmits the name `alice` to `bob_key` and checks whether ownership has been changed properly.
+- `fails_on_transfer_non_existent`: This is a test to see if an appropriate error occurs when attempting to send an unregistered name. Check if the `NameNotExists` error occurs when trying to transmit a name `alice42` that does not exist in `frank_key`.
+- `fails_on_transfer_from_nonowner`: A test that checks whether an appropriate error occurs when a user other than the owner tries to transmit a name. Check whether an `unauthorized` error occurs when trying to transmit a name `alice` that is not owned by `frank_key` to `bob_key`.
+- `fails_on_transfer_insefficient_fees`: This is a test to see if an appropriate error occurs when a name is sent when a sufficient fee has not been paid. If `alice_key` attempts to send the name `alice` to `bob_key` with an insufficient fee, it checks whether the `Insufficient FundsSend` error occurs.
 
-### 1. 테스트 실행하기 
-테스트를 실행하면 정상적으로 동작하는 것을 확인할 수 있다:
 ```sh
 $ cargo test
 
@@ -225,11 +223,10 @@ test tests::test_module::transfer_works ... ok
 test tests::test_module::transfer_works_with_fees ... ok
 ```
 
-## 마무리 
-위와 같이, transfer 기능을 구현하고 테스트를 통해 검증하였다. 이를 통해 이름의 소유권을 다른 사용자에게 안전하게 전송할 수 있게 되었다. 
+## Wrap it up
+As above, the transfer function was implemented and verified through tests. Through this, ownership of the name can be safely transmitted to other users.
 
-이제 namservice의 핵심 기능들은 모두 구현하였다. 이제는 schema를 생성하고 이를 네트워크 위에 배포하는 방법에 대해서 진행해 볼 것이다. 
-
+Now, all the core functions of namservice have been implemented. Now, we will proceed with how to create a schema and distribute it over the network.
 
 
 

@@ -1,10 +1,10 @@
-# 31b2. register 비즈니스 로직 개선하기: name 입력 데이터 검증
+# Improving register business logic: name input data verification
 
-## 0. register 비즈니스 로직 개선하기: name 입력 데이터 검증
-요청된 name의 길이와 잘못된 문자열을 사전 필터링하는 기능을 추가해 볼 것이다. 이렇게 하는 이유는 저장할 때 데이터 무결성을 유지하고, 불필요한 데이터가 저장되는 것을 방지하기 위함이다. 이러한 데이터 관리는 시스템의 안정성과 일관성을 유지하는 데 중요하다.
+## 0. Improving register business logic: name input data verification
+We will add a function to pre-filter the length of the requested name and the incorrect string. The reason for this is to maintain data integrity when stored and to prevent unnecessary data from being stored. This data management is important to maintain the stability and consistency of the system.
 
-## 1. 커스텀 에러 추가하기
-`src/error.rs` 파일에 name 입력 데이터 검증에 필요한 커스텀 에러를 추가한다:
+## 1. Add custom errors
+Add the custom error required to verify the name input data to the file `src/error.rs`:
 ```rust
 #[derive(Error, Debug)]
 pub enum ContractError {
@@ -17,7 +17,7 @@ pub enum ContractError {
     #[error("Insufficient funds sent")]
     InsufficientFundsSend {},
 
-    // --- 추가!
+    // --- Add!
     #[error("Name too short (length {length} min_length {min_length})")]
     NameTooShort { length: u64, min_length: u64 },
 
@@ -29,10 +29,10 @@ pub enum ContractError {
     // ------
 }
 ```
-- `NameTooShort`, `NameTooLong`, `InvalidCharacter` 에러를 추가하여 입력된 이름이 유효하지 않을 때 발생하는 에러를 정의한다. 
+- `NameTooShort`, `NameTooLong`, and `InvalidCharacter` errors are added to define the error that occurs when the entered name is not valid.
 
-## 2. validate 로직 구현하기 
-`src/contract.rs` 파일에 name 검증 로직을 작성한다:
+## 2. Implement validate logic
+Write the name verification logic in the file `src/contract.rs`:
 ```rust
 // --- New!
 const MIN_NAME_LENGTH: u64 = 3;
@@ -67,12 +67,12 @@ fn invalid_char(c: char) -> bool {
     !is_valid
 }
 ```
-- `validate_name` 함수는 입력된 이름의 길이와 유효성을 검증한다.
-- `invalid_char` 함수는 이름에 포함될 수 없는 문자를 검사한다.
-- `validate_name` 함수는 이름이 너무 짧거나 너무 길 경우 또는 유효하지 않은 문자가 포함된 경우 적절한 에러를 반환한다. 
+- The function `validate_name` verifies the length and validity of the entered name.
+- The function `invalid_char` examines characters that cannot be included in the name.
+- The function `validate_name` returns an appropriate error if the name is too short or too long, or if it contains invalid characters.
 
-## 3. register 비즈니스 로직에 추가하기 
-`src/contract.rs` 파일에 `validate_name` 호출을 추가한다:
+## 3. Add to register business logic
+Add the `validate_name` call to the `src/contract.rs` file:
 ```rust 
 pub fn execute_register(
     deps: DepsMut,
@@ -98,12 +98,12 @@ pub fn execute_register(
     Ok(Response::default())
 }
 ```
-- `execute_register` 함수는 `register` 메시지를 처리하는 함수이다.
-- 함수가 실행될 때, `validate_name` 함수를 호출하여 입력된 이름이 유효한지 검증한다.
-- 유효하지 않은 이름이 입력된 경우, 적절한 에러를 반환한다. 
+- The `execute_register` function is a function that processes the `register` message.
+- When the function is executed, call the function `validate_name` to verify that the entered name is valid.
+- Returns an appropriate error if an invalid name is entered.
 
-## 4. 비즈니스 로직 테스트 
-`src/tests.rs` 파일에 비즈니스 로직 테스트를 추가한다:
+## 4. Business logic test
+Add a business logic test to the file `src/tests.rs`:
 ```rust
 #[test]
 fn register_available_name_fails_with_invalid_name() {
@@ -151,9 +151,9 @@ fn register_available_name_fails_with_invalid_name() {
     }
 }
 ```
-- `register_available_name_fails_with_invalid_name`: 입력된 이름이 유효하지 않을 때, register 함수가 적절한 에러를 반환하는지 확인한다. 테스트 케이스에는 이름이 너무 짧거나 너무 긴 경우, 대문자 또는 공백이 포함된 경우에 대해서 모두 커버한다.
+- `register_available_name_fails_with_invalid_name`: When the entered name is invalid, check that the register function returns an appropriate error. The test case covers all cases where the name is too short or too long, and includes capital letters or spaces.
 
-테스트를 실행하여 모든 테스트가 정상적으로 통과하는지 확인한다:
+Run the test to ensure that all tests pass through normally:
 ```sh
 $ cargo test
 running 9 tests
@@ -163,9 +163,8 @@ test tests::test_module::register_available_name_and_query_works_with_fees ... o
 test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 ```
 
-## 마무리
-위와 같이, 입력된 이름의 유효성을 검증하는 로직을 추가하고 테스트를 통해 검증하였다. 이를 통해 저장할 때 데이터 무결성을 유지하고, 시스템의 안정성과 일관성을 보장할 수 있습니다. 다음으로는 소유한 name을 다른 사람에게 양도할 수 있는 transfer라는 새로운 기능을 구현할 것이다.
-
+## Wrap it up
+As above, logic was added to verify the validity of the input name and verified through tests. This allows you to maintain data integrity when stored and ensure system stability and consistency. Next, we will implement a new function called transfer that can transfer the name you own to another person.
 
 
 

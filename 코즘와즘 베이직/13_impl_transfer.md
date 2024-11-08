@@ -1,4 +1,4 @@
-# 31c. transfer execute 구현하기
+# transfer execute 구현하기
 
 ## 사전 지식
 - [05_message_and_event](./05_message_and_event.md)

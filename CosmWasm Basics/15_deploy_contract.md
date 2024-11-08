@@ -1,85 +1,85 @@
-# 32. 컨트랙트 배포하기 
+# Deploy Contracts
 
 ## 0. Neutron
-[Neutron](https://docs.neutron.org/)은 Cosmwasm을 사용해 스마트 컨트랙트를 Cosmos 계열 블록체인에 도입한 블록체인 네트워크이다. Neutron은 IBC 프로토콜을 사용하는 네트워크에서 작동한다. Neutron 보안(블록 검증)은 ICS(Interchain Security)을 통해 Cosmos Hub 네트워크에서 제공한다. 
+[Neutron](https://docs.neutron.org/) is a blockchain network that introduces smart contracts into Cosmos-affiliated blockchains using Cosmwasm. Neutron operates on networks using the IBC protocol. Neutron security (block verification) is provided by the Cosmos Hub network through ICS (Interchain Security).
 
-Mintscan Explorer를 통해 메인넷과 테스트넷에 대한 블록 현황을 살펴볼 수 있다: 
-- Mainnet(`neutron-1`): https://mintscan.io/neutron; 
-- Testnet(`pion-1`): https://mintscan.io/neutron-testnet. 
+Mintscan Explorer allows you to see the status of the blocks for the mainnet and testnet:
+- Mainnet(`neutron-1`): https://mintscan.io/neutron
+- Testnet(`pion-1`): https://mintscan.io/neutron-testnet.
 
-[Celatone](https://neutron.celat.one/neutron-1)은 컨트랙트 업로드, 쿼리, 실행하는 UI를 제공하는 스마트 컨트랙트 explorer이다. 추후 이를 통해 컨트랙트를 Neutron 테스트넷에 배포해 볼 예정이다.
+[Celatone](https://neutron.celat.one/neutron-1) is a smart contract explorer that provides a UI to upload, query, and execute contracts. In the future, through this, contracts will be distributed to the Netron test net.
 
-## 1. Neutron 테스트넷 faucet 받기 
-다음 명령어로 [telegram faucet](https://t.me/+SyhWrlnwfCw2NGM6)을 사용할 수 있다:
+## 1. Get the net faucet of the Neutron test
+You can use [telegram faucet] (https://t.me/+SyhWrlnwfCw2NGM6) with the following command:
 ```
 /request <NEUTRON-ADDRESS>
 ```
 
-## 2. nameservice 컨트랙트 빌드하기
-### 1. 기본으로 빌드하기
+## 2. Builde nameservice contract
+### 1. Basic build
 ```sh
 $ cargo wasm
 ```
 
-사이즈 크기를 확인해보자:
+Let's check the size:
 ```sh
 $ ls -lh ./target/wasm32-unknown-unknown/release/
 
 # ... 1.6M  7 12 23:53 nameservice.wasm
 ```
 
-### 2. wasm 사이즈 압축해서 빌드하기 
-현재 1.6MB임을 알 수 있다. 현재 업로드할 수 있는 최대 사이즈의 크기는 800KB이기 때문에 사이즈를 더 압축해줘야 한다. 
-1. RUSTFLAGS 를 통해 빌드 파일 용량 줄이기
-2. Cosmwasm의 [rust optimizer](https://github.com/CosmWasm/optimizer)로 파일 용량 줄이기
+### 2. Build by compressing the wasm size
+I can see it's 1.6MB at the moment. The maximum size you can upload at the moment is 800KB, so you need to compress the size more.
+1. Reduce Build File Capacity with RUSTFLAGS
+2. Reduce file capacity with Cosmwasm's [rust optimizer](https://github.com/CosmWasm/optimizer)
 
-우선 가장 간단한 1번 방식을 사용해서 줄여보자:
+First, let's reduce it using the simplest method of number one:
 ```sh
 RUSTFLAGS='-C link-args=-s' cargo wasm
 ```
 
-빌드가 완료된 후 사이즈 크기를 확인해보자:
+Let's check the size once the build is completed::
 ```sh
 $ ls -lh ./target/wasm32-unknown-unknown/release/
 
 # ... 195K  7 13 00:06 nameservice.wasm
 ```
 
-그러면 용량이 195KB로 줄어서 배포 가능한 크기가 되었음을 확인할 수 있다. 이대로 배포해도 되지만 cosmwasm이 제공해주는 2번 방법을 사용해보면 크기를 더 작게 압축할 수 있다. 명령어는 다음과 같다:
+Then, it can be confirmed that the capacity has been reduced to 195KB and the size can be distributed. You can distribute it as it is, but using method 2 provided by cosmwasm, you can compress the size smaller. The command is as follows:
 ```sh
 docker run --rm -v "$(pwd)":/code \
   --mount type=volume,source="$(basename "$(pwd)")_cache",target=/target \
   --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
   cosmwasm/optimizer:0.16.0
 ```
-> 이는 사전에 docker 설치를 해야한다. 만약 docker가 설치안되어 있거나 OS 호환이 맞지 않는다면 1번 방식으로도 충분히 배포가 가능하니 이 부분은 생략해도 된다.
+> This requires docker installation in advance. If docker is not installed or OS compatible, it can be fully distributed with method 1, so this part can be omitted.
 
-빌드가 완료된 후 사이즈 크기를 확인해보자:
+After the build is complete, let's check the size:
 ```sh
 $ ls -lh ./artifacts
 
 # ... 165K  7 13 00:12 nameservice.wasm
 ```
-그러면 더 작은 크기인 165KB가 된 것을 확인할 수 있다. 
+Then you can see that it is 165KB, which is a smaller size.
 
 
-## 3. celatone으로 테스트넷에 배포하기
-GUI를 제공하고 있어서 쉽게 테스트넷에 배포할 수 있다. 
+## 3. Deploying to TestNet with Celatone
+It provides GUI, so it can be easily deployed to testnet.
 - https://neutron.celat.one/pion-1/deploy
 
-### 1. wasm 파일 업로드하기
+### 1. Uploading a wasm file
 ![](./assets/32_contract_upload_1.png)
 ![](./assets/32_contract_upload_2.png)
 
-### upload 완료 
-그러면 다음과 같이 code id와 트랜잭션 해시 값을 결과로 받을 수 있다:
+### Finish uploading 
+Then, code id and transaction hash will be returned:
 - code id: 5509
 - hash: 5497E176EBE4107F6BCD65A96071325D8E3DFD75201F17BA89FC421D76D9BC6E
 ![](./assets/32_contract_upload_complete.png)
 
 
-## 4. nameservice 컨트랙트 배포 트랜잭션 결과 제출하기
-다음과 같이 nameservice 컨트랙트를 배포한 결과를 제출해야 한다:
+## 4. Submit the results of the name service contract distribution transaction
+You must submit the results of deploying the nameservice contract as follows:
 - code id: 5509
 - transaction hash: [5497E176EBE4107F6BCD65A96071325D8E3DFD75201F17BA89FC421D76D9BC6E](https://neutron.celat.one/pion-1/txs/5497E176EBE4107F6BCD65A96071325D8E3DFD75201F17BA89FC421D76D9BC6E)
 
