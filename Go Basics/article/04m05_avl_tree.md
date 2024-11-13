@@ -1,33 +1,26 @@
-# 04m05. AVL Tree 사용해보기
+# 04-05. Try AVL Tree
 
-## 목차 
-0. AVL Tree 사용해보기
-1. 기본 설정하기
-2. AVL Tree 함수 이해하기 
-3. print 함수 구현하기
-4. AVL Tree를 print 함수를 통해 출력하는 실행화면 제출 예시
+## 0. Try AVL Tree
+Balanced BST, such as AVL tree and RB tree, has a relatively long code because it has to be implemented by counting the number of various cases. Therefore, in this practice, understand some of the main functions of the AVL tree that have already been implemented and implement a function that simply outputs the tree structure.
 
-## 0. AVL Tree 사용해보기
-AVL 트리나 RB 트리와 같은 Balanced BST는 다양한 경우의 수를 따져서 구현해야 하기 때문에 비교적 코드가 길다. 그래서 해당 실습에서는 이미 구현된 AVL 트리의 일부 주요 함수를 이해하고 간단하게 트리 구조를 출력하는 함수를 구현해보도록 한다.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# map 디렉토리 생성
+# Cretea avl_tree directory
 $ mkdir avl_tree && cd avl_tree
 
-# map go module 생성 
+# Create avl_tree go module 
 $ go mod init avl_tree
 ```
 
-## 2. AVL Tree 함수 이해하기 
-현재 코드에는 AVL 트리에 값을 삽입하는 `Insert` 함수만 구현되어 있다. 해당 함수에는 호출하는 다양한 함수들을 존재한다: 
-- `height`: AVL 트리의 노드 높이를 반환한다. 
-- `getBalance`: 왼쪽 트리와 오른쪽 트리의 높이의 차를 계산하여 이를 반환한다. 한 쪽의 높이가 쏠리게 되면 skewed tree가 되기 때문에 밸런스를 잡는 데 중요한 지표로 사용된다. 
-- `rightRotate`: AVL 트리의 노드를 오른쪽으로 회전하는 함수이다. 이는 전체적인 노드의 높이가 왼쪽으로 치우친 경우에 동작한다.
-- `leftRotate`: AVL 트리의 노드를 왼쪽으로 회전한다. 이는 전체적인 노드의 높이가 오른쪽으로 치우진 경우에 동작한다.
+## 2. Understanding AVL Tree Functions
+In the current code, only the 'Insert' function that inserts a value into the AVL tree is implemented. There are various functions to call in this function:
+- `height`: Returns the node height of the AVL tree.
+- `getBalance`: Calculate the height difference between the left tree and the right tree and return it. It is used as an important indicator for balancing because it becomes a skewed tree when one height is tilted.
+- `rightRotate`: a function that rotates a node of an AVL tree to the right. This operates when the height of the overall node is skewed to the left.
+- `leftRotate`: Rotates the node of the AVL tree to the left. This operates when the height of the overall node is skewed to the right.
 
-`Insert` 함수에서 호출되는 이들 함수들은 트리의 균형을 유지하는 데 필수적이다. AVL 트리의 균형 상태를 유지하기 위해 노드를 삽입할 때 트리의 밸런스를 계산하고, 필요할 경우 회전 연산을 수행한다. 다음 코드는 Insert 함수 내에서 사용되는 회전 조건을 보여준다:
+These functions called in the 'Insert' function are essential for maintaining tree balance. To keep the AVL tree balanced, the tree's balance is calculated when a node is inserted and, if necessary, the rotation operation is performed. The following code shows the rotation conditions used in the Insert function:
 ```go
 // Left Left Case
 if balance > 1 && value < n.left.value {
@@ -51,10 +44,10 @@ if balance < -1 && value < n.right.value {
 	return leftRotate(n)
 }
 ```
-이 조건들은 삽입된 값에 따라 트리의 균형을 맞추기 위해 필요하다. AVL 트리는 각 노드의 왼쪽 서브트리와 오른쪽 서브트리의 높이 차이가 1 이하가 되도록 유지해야 하므로, 이러한 회전 연산을 통해 균형을 유지한다.
+These conditions are necessary to balance the tree according to the inserted value. The AVL tree is balanced through this rotation operation because the height difference between the left subtree and the right subtree of each node is less than or equal to 1.
 
 
-주어진 코드는 다음과 같다: 
+The codes given are as follows:
 ```go
 package main
 
@@ -73,7 +66,7 @@ func NewAVLNode(value int) *AVLNode {
 	return &AVLNode{value: value, height: 1}
 }
 
-// AVL 트리의 높이를 계산하는 함수
+// Function to calculate the height of AVL tree
 func height(n *AVLNode) int {
 	if n == nil {
 		return 0
@@ -81,7 +74,7 @@ func height(n *AVLNode) int {
 	return n.height
 }
 
-// AVL 트리의 균형 인수를 계산하는 함수
+// Function to calcluate the equilibrium factor of AVL tree
 func getBalance(n *AVLNode) int {
 	if n == nil {
 		return 0
@@ -89,39 +82,39 @@ func getBalance(n *AVLNode) int {
 	return height(n.left) - height(n.right)
 }
 
-// 오른쪽 회전
+// Rotate to the righ
 func rightRotate(y *AVLNode) *AVLNode {
 	x := y.left
 	T2 := x.right
 
-	// 회전 수행
+	// Execute the rotation
 	x.right = y
 	y.left = T2
 
-	// 높이 업데이트
+	// Update the height
 	y.height = max(height(y.left), height(y.right)) + 1
 	x.height = max(height(x.left), height(x.right)) + 1
 
 	return x
 }
 
-// 왼쪽 회전
+// Rotate to the left
 func leftRotate(x *AVLNode) *AVLNode {
 	y := x.right
 	T2 := y.left
 
-	// 회전 수행
+	// Execute the rotation
 	y.left = x
 	x.right = T2
 
-	// 높이 업데이트
+	// Update the height
 	x.height = max(height(x.left), height(x.right)) + 1
 	y.height = max(height(y.left), height(y.right)) + 1
 
 	return y
 }
 
-// 최대값을 계산하는 함수
+// Function to calculate the maxiumum value 
 func max(a, b int) int {
 	if a > b {
 		return a
@@ -129,7 +122,7 @@ func max(a, b int) int {
 	return b
 }
 
-// AVL 트리에 값을 삽입하는 함수
+// Function to insert into the value of AVL tree 
 func (n *AVLNode) Insert(value int) *AVLNode {
 	if n == nil {
 		return NewAVLNode(value)
@@ -199,13 +192,14 @@ func main() {
 }
 ```
 
-## 3. print 함수 구현하기
-이미 구현된 AVL Tree를 직접 출력해보면서 이해해보고 이러한 트리 구조를 쉽게 디버깅할 수 있도록 `printTree` 함수를 직접 작성해보도록 하자. 
-> print 함수 구현된 실습 코드 확인하기: [04_avl_tree](../code/04_avl_tree/)
+## 3. Implementing a print function
+Let's directly print out the AVL Tree that has already been implemented, understand it, and write the 'print Tree' function to make it easier to debug these tree structures.
+> Check the practice code implemented with print function: [04_avl_tree](../code/04_avl_tree/)
 
 
-## 4. AVL Tree를 print하는 실행화면 제출 예시
-프로그램을 실행하여 출력된 예시 결과는 다음과 같다:
+## 4. Example of submitting an AVL tree to the execution screen
+The results of the example output from the program execution are as follows:
+
 <div style="text-align: center;">
    <img src="../assets/04_data_structure_avl_tree_result_example.png" alt="04_data_structure_avl_tree_result_example" width="600"/>
 </div>
