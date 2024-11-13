@@ -1,22 +1,15 @@
-# 01m10. Pointer를 활용하여 Swap 함수 구현하기
+# 01-10. Using Pointer to Implement Swap Functions
 
-## 목차
-0. Pointer를 활용하여 Swap 함수 구현하기
-1. 기본 설정하기
-2. Swap Pointer 함수 작성하기
-3. Pointer를 활용한 Swap 함수 프로그램 실행화면 제출 예시
+## 0. Using Pointer to Implement Swap Functions
+[`01m06_function_swap`](./01m06_function_swap.md) The swap example in the practice was simply a function of exchanging values. Here, let's create a function that changes the values of a and b by directly modifying the values at the memory address using a pointer. The operator '&' is used to transfer the addresses of a and b to the function.
 
-
-## 0. Pointer를 활용하여 Swap 함수 구현하기
-[`01m06_function_swap`](./01m06_function_swap.md) 실습에서 다룬 swap 예제는 단순히 값을 교환하는 함수였다. 여기서는 포인터를 사용하여 메모리 주소에서 값을 직접 수정하여 a와 b의 값을 바꾸는 함수를 만들어보자. 연산자 `&`는 a와 b의 주소를 함수에 전달하는 데 사용된다. 
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# pointer_swap 디렉토리 생성
+# Create pointer_swap directory
 $ mkdir pointer_swap && cd pointer_swap
 
-# pointer_swap go module 생성 
+# Create pointer_swap go module 
 $ go mod init pointer_swap
 ```
 

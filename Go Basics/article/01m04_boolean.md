@@ -1,26 +1,20 @@
-# 01m04. Boolean 사용해보기
+# 01-04. Try the Boolean
 
-## 목차
-0. Boolean 사용해보기
-1. 기본 설정하기
-2. main 함수 작성하기 
-3. Boolean 프로그램 실행화면 제출 예시
+## 0. Try Boolean
+Let's use the `bool` type function as a practice.
 
-## 0. Boolean 사용해보기
-실습으로 `bool` 타입 기능을 사용해보도록 하자.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# boolean 디렉토리 생성
+# Create boolean directory
 $ mkdir boolean && cd boolean
 
-# boolean go module 생성 
+# Create boolean go module
 $ go mod init boolean
 ```
 
-## 2. main 함수 작성하기
-이제 bool 타입을 사용할 main 함수 코드를 작성하도록 하자. main 함수에서 실행할 코드는 다음과 같다:
+## 2. Creating a main function
+Now let's write the main function code that will use the bol type. The code to execute in the main function is as follows:
 ```go
 package main
 
@@ -35,11 +29,11 @@ func main() {
 	fmt.Println(b1) // true
 	fmt.Println(b2) // false
 
-	// bool 타입의 기본값 
+	// Basic value of bool type
 	var b3 bool
 	fmt.Println(b3) // false
 
-	// 비교 연산자 
+	// Comparative operatro 
 	a := 10
 	b := 20
 	fmt.Println(a == b) // false
@@ -49,7 +43,7 @@ func main() {
 	fmt.Println(a <= b) // true
 	fmt.Println(a >= b) // false
 
-	// 논리 연산자 
+	// Logical Operatro
 	c := true
 	d := false
 	fmt.Println(c && d) // false
@@ -57,10 +51,11 @@ func main() {
 	fmt.Println(!c)     // false
 }
 ```
-> 실습 코드 확인하기: [01_boolean](../code/01_boolean/)
+> Check the practice code: [01_boolean](../code/01_boolean/)
 
-## 3. Boolean 프로그램 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting Boolean program execution screen
+The results printed by running the program are as follows:
+
 <div style="text-align: center;">
    <img src="../assets/01_basic_bool_result_example.png" alt="01_basic_bool_result_example" width="600"/>
 </div>

@@ -1,26 +1,20 @@
-# 01m03. String Formatting 사용해보기
+# 01-03. Try String Formatting
 
-## 목차
-0. String Formatting 사용해보기
-1. 기본 설정하기
-2. main 함수 작성하기 
-3. String Formatting 프로그램 실행화면 제출 예시
+## 0. Try String Formatting
+Let's use the String Formatting function as a practice.
 
-## 0. String Formatting 사용해보기
-실습으로 String Formatting 기능을 사용해보도록 하자.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# string_formatting 디렉토리 생성
+# Create string_formatting directory
 $ mkdir string_formatting && cd string_formatting
 
-# string_formatting go module 생성 
+# Create string_formatting go module 
 $ go mod init string_formatting
 ```
 
-## 2. main 함수 작성하기
-이제 String Formatting 기능을 사용할 main 함수 코드를 작성하도록 하자. main 함수에서 실행할 코드는 다음과 같다:
+## 2. Creating a main function
+Now let's write the main function code that will use the String Formatting function. The code to execute in the main function is as follows:
 ```go
 package main
 
@@ -68,10 +62,10 @@ func main() {
 	fmt.Printf("Pointer address: %p\n", pointerVar)    // 0xc0000a6010
 }
 ```
-> 실습 코드 확인하기: [01_string_formatting](../code/01_string_formatting/)
+> Check the practice code: [01_string_formattting](../code/01_string_formattting/)
 
-## 3. String Formatting 프로그램 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting a string formatting program execution screen
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/01_basic_string_formatting_result_example.png" alt="string_formatting_result_example" width="600"/>
 </div>

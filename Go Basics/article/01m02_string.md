@@ -1,27 +1,20 @@
+# 01-02. Try String
 
-# 01m02. String 사용해보기
+## 0. Try String
+Let's use the String type as a practice.
 
-## 목차
-0. String 사용해보기
-1. 기본 설정하기
-2. main 함수 작성하기 
-3. String 프로그램 실행화면 제출 예시
-
-## 0. String 사용해보기
-실습으로 String 타입을 사용해보도록 하자.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# string 디렉토리 생성
+# Create string directory
 $ mkdir string && cd string
 
-# string go module 생성 
+# Create string go module 
 $ go mod init string
 ```
 
-## 2. main 함수 작성하기
-이제 String 타입을 사용할 main 함수 코드를 작성하도록 하자. main 함수에서 실행할 코드는 다음과 같다:
+## 2. Creating a main function
+Now let's write the main function code that will use the String type. The code to execute in the main function is as follows:
 ```go
 package main
 
@@ -33,15 +26,15 @@ func main() {
 	var str string = "Hello, Cosmos"
 	fmt.Println(str) // Hello, Cosmos
 
-	// len 함수는 문자 수가 아닌 문자열의 바이트 수를 반환한다. 
+	// len function returns the number of bytes of the string, not the number of characters. 
 	fmt.Println(len(str)) // 13
 	
     fmt.Println(str[0]) // 72 (ASCII value of 'H')
 
-    // range로 문자열을 반복하여 유니코드 코드 포인트를 가져와서 출력한다.
+    // Repeat the string with range to get a Unicode code point and output it.
 	for index, runeValue := range str { 
-        // index: 문자열에서 rune의 시작 바이트 위치이다.
-        // runeValue: 해당 위치에 있는 문자의 유니코드 코드 포인트이다.
+        // index: the starting byte position of the rune in the string.
+        // runeValue: Unicode code point of the character in that location.
 		fmt.Printf("%d: %c\n", index, runeValue)
 	}
 	// 0: H
@@ -75,10 +68,10 @@ func main() {
 	fmt.Println(newStr) // hello, Cosmos
 }
 ```
-> 실습 코드 확인하기: [01_string](../code/01_string/)
+> Check Practice Code: [01_string](../code/01_string/)
 
-## 3. string 프로그램 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting a string program execution screen
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/01_basic_string_result_example.png" alt="string_result_example" width="600"/>
 </div>

@@ -1,50 +1,40 @@
-# 01m08. Method 사용해보기
+# 01-08. Try the Method
 
-## 목차
-0. Method 사용해보기
-1. 기본 설정하기
-2. 코드 작성하기
-   1. Rectangle 구조체 정의하기
-   2. Rectangle 구조체에 area 메서드 추가하기 
-   3. Rectangle 구조체에 scale 메서드 추가하기
-   4. main 함수 작성하기
-3. Method 프로그램 실행화면 제출 예시
+## 0. Try Method
+Let's try to define and use the method directly as a practice.
 
-## 0. Method 사용해보기
-실습으로 메서드를 직접 정의하여 사용해보도록 하자. 
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# method 디렉토리 생성
+# Create method directory
 $ mkdir method && cd method
 
-# method go module 생성 
+# Cretae method go module 
 $ go mod init method
 ```
 
-## 2. 코드 작성하기
-이제 구조체 직접 정의하고 이와 함께 사용되는 메서드를 사용해보도록 하자.
+## 2. Creating code
+Now let's define the structure directly and use the methods used with it.
 
-### 1. Rectangle 구조체 정의하기
-- width: float64 타입의 필드
-- height: float64 타입의 필드
+### 1. Define Rectangle structures
+- width: field of float64 type
+- height: field of floor64 type
 ```go
 type Rectangle struct {
     width, height float64
 }
 ```
 
-### 2. Rectangle 구조체에 area 메서드 추가하기
-area 메서드는 Rectangle의 넓이를 계산하여 반환한다.
+### 2. Add the area method to the Rectangle structure
+The area method calculates the area of the Rectangle and returns it.
 ```go
 func (r Rectangle) area() float64 {
     return r.width * r.height
 }
 ```
 
-### 3. Rectangle 구조체에 scale 메서드 추가하기
-scale 메서드는 Rectangle의 너비와 높이를 주어진 인수(factor)로 확대 또는 축소한다.
+### 3. Add scale method to Rectangle structure
+The scale method enlarges or reduces the width and height of the Rectangle to a given factor.
 ```go
 func (r *Rectangle) scale(factor float64) {
     r.width *= factor
@@ -52,8 +42,8 @@ func (r *Rectangle) scale(factor float64) {
 }
 ```
 
-### 4. main 함수 작성하기
-main 함수에서 Rectangle 구조체의 인스턴스를 생성하고, area 및 scale 메서드를 호출해보자.
+### 4. Creating a main function
+Create an instance of the Rectangle structure from the main function, and call the area and scale methods.
 ```go
 func main() {
     rect := Rectangle{width: 3, height: 4}
@@ -65,7 +55,7 @@ func main() {
 }
 ```
 
-전체 코드는 다음과 같다:
+The entire code is as follows:
 ```go
 package main
 
@@ -95,10 +85,10 @@ func main() {
     fmt.Println("New area:", rect.area()) // New area: 48
 }
 ```
-> 실습 코드 확인하기: [01_method](../code/01_method/)
+> Check the practice code: [01_method](../code/01_method/)
 
-## 3. Method 프로그램 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting a method program execution screen
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/01_basic_method_result_example.png" alt="01_basic_method_result_example" width="600"/>
 </div>

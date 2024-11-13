@@ -1,28 +1,20 @@
+# 01-00. Integer 사용해보기
 
-# 01m00. Integer 사용해보기
+## 0. Try using Integrer
+Let's use the Integer type as a practice. Future practice will be conducted by creating a direct directory and writing a program.
 
-## 목차
-0. Integer 사용해보기
-1. 기본 설정하기
-2. main 함수 작성하기 
-3. Integer 프로그램 실행하기
-4. 실행 결과 제출 예시
-
-## 2. Integer 사용해보기
-실습으로 Integer 타입을 사용해보도록 하자. 앞으로의 실습은 직접 디렉토리를 생성하여 프로그램을 작성하는 방식으로 진행된다.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# integer 디렉토리 생성
+# Create integer directory
 $ mkdir integer && cd integer
 
-# integer go module 생성 
+# Create integer go module
 $ go mod init integer
 ```
 
-## 2. main 함수 작성하기 
-이제 Integer 타입을 사용할 main 함수 코드를 작성하도록 하자. main 함수에서 실행할 코드는 다음과 같다:
+## 2. Creating a main function
+Now let's write the main function code that will use the Integer type. The code to execute in the main function is as follows:
 ```go
 package main
 
@@ -62,16 +54,16 @@ func main() {
     fmt.Println(maxUint64) // 18446744073709551615
 }
 ```
-> 실습 코드 확인하기: [01_integer](../code/01_integer/)
+> Check the practice code: [01_integrer](../code/01_integrer/)
 
-## 3. Integer 프로그램 실행하기
-`go run {go 파일이름}.go` 명령어를 사용하면 main 함수가 작성된 go 프로그램을 실행할 수 있다. 다음과 같이 명령어를 입력해보자:
+## 3. Running the Integrer program
+The `go run {go file name}.go` command allows you to run the go program where the main function is written. Try entering the command as follows:
 ```sh
 $ go run main.go
 ```
 
-## 4. 실행 결과 제출 예시 
-실행하여 출력된 결과는 다음과 같다:
+## 4. Example of submission of execution results
+The results output from the execution are as follows:
 <div style="text-align: center;">
    <img src="../assets/01_basic_integer_result_example.png" alt="integer_result_example" width="600"/>
 </div>
