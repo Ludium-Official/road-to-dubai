@@ -1,18 +1,10 @@
-# 01m11. Closure 기능 사용해보기
+# 01-11. Try the Close feature
 
-## 목차
-0. Closure 기능 사용해보기
-1. 기본 설정하기
-2. 코드 작성하기
-   1. outer 함수 정의하기
-   2. main 함수 작성하기
-3. Closure 프로그램 실행화면 제출 예시
+## 0. Try the Close feature
+Let's use the closure function directly through practice.
 
-## 0. Closure 기능 사용해보기
-실습을 통해 closure 기능을 직접 사용해보도록 하자. 
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
 # closure 디렉토리 생성
 $ mkdir closure && cd closure
@@ -21,9 +13,9 @@ $ mkdir closure && cd closure
 $ go mod init closure
 ```
 
-## 2. 코드 작성하기
-### 1. outer 함수 정의하기
-outer 함수는 count 변수를 가지고 있으며, 내부에 정의된 익명 함수가 이 count 변수에 접근할 수 있다. increment 변수에 outer 함수를 할당하면 increment는 count 변수를 "기억"하고 호출될 때마다 증가된 값을 반환한다.
+## 2. Creating code
+### 1. Define outer functions
+The outer function has a count variable, and an anonymous function defined inside can access this count variable. When the outer function is assigned to the increase variable, the increase "remains" the count variable and returns an increased value each time it is called.
 ```go
 func outer() func() int {
     count := 0
@@ -34,8 +26,8 @@ func outer() func() int {
 }
 ```
 
-### 2. main 함수 작성하기
-main 함수에서 outer 함수를 호출하여 increment 변수에 할당한다. 그 다음 increment 함수를 호출할 때마다 count 변수가 증가된 값을 반환하는지 확인해보도록 하자. 
+### 2. Creating a main function
+Call the outer function from the main function and assign it to the increase variable. Then, each time you call the increase function, let's see if the count variable returns an increased value.
 ```go
 func main() {
     increment := outer()
@@ -45,10 +37,10 @@ func main() {
     fmt.Println(increment()) // 3
 }
 ```
-> 전체 실습 코드 확인하기: [01_closure](../code/01_closure/)
+> Check the full practice code: [01_close](../code/01_close/)
 
-## 3. Closure 프로그램 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting a close program execution screen
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/01_basic_closure_result_example.png" alt="01_basic_closure_result_example" width="600"/>
 </div>

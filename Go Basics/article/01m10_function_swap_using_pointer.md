@@ -13,11 +13,11 @@ $ mkdir pointer_swap && cd pointer_swap
 $ go mod init pointer_swap
 ```
 
-## 2. Pointer를 활용한 Swap 함수 작성하기
-포인터를 사용하여 두 정수의 값을 교환하는 `swap`함수를 작성한다: 
-- `swap` 함수는 두 개의 int 타입의 포인터(x, y)을 매개변수로 받아, 두 값을 교환하고 반환하지 않는다.
+## 2. Create a Swap function using Pointer
+Write a `swap` function that exchanges the values of two integers using a pointer:
+- The `swap` function takes two int-type pointers (x, y) as parameters, exchanges and does not return the two values.
 
-pointer를 활용하여 구현한 swap 함수를 main 함수에서 다음과 같이 호출할 수 있다:
+The swap function implemented using pointer can be called in the main function as follows:
 ```go
 func main() {
     a, b := 5, 10
@@ -26,12 +26,12 @@ func main() {
     fmt.Println("After swap: a =", a, "b =", b) // After swap: a = 10 b = 5
 }
 ```
-> 구현된 실습 코드 확인하기: [01_pointer_swap](../code/01_pointer_swap/)
+> Check the implemented practice code: [01_pointer_swap](../code/01_pointer_swap/)
 
-## 3. Pointer를 활용한 Swap 함수 프로그램 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submission of the Swap function program execution screen using Pointer
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/01_basic_pointer_swap_result_example.png" alt="01_basic_pointer_swap_result_example" width="600"/>
 </div>
 
-이 실습을 통해 포인터를 사용하여 함수에서 값을 직접 수정하는 방법을 배웠다. 포인터를 사용하면 함수가 변수의 복사본이 아닌 실제 메모리 주소를 참조하므로, 함수 내에서 변수의 값을 직접 변경할 수 있다. 
+Through this exercise, we learned how to directly modify values from functions using pointers. Using pointers, you can directly change the value of a variable within the function, since the function refers to the actual memory address rather than a copy of the variable.

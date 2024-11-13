@@ -1,30 +1,11 @@
 # 002. Go Control Structure
-> 이 아티클에서는 Go 언어의 제어 구조에 대해 다룬다. 조건문(if, else), 반복문(for), 그리고 switch문과 같은 제어 구조를 통해 프로그램의 흐름을 제어하는 방법을 설명한다. 각 제어 구조의 문법과 사용 예시를 제공하고, 이를 활용한 실습 과제를 통해 실력을 향상을 목표로 한다.
+> This article deals with the control structure of the Go language. Explain how to control the flow of a program through a control structure such as a conditional statement (if, else), a repetitive statement (for), and a switch statement. It provides grammar and use examples of each control structure, and aims to improve skills through practical tasks using it.
 
+## 1. Conditional statement: if, else if, else
+In Go, conditional statements are defined using the if, if, and else keywords. Conditional statements allow code blocks to be executed or skipped according to specific conditions.
 
-## 목차 
-1. 조건문: if, else if, else
-   1. 기본 if 문
-   2. if-else 문
-   3. if-else if-else 문
-   4. 조건문 내 변수 선언
-2. 반복문: for, break, continue
-   1. 기본 for 문
-   2. 조건식만 있는 for 문
-   3. 무한 루프: 정지 판별 문제
-   4. range를 사용한 for 문
-   5. break와 continue
-3. switch 문
-   1. 기본 switch 문
-   2. 여러 값을 검사하는 switch 문
-   3. 조건식을 사용하는 switch 문
-   4. fallthrough
-
-## 1. 조건문: if, else if, else
-Go에서 조건문은 if, else if, else 키워드를 사용하여 정의한다. 조건문은 특정 조건에 따라 코드 블록을 실행하거나 건너뛸 수 있게 한다.
-
-### 1. 기본 if 문
-조건이 참이면 코드 블록을 실행한다. 다음은 x가 5보다 큰지 검사하는 방법을 보여준다:
+### 1. Default if statement
+If the condition is true, the code block is executed. The following shows how to check that x is greater than 5:
 ```go
 package main
 
@@ -40,8 +21,8 @@ func main() {
 }
 ```
 
-### 2. if-else 문
-조건이 참이면 첫 번째 코드 블록을, 거짓이면 두 번째 코드 블록을 실행한다. 다음은 x가 5보다 큰지 검사하고 마냑 크지 않다면 else 블록을 실행하는 방법을 보여준다: 
+### 2. if-else clause
+If the condition is true, the first code block is executed, and if it is false, the second code block is executed. The following shows how to check that x is greater than 5, and if it is not too large, to execute the else block: 
 ```go
 package main
 
@@ -59,8 +40,8 @@ func main() {
 }
 ```
 
-### 3. if-else if-else 문
-여러 조건을 순차적으로 검사한다. 첫 번째 참인 조건의 코드 블록을 실행하고, 모든 조건이 거짓이면 마지막 else 블록을 실행한다. 다음은 else if문을 추가하여 조건 분기를 더 세밀하게 할 수 있는 방법을 보여준다:
+### 3. if-else if-else clause
+It checks several conditions sequentially. It executes the code block of the first true condition, and if all conditions are false, it executes the last else block. The following shows how you can add an else if statement to make the condition branch more detailed:
 ```go
 package main
 
@@ -80,8 +61,8 @@ func main() {
 }
 ```
 
-### 4. 조건문 내 변수 선언
-if 문 내에서 변수 선언이 가능하다. 이 변수는 if 문 블록 내에서만 유효하다. 다음은 조건문 내에서 x를 10으로 초기화하고, x > 5 조건을 검사하는 방법을 보여준다:
+### 4. Declaration of variables in conditional statements
+It is possible to declare variables within an if statement. This variable is valid only within the if statement block. The following shows how to initialize x to 10 within a condition statement, and check for x > 5 conditions:
 ```go
 package main
 
@@ -98,11 +79,11 @@ func main() {
 }
 ```
 
-## 2. 반복문: for, break, continue
-Go에서는 유일한 반복문으로 for 문을 사용한다. 다양한 방식으로 반복문을 사용할 수 있다.
+## 2. Repeated cluase: for, break, continue
+Go uses the for statement as the only iteration. You can use it in many ways.
 
-### 1. 기본 for 문
-초기화, 조건, 후처리를 포함한 기본 형태이다. 다음은 i를 0으로 초기화하고, i가 5보다 작은 동안 반복하며, 각 반복 후 i를 증가시켜 i의 값을 출력하는 예시 코드이다: 
+### 1. Basic for clause
+It is the basic form including initialization, conditions, and post-processing. The following is an example code that initializes i to 0, repeats while i is less than 5, and outputs the value of i by increasing i after each iteration:
 ```go
 package main
 
@@ -117,8 +98,8 @@ func main() {
 }
 ```
 
-### 2. 조건식만 있는 for 문
-이는 초기화와 후처리가 없이 조건식만 있는 형태도 가능하다. 다음은 위와 같은 기능을 하지만 조건식만 있는 형태로 구현한 예시 코드이다:
+### 2. For clause with conditional expression only
+It is possible to have a form with only a conditional expression without initialization and post-processing. The following is an example code that performs the above functions but only has a conditional expression:
 ```go
 package main
 
@@ -135,17 +116,17 @@ func main() {
 }
 ```
 
-### 3. 무한 루프
-반복문에 조건을 명시하지 않으면 계속해서 반복하여 무한히 실행되는 함수를 구현할 수 있다. 무한 루프 개념은 블록체인에서는 자주 등장한다. 왜냐하면 이러한 함수가 악의적인 사용자에 의해 블록체인 네트워크에서 실행된다면 Liveness에 큰 영향을 끼치게 되기 때문이다. 이는 네트워크의 다른 트랜잭션을 방해하고 전체 시스템의 성능을 저하시킬 수 있다. 이 문제를 방지하기 위해 프로그램 가능하게 설계한 EVM(Ethereum Virtual Machine)과 같은 블록체인 시스템에서는 gas의 개념을 도입하였다. 만약 무한 루프인지 아닌지 판별 할 수 있는 머신이 존재했다면 이더리움 gas의 개념이 존재하지 않았을 것이라고 가볍게 생각해볼 수 있다. 
+### 3. Infinite Loop
+If a condition is not specified in the repetition sentence, a function that is repeatedly executed infinitely can be implemented. The concept of an infinite loop often appears in blockchain. This is because if these functions are executed in a blockchain network by malicious users, it will have a great impact on Liveness. This can interfere with other transactions in the network and degrade the performance of the entire system. To prevent this problem, blockchain systems such as programmable EVM (Ethermal Virtual Machine) introduced the concept of gas. If there was a machine that could determine whether it was an infinite loop or not, it can be lightly considered that the concept of Ethereum gas would not have existed.
 
-#### 튜링 정지 문제 
-이는 유명한 튜링 정지 문제에서 비롯된다. 다음은 튜링의 정지 문제에 대한 간단한 예제를 Go 언어로 작성한 것이다. 이 예제는 정지 여부를 판별하려는 시도를 보여준다. 실제로는 어떠한 함수가 무한으로 동작하는지에 대해 정확히 판별할 수 있는 코드가 존재하지 않으니 가볍게 참고만 하도록 하자: 
+#### Turing Stop Problem
+This stems from the famous Turing stationary problem. The following is a simple example of the Turing stationary problem in the Go language. This example shows an attempt to determine whether a function is stationary. In practice, there is no code to tell exactly which functions behave indefinitely, so let's just take it lightly:
 ```go
-// 이 함수는 주어진 프로그램이 특정 입력에 대해 정지하는지 여부를 판별하는 가상의 함수이다.
-// 실제로는 이와 같은 함수가 모든 경우에 대해 정확히 작동할 수 없음을 나타내기 위해 항상 false를 반환하도록 구현되어 있다.
+// This function is a hypothetical function that determines whether a given program stops for a particular input.
+// In practice, a function like this is always implemented to return false to indicate that it cannot exactly work for all cases.
 func halts(program func(), input int) bool {
-	// 이러한 함수는 존재하지 않는다.
-	return false 
+// These functions do not exist.
+return false
 }
 
 func problematicFunction() {
@@ -165,11 +146,11 @@ func main() {
 	}
 }
 ```
-- 왜 정지 문제를 판별할 수 없을까? 이에 대한 자세한 설명으로는 [SNUON_컴퓨터과학이 여는 세계_2.4 튜링 기계의 급소: 튜링기계 하나는 자연수 하나_이광근](https://www.youtube.com/watch?si=5aWY7S7tfIaplFF7&t=453&v=RINdVaoXV5c&feature=youtu.be) 영상을 참고하면 좋다. 
-> 예제 코드 확인하기: [02_halting_problem](../code/02_halting_problem/)
+- Why can't we discriminate the stopping problem? For a detailed explanation of this, see [SNUON_The world's 2.4 Turing machine opened by computer science: One Turing machine is natural number one_Lee Kwang-geun](https://www.youtube.com/watch?si=5aWY7S7tfIaplFF7&t=453&v=RINdVaoXV5c&feature=youtu.be) .
+> Check the example code: [02_halting_problem](../code/02_halting_problem/)
 
-### 4. range를 사용한 for 문
-배열, 슬라이스, 맵, 채널 등을 순회할 때 사용한다. 다음은 `nums` 슬라이스의 각 요소에 대해 인덱스 i와 값 num을 반복하는 예시 코드이다:
+### 4. For Door with range
+It is used to tour arrays, slices, maps, channels, etc. The following is an example code that repeats the index i and the value num for each element of the `nums` slice:
 ```go
 package main
 
@@ -190,8 +171,8 @@ func main() {
 }
 ```
 
-### 5. break와 continue
-break는 반복문을 종료하고, continue는 다음 반복으로 건너뛴다. 다음은 이 두 기능을 활용한 예시 코드이다:
+### 5. Break and continue
+Break ends the iteration, and continue skips to the next iteration. Here is an example code that utilizes these two features:
 ```go
 package main
 
@@ -212,12 +193,11 @@ func main() {
 }
 ```
 
+## 3. Switch cluase
+In Go, the switch statement is a structure in which one or more conditions are evaluated in order and a code block of matching conditions is executed. If it does not correspond to each case clause, the default clause is executed. If the switch statement is well utilized, it can increase code readability and handle various conditions neatly.
 
-## 3. switch 문
-Go에서 switch 문은 하나 이상의 조건을 순서대로 평가하여, 일치하는 조건의 코드 블록을 실행하는 구조이다. 각 case 절에 해당하지 않으면 default 절을 실행한다. switch 문을 잘 활용하면 코드 가독성을 높이고 여러 조건을 깔끔하게 처리할 수 있다.
-
-### 1. 기본 switch 문
-기본 switch 문은 하나의 변수 값을 여러 case 절과 비교하여 일치하는 경우에 해당 코드 블록을 실행한다. 예시 코드는 다음과 같다:
+### 1. Default switch statement
+The default switch statement compares the value of one variable with several case clauses and executes the corresponding code block when it matches. The example code is as follows:
 ```go
 package main
 
@@ -239,12 +219,12 @@ func main() {
 	}
 }
 ```
-- `switch x`: x의 값을 평가한다.
-- `case 1`, `case 2`, `case 3`: x의 값이 각각 1, 2, 3과 일치할 때 실행할 코드 블록을 정의한다.
-- `default`: 어떤 case 절에도 해당하지 않을 때 실행할 코드 블록을 정의한다.
+- `switch x`: Evaluate the value of x.
+- `Case 1`, `case 2`, and `case 3`: Define the code block to be executed when the values of x match 1, 2, and 3, respectively.
+- `default`: Defines the code block to execute when it does not fall under any case clause.
 
-### 2. 여러 값을 검사하는 switch 문
-여러 값을 검사하는 switch 문에서는 각 case 절에 여러 값을 포함할 수 있다. 이는 동일한 코드 블록을 여러 값에 대해 실행할 때 유용하다. 다음은 switch 문을 통해 1이상 6이하의 홀수와 짝수를 구분하는 프로그램 예시를 보여준다:
+### 2. Switch statement that inspects multiple values
+In a switch statement that examines multiple values, each case clause can contain multiple values. This is useful when running the same code block on multiple values. The following is an example of a program that distinguishes odd numbers and even numbers of 1 or more and 6 or less through a switch statement:
 ```go
 package main
 
@@ -264,12 +244,12 @@ func main() {
 	}
 }
 ```
-- `case 1, 3, 5`: x의 값이 1, 3, 5 중 하나일 때 "Odd"를 출력한다.
-- `case 2, 4, 6`: x의 값이 2, 4, 6 중 하나일 때 "Even"을 출력한다.
-- `default`: x의 값이 나열된 값에 해당하지 않을 때 "Other"를 출력한다.
+- `Case 1, 3, 5`: Output "Odd" when the value of x is one of 1, 3, and 5.
+- `case 2, 4, 6`: Output "even" when the value of x is one of 2, 4, and 6.
+- `default`: Outputs "Other" when the value of x does not correspond to the listed value.
 
-### 3. 조건식을 사용하는 switch 문
-조건식을 사용하는 switch 문에서는 각 case 절에 조건식을 사용하여 조건을 평가할 수 있다. 이 방식은 특정 값뿐만 아니라 보다 복잡한 조건을 처리할 때 유용하다. 
+### 3. Switch statements using conditional expressions
+In a switch statement that uses a conditional expression, conditions can be evaluated using a conditional expression in each case clause. This method is useful when dealing with more complex conditions as well as specific values.
 ```go
 package main
 
@@ -289,13 +269,13 @@ func main() {
 	}
 }
 ```
-- `switch`: switch 키워드 뒤에 아무것도 명시하지 않아도 됩니다. 각 case 절에서 직접 조건을 평가한다.
-- `case x < 5`: x가 5보다 작으면 "x is less than 5"를 출력한다.
-- `case x < 10`: x가 10보다 작고 5 이상이면 "x is less than 10 but greater than or equal to 5"를 출력한다.
-- `default`: x가 10 이상이면 "x is 10 or more"를 출력한다.
+- `switch`: You don't have to specify anything after the switch keyword. Each case section evaluates the condition directly.
+- `case x < 5`: If x is less than 5, output "x is less than 5".
+- `case x < 10`: If x is less than 10 and more than 5, "x is less than 10 but equal to 5" is output.
+- `default`: If x is 10 or more, "xis 10 or more" is output.
 
 ### 4. fallthrough
-fallthrough 키워드는 Go의 switch 문에서 사용되는 특별한 키워드로, 현재 case 절이 실행된 후에 다음 case 절을 강제로 실행하도록 한다. 즉, fallthrough 키워드를 사용하면 조건을 검사하지 않고 다음 case 절의 코드를 실행하게 된다.
+The fallthrough keyword is a special keyword used in Go's switch statement, and after the current case clause is executed, the next case clause is forcibly executed. That is, if the fallthrough keyword is used, the code in the next case clause is executed without checking the condition.
 ```go
 package main
 
@@ -322,12 +302,12 @@ func main() {
 	// Three
 }
 ```
-- `case 1`: x가 1인 경우 "One"을 출력한 후 fallthrough 키워드에 의해 다음 case 절(즉, case 2)을 실행한다.
-- `case 2`: 조건을 검사하지 않고 "Two"를 출력한 후 다시 fallthrough 키워드에 의해 다음 case 절(즉, case 3)을 실행한다.
-- `case 3`: 조건을 검사하지 않고 "Three"를 출력한다.
-- `default`: fallthrough에 의해 다음 case 절이 없을 때 실행된다. 위 코드에서는 실행되지 않는다.
+- If `case 1`: x is 1, output "one" and execute the following case clause (i.e., case 2) by the fallthrough keyword.
+- `case 2`: After outputting "Two" without inspecting the condition, execute the following case clause (i.e., case 3) again by the fallthrough keyword.
+- `Case 3`: Output "Three" without checking the condition.
+- `default`: executed in the absence of the next case clause by fallthrough. It does not run in the code above.
 
-fallthrough는 오직 다음 case 절로만 실행을 강제로 넘길 수 있다. 즉, 현재 case 절의 끝에만 사용될 수 있으며, 다중 fallthrough는 허용되지 않는다. 이를 사용할 경우, 다음 case 절의 조건은 검사되지 않으므로 논리적 오류를 방지하기 위해 신중하게 사용해야 한다.
+Fallthrough can only force execution to the following case clause. That is, it can only be used at the end of the current case clause, and multiple fallthrough is not allowed. When using this, the conditions in the next case clause are not inspected and must be used carefully to prevent logical errors.
 
 
 ## Resources 
