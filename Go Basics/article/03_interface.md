@@ -1,28 +1,22 @@
 # 003. Go Interface
-> 이 아티클에서는 인터페이스의 개념과 이를 통한 다형성 개념을 설명한다. 인터페이스를 사용하여 다양한 타입의 객체를 동일한 방법으로 처리하는 방법을 학습하고, 이를 통해 코드의 유연성과 확장성을 높이는 방법을 실습한다.
+> In this article, we explain the concept of interface and the concept of polymorphism through it. Learn how to use the interface to process various types of objects in the same way, and through this, practice how to increase the flexibility and scalability of code.
 
-## 목차
-0. Interface란 무엇인가?
-1. Interface와 polymorphism(다형성)
-2. Empty Interface
-
-
-## 0. Interface란 무엇인가?
-Interface(이하 인터페이스)는 메서드 시그니처의 집합을 정의하며, 어떤 타입이 해당 인터페이스를 구현하는지 여부는 해당 타입이 인터페이스의 모든 메서드를 구현했는지에 따라 결정된다. 인터페이스 특징은 다음과 같다:
-- 암시적 구현: type은 메서드를 구현함으로써 인터페이스를 자동으로 충족한다.
-- 다형성: 인터페이스는 함수가 필요한 메서드를 구현하기만 하면 다른 타입을 받아들이고 반환할 수 있게 해준다.
+## 0. What is an interface?
+An interface (hereinafter referred to as an interface) defines a set of method signatures, and which type implements that interface depends on whether that type implements all the methods of the interface. Interface features are as follows:
+- Implicit implementation: type automatically meets the interface by implementing the method.
+- Polymorphism: The interface allows the function to accept and return other types as long as it implements the method it needs.
 
 
-이러한 유연성과 단순성 덕분에 Go의 인터페이스 시스템은 강력하고 사용하기 쉬우며, 다형성과 분리를 통해 깔끔하고 유지 관리가 용이한 코드를 만들 수 있다.
+Thanks to this flexibility and simplicity, Go's interface system is powerful, easy to use, and polymorphism and separation can create clean, easy-to-maintain code.
 
-## 1. Interface와 polymorphism(다형성)
-다형성(Polymorphism)은 객체 지향 프로그래밍 및 함수형 프로그래밍에서 중요한 개념으로, 여러 다른 데이터 타입들을 동일한 방식으로 다룰 수 있게 하는 기능을 의미한다. 다형성은 코드를 더 유연하고 재사용 가능하게 만들어 준다. 이러한 기능은 인터페이스를 활용하여 구현할 수 있다.
-> 이는 실습을 통해 코드를 직접 작성해보면서 더 자세히 알아보도록 하자.
+## 1. Interface and polymorphism
+Polymorphism is an important concept in object-oriented programming and functional programming, and refers to a function that allows several different data types to be handled in the same way. Polymorphism makes code more flexible and reusable. These functions may be implemented using interfaces.
+> Let's learn more about this by writing the code ourselves through the practice.
 
 ## 2. Empty Interface
-empty interface(빈 인터페이스)는 어떠한 타입도 담을 수 있는 컨테이너이다. 이를 사용하면 어떠한 타입도 변수에 할당할 수 있으므로, 일반적으로 제네릭, 임의의 데이터 저장, 다양한 타입을 처리해야 할 때 유용하다. 빈 인터페이스는 매우 유연하지만, 사용하는 곳에서는 해당 값의 타입을 알 수 없기 때문에, 값을 사용할 때 type assertion이나 type switch를 통해 원래의 타입을 확인해야 한다. 
+An empty interface is a container that can hold any type. This allows you to assign any type to a variable, so it is generally useful when you have to deal with generics, arbitrary data storage, and various types. The empty interface is very flexible, but since the type of the value cannot be known where you use it, you should check the original type through type assistance or type switch when using the value.
 
-아래 예제는 빈 인터페이스를 사용하여 다양한 타입의 값을 저장하고, type switch를 사용하여 해당 값의 타입을 식별하는 방법을 보여준다:
+The following example shows how to use an empty interface to store different types of values, and to identify the type of values using a type switch:
 ```go
 package main
 
@@ -30,7 +24,7 @@ import (
 	"fmt"
 )
 
-// 정의된 타입 구조체
+// Defined type struct
 type Person struct {
 	Name string
 	Age  int
@@ -41,7 +35,7 @@ type Animal struct {
 	Age     int
 }
 
-// 입력된 값을 구조체와 비교하는 함수
+// function that compares the entered value with the struct
 func compareStructs(i interface{}) {
 	switch v := i.(type) {
 	case Person:
@@ -54,18 +48,18 @@ func compareStructs(i interface{}) {
 }
 
 func main() {
-	// 다양한 타입의 값을 담을 수 있는 빈 인터페이스 슬라이스
+	// Empty interfact slide that can contain diverse type value
 	var i interface{}
 
-	// Person 구조체와 비교
+	// Compare with Person struct
 	i = Person{Name: "Alice", Age: 30}
 	compareStructs(i) // Value is a Person: {Name: Alice Age: 30}
 
-	// Animal 구조체와 비교
+	// Compare with Animal struct
 	i = Animal{Species: "Dog", Age: 5}
 	compareStructs(i) // Value is an Animal: {Species: Dog Age: 5}
 
-	// 기타 타입과 비교
+	// Compare with other types 
 	i = "Hello"
 	compareStructs(i) // Unknown type: string
 }
