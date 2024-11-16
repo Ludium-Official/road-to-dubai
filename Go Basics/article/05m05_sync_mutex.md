@@ -1,26 +1,20 @@
-# 05m05. sync 패키지 사용해보기 - Mutex
+# 05-05. Try the sync package - Mutex
 
-## 목차
-0. sync 패키지 사용해보기 - Mutex
-1. 기본 설정하기
-2. 코드 작성하기
-3. Mutex 실행화면 제출 예시
+## 0. Try the sync package - Mutex
+Mutex controls simultaneous access by protecting critical areas. In this practice, let's use 'Mutex' using the 'sync' package in the Go language.
 
-## 0. sync 패키지 사용해보기 - Mutex
-Mutex는 임계 구역을 보호하여 동시 접근을 제어한다. 이번 실습에서는 Go 언어의 `sync` 패키지를 사용하여 `Mutex`를 사용해보자.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# mutex 디렉토리 생성
+# Create mutex directory
 $ mkdir mutex && cd mutex
 
-# mutex go module 생성 
+# Create mutex go module
 $ go mod init mutex
 ```
 
-## 2. 코드 작성하기
-전체 코드는 다음과 같다: 
+## 2. Creating code
+The full code is as follows:
 ```go
 package main
 
@@ -62,10 +56,10 @@ func main() {
 	fmt.Println(c.Value("somekey")) // 1000
 }
 ```
-> 실습 코드 확인하기: [05_mutex](../code/05_mutex/)
+> Check the practice code: [05_mutex](../code/05_mutex/)
 
-## 3. Mutex 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting Mutex execution screen
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/05_concurrency_mutex_result_example.png" alt="05_concurrency_mutex_result_example" width="600"/>
 </div>

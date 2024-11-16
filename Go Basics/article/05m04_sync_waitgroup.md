@@ -1,26 +1,20 @@
-# 05m04. sync 패키지 사용해보기 - WaitGroup
+# 05-04. Try the sync package - WaitGroup
 
-## 목차
-0. sync 패키지 사용해보기 - WaitGroup
-1. 기본 설정하기
-2. 코드 작성하기
-3. WaitGroup 실행화면 제출 예시
+## Try 0.sync Package - WaitGroup
+Go's sync package provides several tools for simultaneous programming. This includes WaitGroup and Mutex. WaitGroup is used to wait for the completion of several goroutines. In this practice, let's use 'WaitGroup' using the 'sync' package in the Go language.
 
-## 0. sync 패키지 사용해보기 - WaitGroup
-Go의 sync 패키지는 동시성 프로그래밍을 위한 여러 도구를 제공한다. 여기에는 WaitGroup, Mutex 등이 포함된다. WaitGroup은 여러 고루틴의 완료를 기다릴 때 사용한다. 이번 실습에서는 Go 언어의 `sync` 패키지를 사용하여 `WaitGroup`을 사용해보자.
-
-## 1. 기본 설정하기
-기본 설정은 다음과 같다:
+## 1. Setting Preferences
+The default settings are as follows:
 ```sh
-# wait_group 디렉토리 생성
+# Create wait_group directory
 $ mkdir wait_group && cd wait_group
 
-# wait_group go module 생성 
+# Create wait_group go module
 $ go mod init wait_group
 ```
 
-## 2. 코드 작성하기
-전체 코드는 다음과 같다: 
+## 2. Creating code
+The full code is as follows: 
 ```go
 package main
 
@@ -48,10 +42,10 @@ func main() {
 	wg.Wait()
 }
 ```
-> 실습 코드 확인하기: [05_wait_group](../code/05_wait_group/)
+> Check the practice code: [05_wait_group](../code/05_wait_group/)
 
-## 3. WaitGroup 실행화면 제출 예시
-프로그램을 실행하여 출력된 결과는 다음과 같다:
+## 3. Example of submitting a WaitGroup execution screen
+The results printed by running the program are as follows:
 <div style="text-align: center;">
    <img src="../assets/05_concurrency_wait_group_result_example.png" alt="05_concurrency_wait_group_result_example" width="600"/>
 </div>
