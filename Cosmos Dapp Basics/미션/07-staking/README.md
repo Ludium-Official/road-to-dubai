@@ -1,30 +1,29 @@
 # Staking
 
-Cosmos-SDK에 핵심 기능인 staking 관련 기능에 대해 알아본다.
+We will learn about the stacking-related functions that are key to Cosmos-SDK.
 
-## 사전 준비
+## Preparedness
 
-Cosmos-SDK는 dPoS로 체인마다 Validator가 있고 Validator에 위임을 하고 리워드를 받는다. 자세한 내용은 Cosmos Basic에서 확인한다.
+Cosmos-SDK is dpoS, which has validators per chain, delegates to validators, and receives rewards. Details are found in Cosmos Basic.
 
-Validator에 User가 위임하는 걸 Delegate, 위임 철회하는 걸 Undelegate, 위임한 보상을 Reward라고 한다.
+The user's delegation to the Validator is called Delegate, the delegation withdrawal is called Undelegate, and the delegated compensation is called Reward.
 
-아래 미션을 통해 위임/리워드 확인과, 위임/철회/클레임 등 기본 스테이킹 기능을 테스트 해본다.
+Through the mission below, we test basic staking functions such as delegation/reward confirmation and delegation/withdrawal/claim.
 
-참고 - Swagger의 distribution, staking 관련 method 확인
+Note - Check the Swagger distribution, staking-related methods
 https://cosmos-rest.publicnode.com/swagger/
 
-### 데이터 생성
+### Data generation
 
-데이터 조회 전 미리 스테이킹을 하여, 데이터를 생성 해 둔다.
+Staking is performed in advance before data inquiry, and data is generated.
 https://www.mintscan.io/wallet/delegate?chain=cosmoshub-testnet&type=stake
-
 ![m7-1](../../images/m7-1.png)
 
 ![m7-2](../../images/m7-2.png)
 
-## 구현
+## Implementation
 
-### Delegation정보 확인
+### Check Delegation Info
 
 ```ts
 const balances = await fetch(
@@ -34,7 +33,7 @@ const result = await balances.json();
 console.log(result);
 ```
 
-### Reward정보 확인
+### Check Reward Info
 
 ```ts
 const reward = await fetch(
@@ -46,7 +45,7 @@ console.log(result);
 
 ### Delegate
 
-Validator 정보는 Explorer에서 조회 가능하다.
+You can chceck the Validator information on the Explorer.
 https://www.mintscan.io/cosmoshub-testnet/validators/cosmosvaloper1mngvkkhm6g7nqxh4hcv8hjxvgax4m8xujzt964
 
 ```ts
@@ -95,7 +94,7 @@ const res = await client.signAndBroadcast(address, [msg], "auto");
 console.log(res);
 ```
 
-### 미션 적용
+### Apply to Mission
 
 #### **`components/staking.tsx`**
 
@@ -273,9 +272,9 @@ export default function Home() {
 }
 ```
 
-## 결과
+## Result
 
-위 예제로 Delegate, Undelegate, Claim을 하며 미션 프로젝트 및 Mintscan에서 값의 변화를 확인해본다.
+Check to see the changes on Delegate, Undelegate, Claim of a mission project through Mintscan.
 
 ![m7-3](../../images/m7-3.png)
 

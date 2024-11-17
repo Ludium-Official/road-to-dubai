@@ -1,45 +1,45 @@
-# Cosmos-SDK dApp 개발환경
+# Cosmos-SDK dApp Development Environment
 
-미션들을 수행하기 위한 개발 환경을 설정한다.
+Set up a development environment for carrying out missions.
 
 ## Terminal
 
 Warp, iTerm2, Terminal 등
 
-예제에서 입력은 $, 출력은 > 로 한다. #는 주석을 나타낸다.
+In the example, the input is $ and the output is >. # represents an annotation.
 
 ```bash
 $ echo A
 > A
-# 주석
+# Comment
 ```
 
 ## IDE
 
-IDE는 자유롭게 사용하면 되지만, 미션 예제는 VSCode를 기반으로 한다.
+IDE can be used freely, but the mission example is based on VSCode.
 
 VSCode https://code.visualstudio.com/
 
-## nodejs 및 관련 패키지 설치
+## Install nodejs and related packages
 
-dApp 개발 미션은 `nodejs`, `nextjs`, `shadcn/ui`를 프론트앤드 개발에 사용하고, 패키지 매니저는 `yarn`을 사용하기로 한다.
+The dApp development mission uses 'nodejs', 'nextjs', and 'shadcn/ui' for front-end development, and the package manager uses 'yarn'.
 
 ```bash
-#nodejs 설치
+#Install nodejs
 https://nodejs.org/en
 
 $ npm i -g yarn
 ```
 
-## 지갑 설치
+## Wallet Installation
 
-Cosmos에는 [Cosmostation](https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf), [Keplr](https://chromewebstore.google.com/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap) 등 지갑이 있다.
+In Cosmos Ecosystem, there are [Cosmostation](https://chromewebstore.google.com/detail/cosmostation-wallet/fpkhgmpbidmiogeglndfbkegfdlnajnf), [Keplr](https://chromewebstore.google.com/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap), and other wallets.
 
-미션에서는 모든 지갑을 잘 활용할 예정이지만 EVM transaction(미션#9-EVM)까지 지원하는 Cosmostation 지갑을 활용해 예제를 진행할 예정이다.
+In the mission, we will make good use of all wallets, but we will use Cosmostation wallets that support EVM transaction(Mission#9-EVM) to conduct examples.
 
-## 테스트 앱체인 정보
+## Test App Chain Information
 
-미션에서는 Cosmos, Neutron, Osmosis 테스트넷을 사용한다. 각 체인 정보와 Faucet 정보를 통해 미리 준비를 한다.
+For missions, Cosmos, Neutron, and Osmosis test nets are used. Prepare in advance through each chain information and Faucet information.
 
 - Cosmoshub Testnet
   - Explorer
