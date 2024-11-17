@@ -1,10 +1,10 @@
-# Cosmos-SDK dApp 만들기
+# Create Cosmos-SDK dApp
 
-## Cosmos-SDK 기초
+## Cosmos-SDK Foundation
 
-Cosmos-SDK는 쉽게 PoS(Proof-of-Stake) 기반의 앱체인을 제작할 수 있는 툴킷으로, Cosmos-SDK를 사용해 제작된 체인들을 앱체인이라고 주로 말한다.
+Cosmos-SDK is a toolkit that can easily create PoS (Proof-Stake)-based app chains, and chains manufactured using Cosmos-SDK are mainly referred to as app chains.
 
-Cosmos-SDK는 Consensus 레이어는 Tendermint 또는 CombetBFT를 활용하고 개발자는 Application레이어만 신경쓰도록 설계된 SDK 이다.
+Cosmos-SDK is an SDK designed to utilize Tendermint or CombetBFT for Consensus layers and to only care about Application layers for developers.
 
 ```
                   ^  +-------------------------------+  ^
@@ -22,171 +22,171 @@ Build with Cosmos |  |           Consensus           |  |
                   v  +-------------------------------+  v
 ```
 
-### Cosmos-SDK 모듈
+### Cosmos-SDK Module
 
-Cosmos-SDK는 기본 모듈을 제공함으로서 아래와 같은 기능을 기본으로 제공한다.(v0.50.x 기준)
+Cosmos-SDK provides the following functions as a basis by providing a basic module (based on v0.50.x)
 
-- x/auth : 계정과 관련된 기능
+- x/auth : Features related to the account
 
-- x/authz : 다른 계정으로 권한을 위임할 수 있다.(대신 Transaction을 전송 할 수 있다)
+- x/authz : Permission can be delegated to another account (Transaction can be sent instead)
 
-- x/bank : 계정에 토큰 상태를 관리하고, 전송할 수 있다.
+- x/bank : Can manage and transfer token status to account.
 
-- x/staking, Distribution : dPoS 관련된 관련된 기능을 한다.(위임, 클레임)
+- x/staking, Distribution : functions related to dPoS (delegation, claim)
 
-- x/governance : 앱체인 자체적으로 거버넌스를 운영할 수 있는 기능을 제공한다.(제안, 투표, 결과를 통한 상태 변경)
+- x/governance: It provides the ability to operate governance on its own by the app chain (change state through suggestions, votes, and results)
 
-- x/mint : 인플레이션 관련 토큰을 민팅하는 기능
+- x/minint : ability to mint inflation-related tokens
 
-- x/feegrant : 수수료 대납 관련
+- x/feegrant : Regarding the payment of fees
 
-- x/nft : ERC721과 같은 스펙의 NFT 지원
+- x/nft: NFT support with specifications such as ERC721
 
-- 이외에도 체인을 운영하기 위한 Slashing, Genutil, Circuit, Upgrade, Consensus, Evidence, Crisis 등 모듈이 있다.
+- In addition, there are modules such as Slashing, Genutil, Circuit, Upgrade, Consensus, Evidence, and Crisis to operate the chain.
 
-기본 모듈을 아니지만 아래 주요 모듈과 라이브러리들이 존재한다.
+Although it is not a basic module, the main modules and libraries below exist.
 
-- x/liquidstaking : 적용한 앱체인에 대해서 스테이킹한 토큰을 tokenize하여 활용 가능하다.
+- x/liquid staking: It can be used by tokenizing staked tokens for the applied app chain.
 
-- x/ethermint : EVM을 앱체인에서 사용할 수 있도록 지원하는 모듈(SmartContracts)
+- x/etherint : Module that enables EVM to be used on the App Chain (SmartContracts)
 
-- x/wasm : CosmWasm을 앱체인에서 사용할 수 있도록 지원하는 모듈(SmartContracts)
+- x/wasm : A module that supports CosmWasm to be used on the app chain (SmartContracts)
 
-- ibc-go : 앱체인간 토큰, 데이터 전송을 가능하게 하는 모듈
+- ibc-go : inter-app-chain tokens, modules that enable data transmission
 
-- ibc-apps : packet forward middleware라는 ibc로 특정 데이터를 전송하고 수신한 체인에서 자동으로 처리되는 기능이 구현 가능하다.
+- ibc-apps : A function that transmits specific data to ibc called packet forward middleware and automatically processes it in the received chain can be implemented.
 
 ### Cosmos-SDK Smart Contract
 
-초창기 Cosmos-SDK에는 Smart Contract가 없었다. 따라서 새로운 기능을 구현하기 위해서는 기본 제공 모듈이 아닌 Custom Module을 만들어 새로운 State를 관리하고 그에 맞는 기능을 구현하였다.
+In the early days, Cosmos-SDK did not have Smart Contract. Therefore, in order to implement new functions, a custom module was created rather than a basic provision module to manage the new state and implement functions accordingly.
 
-Custom Module을 반영하기 위해선
+To reflect the Custom Module
 
-1. 모듈 개발 및 릴리즈
-2. 거버넌스를 통한 체인 업그레이드(Validator(네트워크 참여자)가 업그레이드를 진행)
+1. Module Development and Release
+2. Chain upgrade with governance (Network participants are upgrading)
 
-위 절차를 진행한다. 위 절차는 체인 코어 개발자, Contribution 등 진입장벽이 높아 Public 하지 않다고 볼 수 있다. 따라서 Smart Contract가 발전하게 된다.
+Proceed with the above procedure. It can be seen that the above procedure is not public due to high barriers to entry such as chain core developers and Contributions. Therefore, Smart Contract develops.
 
-Cosmos-SDK서는 Smart Contract를 지원하기 위한 모듈로는 Cosmwasm, Ethermint이 있다.
+Cosmos-SDK includes Cosmwasm and Etherint as modules to support Smart Contact.
 
 - Cosmwasm https://cosmwasm.com/
 
-  - WebAssembly(Wasm) 기반으로 구축
+- Built on WebAssembly (Wasm)
 
-  - Rust 기반
+- Rust-based
 
-  - Cosmsos-SDK Standard를 제공하여 Wasm 프로그래밍 할 때 앱체인 모듈에 접근할 수 있다.
+- It provides Cosmsos-SDK Standard so that you can access the app chain module when you were programming Wasm.
 
-  - Permission 지정 등 앱체인에 특화된 기능을 많이 가지고 있다.
+- It has many functions specialized in the app chain, such as designating permission.
 
-  - Cosmwasm을 활요하는 주요 체인
+- Cosmwasm's main chain
 
-    - Neutron, Juno, Osmosis, Stargaze ...
+- Neutron, Juno, Osmosis, Stargaze ...
 
 - Ethermint https://github.com/evmos/ethermint
 
-  - Ethereum Virtual Machine(EVM)과 호환
+- Ethereum Virtual Machine(EVM)과 호환
 
-  - 다른 체인에서 활용하는 EVM Smart Contract를 가져와 바로 활용할 수 있다.
+- EVM Smart Contracts used by other chains can be imported and used immediately.
 
-  - 주로 EVM 주소를 활용하며, Metamask에 EVM용 RPC를 제공하면 EVM 체인과 같은 사용성을 가질 수 있다.
+- It mainly utilizes EVM addresses, and providing an RPC for EVM to Metamask can have the same usability as EVM chains.
 
-  - Precompile해 둔 contract를 바탕으로 앱체인의 네이티브 기능도 사용할 수 있다.
+- The native function of the app chain can also be used based on the precompiled contact.
 
-  - Ethermint를 활용하는 주요 체인
+- Key Chain Utilizing Ethermint
 
-    - Kava, Evmos, Canto ...
+- Kava, Evmos, Canto ...
 
-### Cosmos-SDK 상태 조회
+### Cosmos-SDK status inquiry
 
-Cosmos-SDK는 상태 값을 조회할 수 있도록 REST API / gRPC 방식 모두 제공한다.
+Cosmos-SDK provides both REST API and gRPC methods so that status values can be inquired.
 
-- 실제 노드를 운영하지 않는 프로젝트에선, Public Endpoint를 찾거나, API 서비스를 찾아 사용하게 된다.
+- In projects that do not operate actual nodes, public endpoints are found or API services are found and used.
 
-- Production 레벨에서는 API 서비스 이용 또는 직접 노드 운영해야 프로젝트의 안정성을 줄 수 있다.
+- At the production level, the stability of the project can be given only when API services are used or nodes are operated directly.
 
-- 미션을 위해서는 cosmos-kit의 훅을 통해 제공되는 public endpoint를 사용한다.
+- For the mission, we use public endpoints provided through the hook of the cosmos-kit.
 
-Cosmos-SDK에서 Amino, Direct, Text 방식으로 Message Sign을 제공한다. 각 방식은 서명 데이터를 직렬화(인코딩)하는 방법이 다르다.
+Cosmos-SDK provides Message Sign through Amino, Direct, and Text methods. Each method has a different method of serializing (encoding) signature data.
 
-- Amino : Cosmos SDK의 초기 버전에서 사용된 직렬화 방식, 구조화된 데이터를 사용
+- Amino : Serialization method used in earlier versions of Cosmos SDK, using structured data
 
-- Direct 방식 : Protobuf를 통해 직렬화, 효율적 / 최적화된 형식, 권장
+- Direct method: Serialized, efficient/optimized format, recommended with Protobuf
 
-- Text 방식 : Human Readable한 형식으로 직렬화(JSON 또는 YAML), 보안성과 성능 측면에서 바이너리 직렬화 방식보다는 비효율
+- Text method: human readable serialization (JSON or YAML), inefficient than binary serialization in terms of security and performance
 
-| 방식   | 직렬화 방식         | 주요 용도                                     | 장단점                                     |
+| Method   | Serialization Method    | Main Purpose                               |    Pros/Cons                               |
 | ------ | ------------------- | --------------------------------------------- | ------------------------------------------ |
-| Amino  | 바이너리/텍스트     | 초기 Cosmos SDK 사용                          | Protobuf로 대체 중, 새로운 앱에서는 비권장 |
-| Direct | Protobuf (바이너리) | 최신 Cosmos SDK 사용                          | 효율적이고 최적화된 바이너리 형식          |
-| Text   | JSON/YAML (텍스트)  | 디버깅, 로깅, 사람이 읽을 수 있는 데이터 확인 | 사람이 읽기 쉽지만 덜 효율적               |
+| Amino  | Binary/Test     | Used for early Cosmos SDK 사용                          | Substituted to Protobuf, not recommened for the new application |
+| Direct | Protobuf (Birnary) | Used for the recent Cosmos SDK                       | Efficient and optimized binary method   |
+| Text   | JSON/YAML (Text)  | Debugging, logging, human readable data | Human redable but less efficient        |
 
-## dApp 개발을 위한 기초 지식
+## Basic knowledge for dApp development
 
-- dApp은 Blockchain Network(앱체인)을 실제 유저가 활용하는 애플리케이션(웹 / 모바일 웹 / 모바일 앱)으로, 블록체인에 있는 상태 값을 조회 또는 저장하여 활용하는 어플리케이션으로 볼 수 있다. 모바일 지갑, 익스텐션 지갑, Explorer 등 체인의 정보를 활용하는 것을 모두 dApp으로 볼 수 있다.
+- dApp is an application (web/mobile web/mobile app) that uses the Blockchain Network (appchain) by real users, and can be viewed as an application that inquires or stores status values in the blockchain. All of the information on the chain, such as mobile wallets, extension wallets, and explorers, can be viewed as dApps.
 
-- 앱 체인에서 토큰 전송을 예를 들면
+- For example, sending tokens from the app chain
 
   ```
       ^  +-------------------------------+  ^
       |  | Blockchain                    |  |
       |  |                               |  |
-      |  |   auth                        |  |  계정의 사인 / 검증을 한다.
-      |  |   bank                        |  |  계정의 토큰 보유 상태를 관리한다.
+      |  |   auth                        |  |  Sing / verify an account.
+      |  |   bank                        |  |  Manage token sttus in an account.
       |  |                               |  |
       v  +-------------------------------+  v
 
       ^  +-------------------------------+  ^
       |  | dApp (UI)                     |  |
       |  |                               |  |
-      |  |   address                     |  |  연결된 지갑을 통해 현재 주소를 가져온다.
-      |  |   balance                     |  |  체인에 있는 토큰 상태를 조회한다.
-      |  |   send                        |  |  연결된 지갑에 토큰 전송 메시지를 전달한다.
+      |  |   address                     |  |  Call the adress through connected wallet.
+      |  |   balance                     |  |  Query toekn balance on the chain.
+      |  |   send                        |  |  Send token sending message to the connected wallet.
       |  |                               |  |
       v  +-------------------------------+  v
 
       ^  +-------------------------------+  ^
       |  | Wallet                        |  |
       |  |                               |  |
-      |  |   account                     |  |  계정을 관리한다(개인키 니모닉 등)
-      |  |   balance                     |  |  체인에 있는 토큰 상태를 조회한다.
-      |  |   sign                        |  |  dApp에서 요청받은 메시지를 키를 이용해 사인 및 전송한다.
+      |  |   account                     |  |  Manage account (Private key, Mnmonic, etc)
+      |  |   balance                     |  |  Query token balacne on the chain.
+      |  |   sign                        |  |  Sign and send message requested by dApp by using key.
       |  |                               |  |
       v  +-------------------------------+  v
   ```
 
-## Cosmos 생태계에서 지원을 하는 dApp 개발을 위한 툴 킷
+## Toolkit for developing dApps supported by Cosmos ecosystem
 
 - CosmJS https://github.com/cosmos/cosmjs
 
-  - Cosmos-SDK의 대표 typescript/javascript 라이브러리로 앱체인과 통신합니다.
+- Communicate with the app chain with Cosmos-SDK's representative typescript/javascript library.
 
-  - CosmJS 라이브러리에서 하는 일
+- What you do in CosmJS library
 
-    - 니모닉/개인키를 활용해 Message를 Sign & Broadcast합니다.
+- Sign & Broadcast the Message using the mnemonic/private key.
 
-    - Cosmostation, Keplr과 같은 지갑의 도움을 받아 사용자 서명을 요청합니다.(OfflineSigner)
+- Request user signatures with the help of wallets such as Cosmostation and Kipl. (OfflineSigner)
 
-    - 블록체인 네트워크에 State 정보를 Query 할 수 있습니다.
+- You can query the state information to the blockchain network.
 
-    - Cosmos SDK 모듈에서 발생하는 이벤트를 수신합니다.
+- Receive events that occur on the Cosmos SDK module.
 
 - cosmos-kit https://cosmology.zone/products/cosmos-kit
 
-  - cosmos-kit은 Cosmos생태계의 지갑 Cosmostation, Keplr, Leap 등 다양한 지갑연결 및 CosmJS를 활용하여 Cosmos-SDK를 활용한 앱체인들과 쉽게 통신할 수 있다.
+- Cosmos-kit can easily communicate with app chains using Cosmos-SDK by utilizing Cosmos-SDK and various wallet connections such as Cosmos Ecosystem Cosmostation, Keplr, and Leap.
 
-  - create-cosmos-app을 활용해서 다양한 예제를 제공하고 있다.
+- Various examples are provided using create-cosmos-app.
 
 - Mintscan https://mintscan.io
 
-  - 코스모스 생태계의 대표적인 Explorer
+- Representative Explorer of the Cosmos Ecosystem
 
-  - 메인넷, 테스트넷 등 다양한 체인을 지원하고 있으며 각 체인별 정보와 통계 뿐만 아니라 Cosmos 생태계 정보를 한번에 볼 수 있다.
+- It supports various chains such as mainnet and testnet, and can see not only information and statistics for each chain, but also Cosmos ecosystem information at once.
 
-  - 지갑이 내장되어 있어 x/bank, x/staking, x/governance 등 Cosmos 주요 기능을 바로 활용 가능하다.
+- It has a built-in wallet, so you can immediately utilize Cosmos major functions such as x/bank, x/staking, and x/governance.
 
 - Ignite https://docs.ignite.com/
 
-  - Cosmos-SDK의 scaffold 기능을 하는 cli
+- cli functioning as a scaffold of Cosmos-SDK
 
-  - 체인 생성, 모듈 생성, 릴레이어 등 생성을 쉽게 한다.
+- It facilitates chain generation, module generation, relayer, etc.

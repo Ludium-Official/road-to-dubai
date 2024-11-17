@@ -1,38 +1,37 @@
-# cosmos-kit 템플릿 프로젝트
+# cosmos-kit template project
 
-cosmos-kit에서 제공하는 여러 템플릿 프로젝트를 생성하고 이해한다.
+Create and understand several template projects provided by cosmos-kit.
 
-## 사전 준비
+## Prepare in Adfacne
 
 ### cosmos-kit?
 
-cosmos-kit은 Cosmos생태계의 지갑 Cosmostation, Keplr, Leap 등 다양한 지갑연결 및 CosmJS를 활용하여 Cosmos-SDK를 활용한 앱체인들과 쉽게 통신할 수 있다.
+Cosmos-kit can easily communicate with app chains using Cosmos-SDK by utilizing Cosmos-SDK and various wallet connections such as Cosmos Ecosystem Cosmostation, Keplr, and Leap.
 
-제공되는 예제로는 Cosmos-SDK에서 제공되는 기본 모듈 외에도 대표 NFT Marketplace, DEX인 Stargaze, Osmosis 컨트랙트를 활용하는 예제들도 있다.
+In addition to the basic modules provided by Cosmos-SDK, examples also utilize the representative NFT Marketplace, DEX Stargaze, and Osmosis Contract.
 
-## 구현
+## Implementation
 
-### nodejs 설치 확인
+### Verifying nodejs Installation
 
 ```
 $ node -v
 > v20.11.1
-# 버전은 맞출 필요는 없지만 지원이 안되는 경우 nvm을 사용하여 nodejs 버전을 변경하여 사용하도록 한다.
+# If you don't need to match the version, but you can't support it, try changing the nodejs version using nvm.
 ```
 
-### cosmos-kit 설치
-
+### Install cosmos-kit
 ```
 $ npm i -g create-cosmos-app
 > ... added 79 packages in 8s ...
 
 
-# 설치 후 cca 명령어를 이용해 cosmos-kit 관련 작업을 진행한다.
+# After installation, use cca command to perform cosmos-kit related tasks.
 $ cca -v
 > 2.3.3
 ```
 
-### cosmos-kit 프로젝트 생성
+### Create cosmos-kit project
 
 ```
 # `cca` 또는 `create-cosmos-app`을 통해 프로젝트 생성을 한다.
