@@ -1,14 +1,13 @@
-# cosmos-kit을 연동
+# interlock cosmos-kit
 
-cosmos-kit을 템플릿을 사용하지 않고 신규 nextjs 프로젝트 생성 후 연동한다.
+Create a new nextjs project and link cosmos-kit without using a template.
 
 
-## 구현
+## Implementation
 
-아래 nextjs 프로젝트를 생성해서 빈 프로젝트부터 필요한 라이브러리 및 cosmos-kit을 추가한다.
+Create the nextjs project below to add the library and cosmos-kit you need from the blank project.
 
-### nextjs 프로젝트 생성
-
+### Create nextjs project
 ```bash
 $ npx create-next-app@latest my-app --typescript --tailwind --eslint
 $ ✔ Would you like to use `src/` directory? … No
@@ -18,7 +17,7 @@ $ ✔ Would you like to customize the default import alias (@/*)? … No
 
 ### shadcn/ui
 
-UI를 쉽게 적용하기 위한 라이브러리
+Library for easy UI application
 https://ui.shadcn.com/docs/installation
 
 ```bash
@@ -33,31 +32,30 @@ $ ✔ Would you like to use CSS variables for colors? … no / yes
 > Success! Project initialization completed. You may now add components.
 ```
 
-### nextjs + shadcn/ui 프로젝트 실행
+### Run the nextjs + shadcn/ui project
 
 ```bash
 $ yarn
 $ yarn dev
 ```
 
-여기까지 잘 되었다면, 기본 nextjs 프로젝트에 shadcn/ui 테마가 적용된 화면이 나타난다.
-
+If it's worked out so far, the default nextjs project shows a screen with the shadcn/ui theme.
 ![m3-1](../../images/m3-1.png)
 
-### cosmos-kit 연동
+### Integration to cosmos-kit
 
 https://docs.cosmology.zone/cosmos-kit/get-started
 
 ```bash
 $ yarn add @cosmos-kit/react @cosmos-kit/cosmostation chain-registry
-# @cosmos-kit/react react/nextjs용 라이브러리
-# @cosmos-kit/cosmostation 지갑 지원을 위한 라이브러리
-# chain-registry 앱체인 정보를 가져오기 위한 라이브러리
+# Library for @cosmos-kit/react react/nextjs
+# @cosmos-kit/cosmostation Library for wallet support
+# Library for importing chain-registry appchain information
 ```
 
-연동을 위해 `provider.tsx` 클래스를 만들고, cosmos-kit을 위한 ChainProvider를 연결해준다.
+Create a 'provider.tsx' class for linkage and connect ChainProvider for cosmos-kit.
 
-#### **`app/provider.tsx 추가`**
+#### **`Add app/provider.tsx`**
 
 ```ts
 "use client";
@@ -76,13 +74,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-#### **`app/layout.tsx 수정`**
+#### **`Edit app/layout.tsx`**
 
 ```ts
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-//코드 추가
+//Add Code
 import Providers from "./provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -107,9 +105,9 @@ export default function RootLayout({
 }
 ```
 
-### 지갑 연결 기능 구현
+### Implementing Wallet Connectivity
 
-shadcn/ui 버튼 모듈 추가
+Add shadcn/ui button module
 
 ```bash
 npx shadcn-ui@latest add button
@@ -139,11 +137,11 @@ export default function Wallet() {
 }
 ```
 
-useChain 훅을 이용해 cosmoshubtestnet 체인과 지갑을 연결하게 되며, 만약 해당 체인 정보가 없다면 chain-registry에 있는 정보를 가지고 지갑에 앱 체인 정보를 자동으로 추가해 준다.
+The cosmoshubtestnet chain and wallet are connected using the useChain hook, and if there is no chain information, the app chain information is automatically added to the wallet with the information in the chain-registry.
 
-지갑 연결 상태, 체인 정보, 지갑 주소, 연결 팝업을 활용할 수 있다.
+Wallet connection status, chain information, wallet address, and connection pop-up are available.
 
-#### **`app/page.tsx 수정`**
+#### **`Edit app/page.tsx`**
 
 ```ts
 import Wallet from "@/components/wallet";
@@ -160,11 +158,11 @@ export default function Home() {
 }
 ```
 
-위 코드를 통해 지갑 연결이 정상적으로 되는지 확인한다.
+Check if the wallet connection is normal through the code above.
 
-## 결과
+## Result
 
-지갑 연결 및 주소를 확인한다.
+Check the wallet connection and address.
 
 ![m3-2](../../images/m3-2.png)
 

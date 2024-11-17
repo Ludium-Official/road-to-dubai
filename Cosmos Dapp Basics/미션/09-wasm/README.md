@@ -1,31 +1,31 @@
 # Cosmwasm
 
-Cosmwasm은 Cosmos-SDK에서 Smart Contracts를 사용하기 위한 프로젝트 중 하나이다.
+Cosmwasm is one of the projects to use Smart Contracts in Cosmos-SDK.
 
-`x/wasm` 모듈을 통해 코드, 컨트랙, 컨트랙 state 관리, wasmvm 등 기능을 한다.
+It functions as code, contract, contract state management, and wasmvm through the 'x/wasm' module.
 
-이 미션을 통해 Cosmwasm 코드 / 컨트랙트 구조와 쿼리, 실행을 알아본다.
+Through this mission, we will learn Cosmwasm code / contract structure, query, and execution.
 
-## 사전 준비
+## Prepare In Advance
 
-Cosmos-SDK의 Cosmwasm은 evm의 스마트 컨트랙트와 약간의 다른점이 있다.
+Cosmos-SDK's Cosmwasm is a bit different from EVM's smart contract.
 
-[Code](https://www.mintscan.io/neutron/wasm?sector=code)와 [Contract](https://www.mintscan.io/neutron/wasm/code/491)가 나누어져 있는데, 코드를 먼저 배포하고 해당 코드를 initiate하여 contract를 배포할 수 있는 구조이다.
+[Code](https://www.mintscan.io/neutron/wasm?sector=code) and [Contract](https://www.mintscan.io/neutron/wasm/code/491) are divided, and it is a structure that allows you to distribute the code first and initiate the code to distribute the contact.
 
-Cosmwasm 코드 및 컨트랙트 업로드, initiate를 권한을 통해 관리할 수 있다.
+Cosmwasm code, contract upload, initiate can be managed through permission.
 
-- Code 업로드를 거버넌스를 통해서만 올리게 할 수 있다.
-- Code를 특정한 사람만 Initiate 할 수 있다.
-- Public하게 Code / Contract를 생성 할 수 있다.
+- You can only upload code uploads through governance.
+- Only those who specify the code can initiate.
+- You can generate Code/Contact publicly.
 
-우리는 Public Contract 체인인 Neutron Testnet 기반으로 미션을 진행한다.
+We conduct missions based on the Public Contact chain, Neutron Testnet.
 
-Cosmwasm에서 컨트랙을 개발하는 것을 배운 상태이므로,
-이미 구현된 code를 배포, initiate, query, execute 하는 것을 배워보도록 한다.
+I've learned to develop a contract at Cosmwasm,
+Learn to distribute, initiate, query, and execute the already implemented code.
 
-### Neutron signing option 추가
+### Add Neutron signing option
 
-Cosmwasm 미션은 Neutron Testnet에서 진행하므로, Neutron 테스트넷 관련 signing 옵션을 추가해둔다.
+Cosmwasm mission is carried out in the Neutron Testnet, so add the signing option related to the Neutron testnet.
 
 #### **`app/providers.tsx`**
 
@@ -70,20 +70,18 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-## 구현
+## Implementation
 
-Cosmoshub는 Cosmwasm이 지원되지 않는 체인이기 때문에, Neutron 체인에서 테스트 한다.
+Cosmoshub is a chain not supported by Cosmwasm, so it is tested on the Neutron chain.
 
-기존에 getSigningClient 였던 client 훅도 wasm 전용인 getSigningCosmWasmClient로 변경하여 client를 생성한다.
-
+The client hook, which was previously the getSigningClient, is also changed to getSigningCosmWasmClient, which is exclusive to wasm, to create a client.
 ```ts
 const { address, getSigningCosmWasmClient } = useChain("neutrontestnet");
 ```
 
 ### Code Upload
 
-Cosmwasm의 cw-plus(https://github.com/CosmWasm/cw-plus/)에 ERC20과 같은 프로젝트인 cw20-base 컨트랙트를 배포 해본다. [cw20_base.wasm](../../files/cw20_base.wasm)
-
+Distribute the cw20-base contract, a project like ERC20, to Cosmwasm's cw-plus (https://github.com/CosmWasm/cw-plus/). [See cw20_base.wasm](..//files/cw20_base.wasm)
 ```ts
 const upload = async (uploadCode: Uint8Array) => {
   if (!address || !uploadCode) {
@@ -112,13 +110,12 @@ const upload = async (uploadCode: Uint8Array) => {
 
 ### Initiate
 
-업로드 된 코드의 아이디를 확인한다.
+Check the ID of the uploaded code.
 
 https://neutron.celat.one/pion-1/codes/5541/schema
 
-해당 Code의 Schema 정보를 확인하여 initiate 한다.
-(Schema 관련 정보는 코슴와즘 관련 내용 참고)
-
+Check the schema information of the corresponding code and initiate it.
+(For information on Schema, please refer to Cosmwism.)
 ```ts
 const client = await getSigningCosmWasmClient();
 const init = await client.instantiate(
@@ -137,16 +134,15 @@ console.log(init);
 const contractAddress = init.contractAddress;
 ```
 
-위 initiate를 통해 cw20 토큰 contract가 생성되고, initial_balances에 있는 정보로 토큰이 할당 되게 된다.
+Through the above initiation, the cw20 token contract is generated, and the token is assigned to the information in the initial_balances.
 
 ### Query
 
-생성된 contractAddress정보를 통해 query, execute를 해본다.
+Through the generated contactAddress information, query and execute are performed.
 
-contract에 쿼리를 하기 위해선 Query를 위한 schema 정보를 확인하여 해당 스펙에 맞게 구조를 만들어 호출하여 조회한다.
+In order to query contact, check the schema information for Query, create a structure according to the specifications, call, and inquire.
 
-아래는 cw20의 토큰 밸런스를 조회하는 `{ balance: { address: address } }` smart 쿼리를 호출 하는 예제이다.
-
+Below is an example of calling a `{balance:{address:address}}` smart query that inquires about the token balance of cw20.
 ```ts
 const client = await getSigningCosmWasmClient();
 const query = await client.queryContractSmart(contractAddress, {
@@ -157,10 +153,9 @@ console.log(query);
 
 ### Execute
 
-Execute는 이더리움의 call과 같은 기능으로 트랜잭션을 컨트랙으로 보내는 기능이다.
+Execute is a function that sends transactions into a contract with the same function as Ethereum's call.
 
-아래는 cw20 100 토큰을 전송하는 예제로 다른 execute를 하기 위해서는 schema 정보를 확인한다.
-
+Below is an example of transmitting the cw20 100 token, and check the schema information for other executions.
 ```ts
 const client = await getSigningCosmWasmClient();
 const execute = await client.execute(
@@ -172,9 +167,9 @@ const execute = await client.execute(
 console.log(execute);
 ```
 
-### 미션 적용
+### Apply to Mission
 
-위 내용들을 구현한 예제를 통해 Cosmwasm 구동 방식을 이해해본다.
+Understand the Cosmwasm driving method through an example implementing the above contents.
 
 #### **`components/wasm.tsx`**
 
@@ -304,6 +299,6 @@ export default function Home() {
 }
 ```
 
-## 결과
+## Result
 
 ![m9-1](../../images/m9-1.png)

@@ -1,15 +1,14 @@
 # Governance
 
-거버넌스는 현재 진행중인 현재 진행중인 Proposal 목록, 그리고 투표하는 Msg를 생성 및 전송하는 것을 구현한다.
+Governance implements the creation and transmission of a list of currently ongoing proposals and Msg voting.
 
-현재는 cosmoshub testnet에 진행중인 proposal이 없어서 예제 코드를 통해서만 알아본다.
+Currently, there is no progress proposal on cosmoshub testnet, so I only look into it through the example code.
 
-## 구현
+## Implementation
 
-### Proposal 목록 조회(REST API)
+### Proposal List Inquiry (REST API)
 
-최근 3개의 제안을 조회한다. 파라미터를 통해 상태별 등 조회 조건을 선택할 수 있다(swagger 참고)
-
+Check three recent proposals. Check conditions such as status can be selected through parameters (see swagger)
 ```ts
 const { getRestEndpoint } = useChain("cosmoshubtestnet");
 const res = await fetch(
@@ -18,7 +17,7 @@ const res = await fetch(
 const result = await res.json();
 ```
 
-### 투표 기능 구현
+### Voting Functionality
 
 ```ts
 const msg: MsgVoteEncodeObject = {
@@ -140,8 +139,8 @@ export default function Home() {
 }
 ```
 
-## 결과
+## Result
 
-최신 Proposal 3개와 투표를 할 수 있는 기능 구현이 완료되었다.
+Three most recent Proposal and voting functionality is applied to the project.
 
 ![m8-1](../../images/m8-1.png)

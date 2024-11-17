@@ -1,16 +1,16 @@
 # Balance
 
-Cosmos-SDK를 이용한 앱체인들의 State 조회를 하는 여러 방법들을 활용하여 연결된 지갑 Account의 Token Balance를 조회한다.
+The Token Balance of the connected wallet account is searched using various methods of checking the state of app chains using Cosmos-SDK.
 
-## 사전 준비
+## Preparedness
 
-앱 체인의 데이터를 조회하는 방법은 `RPC Endpoint 호출` `REST Endpoint 호출` `Cosmjs 라이브러리 활용` 등 방법이 있다.
+There are methods of inquiring the data of the app chain, such as 'RPC Endpoint Call', 'REST Endpoint Call', and 'Use Cosmjs Library'.
 
 ### cosmos-kit endpoint hooks
 
-cosmos-kit에서는 https://github.com/cosmology-tech/chain-registry/tree/main/v2/chain-registry repository에 등록된 정보를 호출해가며 정상 응답이 오는 endpoint를 찾아 활용하는 기능을 제공한다.
+Cosmos-kit provides a function that calls information registered in the https://github.com/cosmology-tech/chain-registry/tree/main/v2/chain-registry repository and finds and utilizes endpoints with normal responses.
 
-미션에서는 Cosmjs와 REST API를 활용한 기능으로도 충분히 구현 가능하기 때문에, RPC 데이터 조회는 생략한다. 관련 코드 및 예제를 보고 싶으면 아래 RPC Endpoint를 찾아주는 hook과 Repository를 참고한다.
+In the mission, RPC data inquiry is omitted because it can be sufficiently implemented with functions using Cosmjs and REST APIs. For related codes and examples, refer to the hook and repository below for RPC Endpoint.
 
 ```ts
 import { useChain } from "@cosmos-kit/react";
@@ -24,7 +24,7 @@ https://github.com/cosmology-tech/interchain
 
 ### cosmos-kit + cosmjs
 
-cosmjs에서는 state 조회를 위해 client를 통해 다음과 같은 method를 제공한다.
+Cosmjs provides the following method through the client for state inquiry.
 
 `getChainId()`
 `getHeight()`
@@ -37,43 +37,41 @@ cosmjs에서는 state 조회를 위해 client를 통해 다음과 같은 method�
 `getDelegation(delegatorAddress: string, validatorAddress: string)`
 `getTx(id: string)`
 
-## 구현
+## Implementation
 
-### 결과 화면을 위한 shadcn/ui badge 컴퍼넌트 추가
+### Add shadcn/uibadge component for result screen
 ```bash
 npx shadcn-ui@latest add badge
 ```
 
-### cosmos-kit을 통한 데이터 조회
+### Inquire data with cosmos-kit
 
-다음 예제를 통해 cosmoshubtestnet 체인의 현재 지갑에 연결된 address의 모든 Balance를 조회하는 기능을 구현해본다.
+Through the following example, we implement a function to look up all the balances of addresses connected to the current wallet of the cosmoshubtestnet chain.
 
-연결된 지갑의 주소, client를 구하기 위해 `useChain` 훅을 사용한다.
-
+Use the 'useChain' hook to obtain the address and client of the connected wallet.
 ```ts
-//import 및 hook
+//import and hook
 import { useChain } from "@cosmos-kit/react";
 const { address, getStargateClient } = useChain("cosmoshubtestnet");
-//cosmjs clinet 객채 생성 및 balance 조회
+//Create cosmjs clinet object and query balance
 const client = await getStargateClient();
 const result = await client.getAllBalances(address);
 console.log(result);
 ```
 
-### REST API를 통한 데이터 조회
+### Data Inquiry via REST API
 
-Cosmos-SDK는 RPC 통신 외에도 LCD라 불리는 REST API Endpoint도 제공할 수 있다. 노드 구동시 설정에서 제어할 수 있다.(Swagger 포함)
+Cosmos-SDK may provide REST API Endpoint called LCD in addition to RPC communication. It may be controlled in settings when the node is driven (including Swagger)
 
-다음은 Cosmos 체인에서 제공하는 REST API Endpoint를 볼 수 있는 Swagger 이다.
+The following is a Swagger that lets you view REST API Endpoint provided by the Cosmos chain.
 https://cosmos-rest.publicnode.com/swagger/
 
-다른 체인들의 Swagger들을 살펴보면 각 체인마다 Custom Module들에따라 지원되는 REST API 들을 확인할 수 있다.
-
+If you look at the swaggers of other chains, you can check the REST APIs supported by Custom Modules for each chain.
 ```ts
-//import 및 hook
+//import and hook
 import { useChain } from "@cosmos-kit/react";
 const { address, getRestEndpoint } = useChain("cosmoshubtestnet");
-//Balance 조회 REST API 호출
+//Query Balance and call REST API
 const balances = await fetch(
   `${await getRestEndpoint()}/cosmos/bank/v1beta1/balances/${address}`
 );
@@ -81,7 +79,7 @@ const result = await balances.json();
 console.log(result);
 ```
 
-### 미션 적용
+### Apply to Mission
 
 #### **`components/balance.tsx`**
 
@@ -171,9 +169,9 @@ export default function Home() {
 }
 ```
 
-## 결과
+## Result
 ![m4-1](../../images/m4-1.png)
 
-최초에는 위 Balance 부분이 노출되진 않는데, cosmostestnet faucet을 받아 balance가 노출되는 것을 확인한다.
+At first, the upper balance part is not exposed, but the balance is confirmed by receiving the cosmostestnet faucet.
 
-참고. Cosmos-SDK의 decimal은 수정 가능하지만 기본은 6자리이다. (1000000uatom = 1ATOM)
+Note. The decimal of Cosmos-SDK is modifiable, but the default is 6 digits. (1000000uatom = 1ATOM)

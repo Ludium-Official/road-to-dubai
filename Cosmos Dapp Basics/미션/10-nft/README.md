@@ -1,31 +1,29 @@
 # NFT
 
-Cosmwasm 스마트 컨트랙트인 CW721을 활용하여 NFT 민팅, 전송을 구현한다.
+It utilizes CW721, a Cosmwasm smart contract, to implement NFT minting and transfer.
 
-## 사전 준비
+## Prepare in Advance
 
-CW721 컨트랙트를 배포한다.
+Distribute the CW721 contract.
 https://github.com/public-awesome/cw-nfts
 
-### clone 및 build
-
+### clone and build
 ```bash
 git clone https://github.com/public-awesome/cw-nfts.git
 cd cw-nfts
 ./build.sh
 ```
 
-`Is the docker daemon running?` 혹시 도커 관련 오류가 발생한다면 docker를 실행해둔다.
+`Is the docker daemon running?` If a docker-related error occurs, run docker.
 
-컴파일이 완료되면 아래 폴더에 cw721_base.wasm이 생기게 된다.
+When compiling is complete, cw721_base.wasm will appear in the folder below.
 
 ```bash
 cd artifacts
 cw721_base.wasm
 ```
 
-schema를 확인하기 위해선 아래의 명령어를 통해 스키마를 생성하고, schema디렉터리에 생긴 파일들을 확인한다.
-
+In order to check the schema, the schema is generated through the command below, and the files created in the schema directory are checked.
 ```sh
 cd contracts
 cd cw721-base
@@ -33,12 +31,12 @@ cargo schema
 
 cd schema
 
-cat instantiate_msg.json #initiate 하기 위한 struct
-cat query_msg.json #상태 조회 쿼리를 하기 위한 stru
-cat execute_msg.json #상태 변경 하기 위한 struct
+cat instantiate_msg.json #struct to initiate
+cat query_msg.json #struct query the state
+cat execute_msg.json # truct to change the state
 ```
 
-위 contract를 Neutron testnet에 배포한다. (미션#9 참고)
+Deploy the contract on Neutron testnet. (See Mission#9)
 
 ### schema
 
@@ -71,14 +69,13 @@ cat execute_msg.json #상태 변경 하기 위한 struct
 }
 ```
 
-## 구현
+## Implementation
 
-Neutron Testnet에 Code ID `5785`로 cw721을 올려두었다. 직접 올려서 작성된 코드로 하는 것을 권장하지만 예제에서는 `5785`로 진행한다.
+On the Neutron Testnet, cw721 was placed with the code ID '5785'. It is recommended to post it directly and use the code written, but in the example, it proceeds to '5785'.
 
 ### Initiate
 
-위에 `initiate_msg.json` 스키마를 확인하면, properties에 `name(*)`, `symbol(*)`, `minter`, `withdraw_address`가 필요하다. 미션에서는 minter를 현재 지갑주소로 해서 minting을 할 수 있도록 한다.
-
+If you check the `initiate_msg.json` schema above, properties need `name(*)`, `symbol(*)`, `minter`, and `withdraw_address`. In the mission, the minter is used as the current wallet address to be minted.
 ```ts
 const client = await getSigningCosmWasmClient();
 const init = await client.instantiate(
@@ -96,15 +93,14 @@ console.log(init);
 const contractAddress = init.contractAddress;
 ```
 
-위 initiate를 통해 `MY NFT` CW721 컬렉션이 생기게 되며 연결된 지갑을 통해 mint를 할 수 있다.
+Through the above initiation, a collection of 'MY NFT' CW721 will be created, and you can mint through a connected wallet.
 
 ### Mint
 
-생성된 contractAddress정보를 통해 NFT를 minting 해본다.
+Try to mint NFTs through the generated contactAddress information.
 
-mint를 위한 schema 정보를 확인하여 해당 스펙에 맞게 구조를 만들어 호출하여 조회한다.
-
-#### **`execute_msg.json` 중 `mint`**
+Check the schema information for mint, make a structure according to the specifications, call, and inquire.
+#### **`execute_msg.json` in `mint`**
 
 ```json
 {
@@ -146,7 +142,7 @@ mint를 위한 schema 정보를 확인하여 해당 스펙에 맞게 구조를 �
 }
 ```
 
-위 스키마를 바탕으로 execute시 전송할 msg를 생성하여 호출한다.
+Based on the above schema, msg to be transmitted during execution is generated and called.
 
 ```ts
 const client = await getSigningCosmWasmClient();
@@ -159,13 +155,12 @@ const execute = await client.execute(
 console.log(execute);
 ```
 
-### NFT 토큰 정보 조회
+### Look up NFT token information
 
-아래는 CW721의 토큰 ID로 NFT 정보를 조회하는 `{ nft_info: { token_id: "1" } }` smart 쿼리를 호출 하는 예제이다.
+Below is an example of calling a `{nft_info: { token_id: "1''}` smart query that queries NFT information with the token ID of CW721.
 
-아래 스키마 정보를 바탕으로 smart msg를 생성해서 호출하여 contract의 상태 정보를 가져온다.
-
-#### **`query_msg.json` 중 `nft_info`**
+Based on the schema information below, smart msg is generated and called to obtain contact status information.
+#### **`query_msg.json` in `nft_info`**
 
 ```json
 {
@@ -200,10 +195,9 @@ const query = await client.queryContractSmart(contractAddress, {
 console.log(query);
 ```
 
-### NFT 모든 토큰 정보 조회
+### Look up all NFT token information
 
-아래는 CW721의 모든 토큰 ID를 조회하는 `{ all_tokens: {} }` smart 쿼리를 호출 하는 예제이다. 스키마 첨부는 생략한다.
-
+Below is an example of calling the `{all_tokens:{}}` smart query that queries all token IDs of CW721. Schema attachment is omitted.
 ```ts
 const client = await getSigningCosmWasmClient();
 const query = await client.queryContractSmart(contractAddress, {
@@ -212,13 +206,12 @@ const query = await client.queryContractSmart(contractAddress, {
 console.log(query);
 ```
 
-### NFT 전송
+### Send NFTs
 
-NFT를 전송 해본다.
+Try sending NFTs.
 
-를 위한 schema 정보를 확인하여 해당 스펙에 맞게 구조를 만들어 호출하여 조회한다.
-
-#### **`execute_msg.json` 중 `transfer_nft`**
+Check the schema information for, create a structure according to the specifications, call, and inquire.
+#### **`execute_msg.json` in `transfer_nft`**
 
 ```json
 {
@@ -249,7 +242,7 @@ NFT를 전송 해본다.
 },
 ```
 
-위 스키마를 바탕으로 execute시 전송할 msg를 생성하여 호출한다. 이 예제에서는 본인에게 전송하지만, 다른 주소를 입력받아 전송하도록 개선해본다.
+Based on the above schema, msg to be transmitted during execute is created and called. In this example, it is sent to the person, but it is improved to receive and transmit a different address.
 
 ```ts
 const client = await getSigningCosmWasmClient();
@@ -262,10 +255,9 @@ const execute = await client.execute(
 console.log(execute);
 ```
 
-### 미션 적용
+### Apply to Mission
 
-위 내용들을 구현한 예제를 통해 NFT 민팅 및 구동 방식을 이해해본다.
-
+Understand NFT minting and driving methods through examples implementing the above contents.
 #### **`components/nft.tsx`**
 
 ```ts
@@ -402,12 +394,11 @@ export default function Home() {
 }
 ```
 
-## 결과
+## Result
 
 ![m10-1](../../images/m10-1.png)
 
 ![m10-2](../../images/m10-2.png)
 
-전송, 민팅된 내용을 Neutron testnet 전용 explorer인 celaton에서 조회한다.
-
+Inquire transmitted and minted content on Celaton, an explorer dedicated to Netron testnet.
 https://neutron.celat.one/pion-1/accounts/{address}
