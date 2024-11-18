@@ -1,37 +1,19 @@
-# 코스모스 디앱 만들기
+# Create Cosmos DApp
 
-## 개요
+## Overview
 
-- 코스모스 디앱 만들기 모듈은 코스모스 디앱 만들기 모듈은 CosmJS를 활용하여 스마트 컨트랙트와 프론트엔드를 연결한 디앱 제작 실습 자료를 제공한다. ComJS의 개념부터 다양한 패키지의 이해, 스마트 컨트랙트와 연결을 통한 디앱 제작의 실습까지의 내용을 다룬다.
+- The Cosmos DApp Making Module uses CosmJS to provide DApp production practice materials that connect smart contracts and front ends. It deals with content from the concept of ComJS to understanding various packages and the practice of DApp production through smart contracts and connections.
 
-- 모듈은 아티클과 미션으로 구성된다. 아티클이란 특정 개념 혹은 현상을 설명하는 자료이다. 아티클은 기술 및 배경의 정의와 출현 배경, 구성 요소, 구동 원리, 특장점, 활용 방안을 포함한다. 반면 미션은 실습을 통해 기술 및 개념 체득을 유도하는 자료이다. 미션은 결과물 설명을 포함하는 목적 및 배경, 사전 설치, 코드와 설명을 포함한 수행 방법, 제출 내용을 포함한다.
+- The module consists of articles and missions. An article is a material that explains a specific concept or phenomenon. Articles include the definition and appearance background of technology and background, components, driving principles, features, and utilization plans. On the other hand, missions are data that induce the acquisition of skills and concepts through practice. The mission includes the purpose and background including the description of the results, the pre-installation, the method of performing including the code and explanation, and the contents to be submitted.
 
-## 모듈 구성
+## Mission
 
-코스모스 디앱 만들기 모듈의 구성은 다음과 같다
+The code for each mission is separated by a branch on https://github.com/soaryong/rtd-cosmos-dapp-mission.
 
-|                         | 구분   | 설명                                                                   | 자료 링크                                                           |
-| ----------------------- | ------ | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 코스모스 디앱 제작 개요 | 아티클 | 코스모스 디앱 아키텍처 이해                                            | [Article1](../코스모스%20디앱%20만들기/아티클/README.md)            |
-| 코스모스 디앱 개발환경  | 아티클   | 코스모스 디앱 개발 환경 구축                                           | [Mission1](../코스모스%20디앱%20만들기/미션/01-environment/)         |
-| cosmos-kit 템플릿       | 미션   | Cosmos Kit 제공 템플릿을 활용한 프로젝트 생성, 지갑 연결 페이지 만들기 | [Missions2](../코스모스%20디앱%20만들기/미션/02-cosmoskit)           |
-| Integrage cosmos-kit    | 미션   | 신규 프로젝트 생성하여 cosmos-kit 연동                                 | [Mission3](../코스모스%20디앱%20만들기/미션/03-integrate-cosmoskit/) |
-| Balance                 | 미션   | Bank 모듈을 활용하여 Balance 조회 기능 만들기                          | [Mission4](../코스모스%20디앱%20만들기/미션/04-balance/)             |
-| Bank                    | 미션   | Bank 모듈을 활용하여 Send 기능 만들기                                  | [Mission4](../코스모스%20디앱%20만들기/미션/05-send/)                |
-| IBC                     | 미션   | Token을 다른 체인으로 보내는 IBC 기능 만들기                           | [Mission6](../코스모스%20디앱%20만들기/미션/06-ibc/)                 |
-| Staking                 | 미션   | Staking 모듈을 통해 Staking, Reward Claim 하는 기능 만들기             | [Mission7](../코스모스%20디앱%20만들기/미션/07-staking/)             |
-| Governance              | 미션   | Governance 모듈을 통한 제안, 투표 디앱 만들기                          | [Mission8](../코스모스%20디앱%20만들기/미션/08-gov/)                 |
-| WASM                    | 미션   | CosmWasm Code/Contract 배포 기능 만들기                                | [Mission9](../코스모스%20디앱%20만들기/미션/09-wasm/)                |
-| NFT                     | 미션   | CW721 기능 만들기                                                      | [Mission10](../코스모스%20디앱%20만들기/미션/10-nft/)               |
+## Suggestions and Additions
 
-## 미션
+- The Cosmos Basic Education Module continuously supplements and develops data through open-source country views.
 
-각 미션의 코드는 https://github.com/soaryong/rtd-cosmos-dapp-mission 에 branch로 구분되어 있다.
+- Builders who want an offer improvements to an existing module can [create an Issue](https://github.com/Ludium-Official/road-to-dubai/issues) or Fork the repo to request [a Pull Request](https://github.com/Ludium-Official/road-to-dubai/pulls)
 
-## 제안 및 추가
-
-- 코스모스 베이직 교육 모듈은 오픈 소스 컨트리뷰션을 통해 지속적으로 자료를 보완, 발전시킨다.
-
-- 현존하는 모듈에 제안을 원하는 빌더는 [Issue를 통해 제안 내용을 작성하거나](https://github.com/Ludium-Official/road-to-dubai/issues) 리포를 포킹해서 개선된 내용을 [Pull Request로 바로 요청](https://github.com/Ludium-Official/road-to-dubai/pulls)할 수도 있다
-
-- 제안, 요청된 내용은 루디움에서 검토 이후 적절성을 판단하여 자료를 업데이트 한다
+- Suggestions, contents requested shall be updated after review by Rudium by judging appropriateness
